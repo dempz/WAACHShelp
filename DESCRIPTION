@@ -1,12 +1,15 @@
 Package: WAACHShelp
-Type: Package
-Title: Various helper functions to aid reproducibility in WAACHS analysis-related tasks
 Version: 0.1.0
+Date: 2024-08-29
+Title: Various helper functions to aid reproducibility in WAACHS analysis-related tasks
+Authors@R: c(person("Zac", "Dempsey", role = c("aut", "cre"),
+                     email = "zac.dempsey@thekids.org.au"))
 Author: Zac Dempsey [aut, cre]
-Maintainer: Zac Dempsey
+Maintainer: Zac Dempsey <zac.dempsey@thekids.org.au>
+Depends: R (>= 4.3), dplyr (>= 1.0.0)
+Suggests: gtsummary
 Description: Data analysis requirements for the WAACHS project often involves a range of complex and nuanced functions. This is conflated by different analysts working across similar tasks at different points in time. This (local) package aims to ameliorate this with a set of functions applicable to all analysts (who use R) -- aiding reproducibility.
-License: MIT + file LICENSE
+License: MIT
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
-Imports: dplyr (>= 1.0.0)
