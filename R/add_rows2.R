@@ -11,7 +11,6 @@
 #' @export
 
 add_rows2 <- function (..., id = NULL) {
-  suppressMessages(library(dplyr))
 
   cnames <- purrr::map(list(...), ~colnames(.x)) %>% purrr::flatten_chr()
   if (!is.null(id) && id %in% cnames) {

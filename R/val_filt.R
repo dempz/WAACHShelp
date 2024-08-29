@@ -13,7 +13,6 @@
 #' @export
 
 val_filt <- function(input_vec, letter, lower, upper){
-  suppressMessages(library(dplyr))
 
   regex_pattern <- sprintf("^%s(\\d+\\.?\\d*)$", letter)
   filt <- input_vec[grep(regex_pattern, input_vec)]

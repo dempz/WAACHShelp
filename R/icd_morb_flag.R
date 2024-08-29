@@ -43,8 +43,6 @@ icd_morb_flag <- function(data,
                           age = 18,
                           person_summary = FALSE){
 
-  suppressMessages(library(dplyr))
-
   data("icd_dat", package = "WAACHShelp")
 
   if (!(flag_category %in% c(unique(icd_dat$var), "Other"))) {

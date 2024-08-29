@@ -21,7 +21,6 @@
 
 proc_freq <- function(var1, data = NULL, sort = NULL, min.frq = 0){
 
-  suppressMessages(library(dplyr))
   suppressMessages(library(haven))
   suppressMessages(library(table1))
   suppressMessages(library(flextable))

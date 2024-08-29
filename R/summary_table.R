@@ -9,7 +9,6 @@
 #' @export
 
 sum_tab <- function(data, ...){
-  suppressMessages(library(dplyr))
 
   my_compact_theme <- list(
       # for gt in render

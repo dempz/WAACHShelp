@@ -12,7 +12,6 @@
 
 ptab <- function(tt, shading = NULL, caption = " ", bodysize = 11) {
 
-  suppressMessages(library(dplyr))
   suppressMessages(library(officer))
   suppressMessages(library(flextable))
 

@@ -12,7 +12,6 @@
 #' @export
 
 twoway <- function(var1, var2, data = NULL, var2lab = NULL){
-  suppressMessages(library(dplyr))
 
   # Pick up the arguments:
   arg <- match.call()
