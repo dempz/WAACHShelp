@@ -1,0 +1,18 @@
+#' Helper Function #4
+#'
+#' This is an internal helper function.
+#'
+#' @keywords internal
+
+person_level <- function(data, flag_category) {
+
+  # Process the morbidity data
+  data <- data %>%
+    group_by(rootnum) %>%
+    mutate(!!rlang::sym(flag_category) := case_when(any(!!rlang::sym(flag_category) == "Yes") ~ "Yes",
+                                                    TRUE ~ "No")) %>%
+    distinct(rootnum, !!rlang::sym(flag_category)) %>%
+    ungroup
+
+  return(data)
+}
