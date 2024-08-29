@@ -17,7 +17,7 @@
 #' @export
 
 
-theme_waachs <- function(base_size = 11,
+theme_waachs <- function(base_size = 12,
                          base_line_size = base_size/22,
                          base_rect_size = base_size/22){
 
