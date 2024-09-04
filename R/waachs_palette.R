@@ -41,6 +41,7 @@ waachs_palette <- function(type = "discrete",
 
   }
 
+
   if (visualisation == TRUE){
 
     viz_dat <- data.frame(x = rep(1:ceiling(sqrt(n)),
@@ -50,15 +51,12 @@ waachs_palette <- function(type = "discrete",
                           colours = palette
                           )
 
-    plot <- ggplot2::ggplot(viz_dat,
-                            aes(x = x,
-                                y = y,
-                                fill = colours)) +
+    plot <- ggplot2::ggplot(viz_dat, ggplot2::aes(x = x, y = y, fill = colours)) +
       ggplot2::geom_tile() +
       ggplot2::scale_fill_identity() +
       ggplot2::theme_void() +
       ggplot2::theme(legend.position = "none") +
-      ggplot2::labs(title = "Continuous Palette Visualization")
+      ggplot2::labs(title = paste0(stringr::str_to_title(type), " Palette Visualization"))
 
     return(list(palette = palette,
                 plot = plot))
