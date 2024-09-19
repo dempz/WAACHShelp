@@ -26,6 +26,9 @@ transpose_tblsum <- function(tbl,
     t() %>%
     as.data.frame() %>%
     rownames_to_column() %>%
+    mutate(across(-c(rowname), ~gsub("^_(.*)_$",
+                                     "\\1",
+                                     .))) %>%
     mutate(rowname = gsub("\\*\\*(.*?)\\*\\*", "\\1", rowname),
            rowname = str_replace(rowname, "\n", ""),
            rowname = gsub("(N = [0-9,]+)", "(\\1)", rowname))
