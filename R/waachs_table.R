@@ -2,6 +2,8 @@
 #'
 #' Function to apply consistent formatting to summary tables rendered using R. Works with functions from the `gtsummary` package, or dataframes.
 #'
+#' Inspired and based on `thekidsbiostats::thekids_table()`.
+#'
 #' @param x A table, typically a data.frame, tibble, or output from gtsummary.
 #' @param font.size The font size for text in the body of the table, defaults to 8 (passed throught to set_flextable_defaults).
 #' @param font.size.header The font size for text in the header of the table, defaults to 10.
@@ -41,7 +43,7 @@ waachs_table <- function(x,
   body_bg_col <- body_bg_col
   header_text_col <- header_text_col
 
-  if (any(class(x) == "gtsummary")) {
+  if (any(class(x) %in% c("gtsummary"))) {
     x %>%
       as_flex_table() %>%
       fontsize(part = "header",
@@ -52,8 +54,45 @@ waachs_table <- function(x,
          part = "header") %>%  # Apply header background color
       color(color = "#111921",
             part = "body") %>%
+      bold(part = "header") %>%
       bg(bg = body_bg_col,
          part = "body") %>%     # Apply cream background to the body
+      autofit()
+  }
+  else if (any(class(x) %in% c("flextable"))) {
+    x %>%
+      fontsize(part = "header",
+               size = font.size.header) %>%
+      color(color = header_text_col,
+            part = "header") %>%
+      bg(bg = header_bg_col,
+         part = "header") %>%  # Apply header background color
+      color(color = "#111921",
+            part = "body") %>%
+      bg(bg = body_bg_col,
+         part = "body") %>%     # Apply cream background to the body
+      bold(part = "header") %>%
+      hline_top(part = "all") %>%
+      hline_bottom() %>%
+      autofit()
+  }
+  else if (any(class(x) %in% c("gt_tbl"))) {
+    x %>%
+      data.frame() %>%
+      flextable() %>%
+      fontsize(part = "header",
+               size = font.size.header) %>%
+      color(color = header_text_col,
+            part = "header") %>%
+      bg(bg = header_bg_col,
+         part = "header") %>%  # Apply header background color
+      color(color = "#111921",
+            part = "body") %>%
+      bg(bg = body_bg_col,
+         part = "body") %>%     # Apply cream background to the body
+      bold(part = "header") %>%
+      hline_top(part = "all") %>%
+      hline_bottom() %>%
       autofit()
   }
   else {
@@ -68,7 +107,8 @@ waachs_table <- function(x,
       color(color = "#111921",
             part = "body") %>%
       bg(bg = body_bg_col,
-         part = "body") %>%      # Apply cream background to the body
+         part = "body") %>%     # Apply cream background to the body
+      bold(part = "header") %>%
       hline_top(part = "all") %>%
       hline_bottom() %>%
       autofit()
