@@ -38,6 +38,9 @@ waachs_table(
 \description{
 Function to apply consistent formatting to summary tables rendered using R. Works with functions from the \code{gtsummary} package, or dataframes.
 }
+\details{
+Inspired and based on \code{thekidsbiostats::thekids_table()}.
+}
 \examples{
 head(mtcars) \%>\%
   waachs_table()
