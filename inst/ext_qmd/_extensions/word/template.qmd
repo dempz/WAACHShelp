@@ -1,0 +1,43 @@
+---
+title: "WAACHS Quarto Markdown Analysis Report"
+subtitle: "A biostatistics report template"
+author:
+  name: "Author"
+  affiliation:
+  - "The Kids Research Institute Australia, Perth, WA, Australia"
+date: "`r format(Sys.time(), '%d %B %Y')`"
+format:
+  docx:
+    reference-doc: _extensions/word/WAACHS_quarto_template.docx
+    toc: false
+    toc-depth: 3
+    toc-title: Contents
+    number-sections: true
+    number-depth: 1
+    highlight-style: github
+    fig-dpi: 1000
+editor_options: 
+  chunk_output_type: inline
+execute:
+  echo: false
+  warning: false
+  message: false
+fig-align: center
+fig-format: png
+---
+
+```{r init, include = F}
+# Some useful packages to get started
+library(tidyverse)
+library(WAACHShelp)
+library(thekidsbiostats)
+```
+
+
+## Reproducibility Information
+
+```{r}
+sessionInfo()
+```
+
+
