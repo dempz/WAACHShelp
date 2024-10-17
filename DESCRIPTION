@@ -6,9 +6,9 @@ Authors@R: c(person("Zac", "Dempsey", role = c("aut", "cre"),
                      email = "zac.dempsey@thekids.org.au"))
 Author: Zac Dempsey [aut, cre]
 Maintainer: Zac Dempsey <zac.dempsey@thekids.org.au>
-Depends: R (>= 4.3), dplyr (>= 1.0.0)
+Depends: R (>= 4.3), tidyverse (>= 2.0.0), gtsummary (>= 2.0), flextable (>= 0.9)
 Suggests: gtsummary, purrr, rlang, sjmisc, lubridate, haven, table1, flextable, officer, readr, grDevices, ggplot2, stringr, tcltk
-Description: Data analysis requirements for the WAACHS project often involves a range of complex and nuanced functions. This is conflated by different analysts working across similar tasks at different points in time. This (local) package aims to ameliorate this with a set of functions applicable to all analysts (who use R) -- aiding reproducibility.
+Description: Data analysis requirements for the WAACHS project often involves a range of complex and nuanced functions. This is conflated by different analysts working across similar tasks at different points in time. This (local) package aims to ameliorate this with a set of functions applicable to all analysts (who use R)---aiding reproducibility.
 License: MIT
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
