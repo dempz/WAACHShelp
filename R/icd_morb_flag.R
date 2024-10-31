@@ -8,42 +8,90 @@
 #' @param dobmap DOBMap file corresponding to input dataset.
 #' @param flag_category Type of flag to generate. Takes values from reference file (e.g., MH_morb, Sub_morb, etc.) or "Other" for custom ICD specification and flagging.
 #' @param flag_other_varname Flag variable name (specified only When `flag_category == "Other"`). Input as character string.
-#' @param flag_other_vals Flag variable ICD values (specified only when `flag_category == "Other"`). Input as list with keys "diag_ediag" (for searching across diagnosis, ediag variables) and "ecode" (for searching across ecode variables).
+#' @param diag_type Diagnosis type. Select from "principal diagnosis", (all) "additional diagnoses", "external cause of injury", "custom".
+#' @param diag_type_custom_vars Variables to search across when `diag_type == "custom"`.
+#' @param diag_type_custom_params Search parameters to search across when `diag_type == "custom"`. Must be a list where the keys are the variable names and values are the inputs to `WAACHShelp::val_filt`. See examples for specification
 #' @param under_age Return additional variables corresponding to when participant was strictly under `age` y.o.. Uses DOBMap DOB and subadm morbidity admission date. Variables have suffix "_under{age}".
 #' @param age Integer. Age to consider for the `under_age` variable (default 18).
 #' @param person_summary Summarise results at a person-level.
 #' @return Flagged dataframe.
 #' @examples
 #' # Example 1: Basic use
+#' ## Create any mental health or substance-related morbidity flag, "MH_morb"
+#' ## This automatically searches across all "principal diagnosis", "additional diagnoses", "external cause of injury" codes.
+#' ## Create additional flag for whether admission occurred when under 18 years of age
 #' icd_morb_flag(data = morb,
 #'               dobmap = dob,
-#'               flag_category = "MH_morb" # Create any MH contact flag
+#'               flag_category = "MH_morb", # Create any MH contact flag
 #'               under_age = T, # Return additional set of flags depending on whether participant is under 18 at time of admission.
 #'               age = 18
 #'               )
 #'
-#' # Example 2: Specify custom set of ICD codes to base flags on
+#' # Example 2: Basic use
+#' ## Create any substance-related morbidity flag, "Sub_morb"
+#' icd_morb_flag(data = morb,
+#'               dobmap = dob,
+#'               flag_category = "Sub_morb" # Create any MH contact flag
+#'               )
+#'
+#' # Example 3: Search only *principal diagnosis* and *first additional diagnosis* for a custom set of ICD codes
+#' ## Call this variable "test_var"
 #' icd_morb_flag(data = morb,
 #'               dobmap = dob,
 #'               flag_category = "Other",
-#'               flag_other_varname = "testing_var",                                # Create new flagging variable called "testing_var"
-#'               flag_other_vals = list("diag_ediag" = c("abc24.21", "xyz4231.2")), # Base flag on searching across the "diagnosis" and "ediag" variables (vector corresponds to ICD codes)
-#'               under_age = T,
-#'               age = 25,                                                          # Return additional set of flags depending on whether participant is under 25 at time of admission.
-#'               person_level = F
+#'               diag_type = "custom",
+#'               diag_type_custom_vars = c("diagnosis", "ediag20"),
+#'               diag_type_custom_params = list("diagnosis" = list("letter" = "F",
+#'                                                                 "lower" = 0,
+#'                                                                 "upper" = 99.9999),
+#'                                              "ediag20" = list("letter" = "",
+#'                                                               "lower" = 0,
+#'                                                               "upper" = 99.9999)),
+#'               flag_other_varname = "test_var"
+#'               )
+#'
+#' # Example 4: Search only across primary diagnosis and (all) additional diagnosis fields for a custom set of ICD codes
+#' ## Call this variable "test_var2"
+#' icd_morb_flag(data = morb,
+#'               dobmap = dob,
+#'               flag_category = "Other",
+#'               diag_type = c("principal diagnosis", "additional diagnoses"),
+#'               diag_type_custom_params = list("principal diagnosis" = list("letter" = "F",
+#'                                                                           "lower" = 0,
+#'                                                                           "upper" = 99.9999),
+#'                                              "additional diagnoses" = list("letter" = "",
+#'                                                                            "lower" = 0,
+#'                                                                            "upper" = 99.9999)),
+#'               flag_other_varname = "test_var2"
+#'               )
+#'
+#' # Example 5: Search across (all) additional diagnosis fields and another random field, `dagger`
+#' ## Call this variable "test_var3"
+#' icd_morb_flag(data = morb,
+#'               dobmap = dob,
+#'               flag_category = "Other",
+#'               diag_type = c("custom", "additional diagnoses"),
+#'               diag_type_custom_vars = "dagger",
+#'               diag_type_custom_params = list("dagger" = list("letter" = "F",
+#'                                                              "lower" = 0,
+#'                                                              "upper" = 99.9999)),
+#'               flag_other_varname = "test_var3"
 #'               )
 #' @export
 
 icd_morb_flag <- function(data,
                           dobmap,
                           flag_category,
-                          flag_other_vals,
                           flag_other_varname,
+                          diag_type,
+                          diag_type_custom_vars = NULL,
+                          diag_type_custom_params,
                           under_age = FALSE,
                           age = 18,
                           person_summary = FALSE){
 
   data("icd_dat", package = "WAACHShelp")
+  data("")
 
   if (!(flag_category %in% c(unique(icd_dat$var), "Other"))) {
     stop(sprintf("Error: '%s' is not a valid input. Please choose from %s. If variable not contained in this list, please specify `flag_category == \"Other\"` and use the `flag_other_varname` and `flag_other_vals` arguments.",
@@ -53,7 +101,6 @@ icd_morb_flag <- function(data,
   # 1) Calculate age at record
   ## 1.1) For morbidity data sets -> relative to `subadm`
   age_test <- age - 1
-  #print(age_test)
   data <- data %>%
     left_join(dobmap %>% select(rootnum, dob), by = "rootnum") %>%
     mutate(age_adm = lubridate::time_length(lubridate::interval(dob, subadm), unit = "years"),
@@ -65,8 +112,9 @@ icd_morb_flag <- function(data,
   ## Uses the `icd_extraction` function
   icds <- icd_extraction(data = data,
                          flag_category = flag_category,
-                         flag_other_varname = flag_other_varname,
-                         flag_other_vals = flag_other_vals)
+                         diag_type = diag_type,
+                         diag_type_custom_vars = diag_type_custom_vars,
+                         diag_type_custom_params = diag_type_custom_params)
 
 
   # 3) Create flagging variables
@@ -74,9 +122,10 @@ icd_morb_flag <- function(data,
   icd_flags <- icd_flagging(data = data,
                             flag_category = flag_category,
                             icd_list = icds,
-                            flag_other_vals = flag_other_vals,
-                            flag_other_varname = flag_other_varname
-  )
+                            flag_other_varname = flag_other_varname,
+                            diag_type = diag_type,
+                            diag_type_custom_vars = diag_type_custom_vars,
+                            diag_type_custom_params = diag_type_custom_params)
 
   data <- suppressMessages(left_join(data, icd_flags)) # Join by ALL variables to avoid double-ups
 

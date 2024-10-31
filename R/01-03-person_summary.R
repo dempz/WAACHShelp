@@ -4,7 +4,8 @@
 #'
 #' @keywords internal
 
-person_level <- function(data, flag_category) {
+person_level <- function(data,
+                         flag_category) {
 
   # Process the morbidity data
   data <- data %>%

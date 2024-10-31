@@ -4,7 +4,13 @@
 \alias{icd_extraction}
 \title{Helper Function #2}
 \usage{
-icd_extraction(data, flag_category, flag_other_varname, flag_other_vals)
+icd_extraction(
+  data,
+  flag_category,
+  diag_type,
+  diag_type_custom_vars = NULL,
+  diag_type_custom_params
+)
 }
 \description{
 This is an internal helper function.
