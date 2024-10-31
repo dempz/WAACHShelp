@@ -252,31 +252,14 @@ icd_dat <- dplyr::bind_rows(MH_morb_diag,
 
                             SH_morb)
 
-# Now we can add some classifications to our file
-actual_colnames <- c("diagnosis", paste0("ediag", 1:20), paste0("ecode", 1:4))
-
-colname_classify_broad <- list("principal diagnosis" = "diagnosis",
-                               "additional diagnoses" = "ediag",
-                               "external cause of injury" = "ecode")
-
-colname_classify_specific <- list("principal diagnosis" = actual_colnames[str_detect(actual_colnames, "diagnosis")],
-                                  "additional diagnoses" = actual_colnames[str_detect(actual_colnames, "ediag")],
-                                  "external cause of injury" = actual_colnames[str_detect(actual_colnames, "ecode")])
-
-# Make an extra useful list
-
-
-
+# Referencing the `colname_classify_broad` calculated in colname_classify_list.R
 icd_dat <- icd_dat %>%
   mutate(classification = find_key(broad_type, colname_classify_broad),
          .after = broad_type)
 
 
-
 # Save our data set
 save(icd_dat, file = "data/icd_dat.RData")
-save(colname_classify_specific, file = "data/colname_classify_specific.RData")
-save(colname_classify_broad, file = "data/colname_classify_broad.RData")
 
 
 # Clean up some stuff

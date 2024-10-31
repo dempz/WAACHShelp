@@ -5,14 +5,15 @@
 #' @keywords internal
 
 person_level <- function(data,
-                         flag_category) {
+                         flag_category,
+                         joining_var) {
 
   # Process the morbidity data
   data <- data %>%
-    group_by(rootnum) %>%
+    group_by(!!rlang::sym(joining_var)) %>%
     mutate(!!rlang::sym(flag_category) := case_when(any(!!rlang::sym(flag_category) == "Yes") ~ "Yes",
                                                     TRUE ~ "No")) %>%
-    distinct(rootnum, !!rlang::sym(flag_category)) %>%
+    distinct(!!rlang::sym(joining_var), !!rlang::sym(flag_category)) %>%
     ungroup
 
   return(data)

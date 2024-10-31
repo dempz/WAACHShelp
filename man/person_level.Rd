@@ -4,7 +4,7 @@
 \alias{person_level}
 \title{Helper Function #4}
 \usage{
-person_level(data, flag_category)
+person_level(data, flag_category, joining_var)
 }
 \description{
 This is an internal helper function.

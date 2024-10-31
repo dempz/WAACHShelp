@@ -14,6 +14,9 @@
 #' @param under_age Return additional variables corresponding to when participant was strictly under `age` y.o.. Uses DOBMap DOB and subadm morbidity admission date. Variables have suffix "_under{age}".
 #' @param age Integer. Age to consider for the `under_age` variable (default 18).
 #' @param person_summary Summarise results at a person-level.
+#' @param joining_var Joining (ID) variable consistent between `data` and `dobmap`. Default `rootnum`.
+#' @param dob_var Date of birth (DOB) variable in `dobmap`. Default `"dob"`.
+#' @param morb_date_var Hospital morbidity date variable in `data`. Default `"subadm"`.
 #' @return Flagged dataframe.
 #' @examples
 #' # Example 1: Basic use
@@ -88,10 +91,12 @@ icd_morb_flag <- function(data,
                           diag_type_custom_params,
                           under_age = FALSE,
                           age = 18,
-                          person_summary = FALSE){
+                          person_summary = FALSE,
+                          joining_var = "rootnum",
+                          dob_var = "dob",
+                          morb_date_var = "subadm"){
 
   data("icd_dat", package = "WAACHShelp")
-  data("")
 
   if (!(flag_category %in% c(unique(icd_dat$var), "Other"))) {
     stop(sprintf("Error: '%s' is not a valid input. Please choose from %s. If variable not contained in this list, please specify `flag_category == \"Other\"` and use the `flag_other_varname` and `flag_other_vals` arguments.",
@@ -102,8 +107,8 @@ icd_morb_flag <- function(data,
   ## 1.1) For morbidity data sets -> relative to `subadm`
   age_test <- age - 1
   data <- data %>%
-    left_join(dobmap %>% select(rootnum, dob), by = "rootnum") %>%
-    mutate(age_adm = lubridate::time_length(lubridate::interval(dob, subadm), unit = "years"),
+    left_join(dobmap %>% select(!!rlang::sym(joining_var), !!rlang::sym(dob_var)), by = joining_var) %>%
+    mutate(age_adm = lubridate::time_length(lubridate::interval(!!rlang::sym(dob), !!rlang::sym(morb_date_var)), unit = "years"),
            adm_under_age = case_when(floor(age_adm) <= age_test ~ "Yes",
                                      floor(age_adm) > age_test  ~ "No")) # Calculate ages
 
@@ -162,18 +167,27 @@ icd_morb_flag <- function(data,
   } else if (person_summary == TRUE){
     if (!"Other" %in% flag_category){
       if (under_age == FALSE){
-        data <- person_level(data, flag_category)
+        data <- person_level(data = data,
+                             flag_category = flag_category,
+                             joining_var = joining_var)
 
       } else if (under_age == TRUE) {
-        data <- person_level(data, paste0(flag_category, "_under", age))
+        data <- person_level(data = data,
+                             flag_category = paste0(flag_category, "_under", age),
+                             joining_var = joining_var
+                             )
 
       }
     } else if ("Other" %in% flag_category){
       if (under_age == FALSE){
-        data <- person_level(data, flag_other_varname)
+        data <- person_level(data = data,
+                             flag_category = flag_other_varname,
+                             joining_var = joining_var)
 
       } else if (under_age == TRUE){
-        data <- person_level(data, paste0(flag_other_varname, "_under", age))
+        data <- person_level(data = data,
+                             flag_category = paste0(flag_other_varname, "_under", age),
+                             joining_var = joining_var)
 
       }
     }

@@ -14,7 +14,10 @@ icd_morb_flag(
   diag_type_custom_params,
   under_age = FALSE,
   age = 18,
-  person_summary = FALSE
+  person_summary = FALSE,
+  joining_var = "rootnum",
+  dob_var = "dob",
+  morb_date_var = "subadm"
 )
 }
 \arguments{
@@ -37,6 +40,12 @@ icd_morb_flag(
 \item{age}{Integer. Age to consider for the \code{under_age} variable (default 18).}
 
 \item{person_summary}{Summarise results at a person-level.}
+
+\item{joining_var}{Joining (ID) variable consistent between \code{data} and \code{dobmap}. Default \code{rootnum}.}
+
+\item{dob_var}{Date of birth (DOB) variable in \code{dobmap}. Default \code{"dob"}.}
+
+\item{morb_date_var}{Hospital morbidity date variable in \code{data}. Default \code{"subadm"}.}
 }
 \value{
 Flagged dataframe.
