@@ -4,15 +4,7 @@
 \alias{icd_flagging}
 \title{Helper Function #3}
 \usage{
-icd_flagging(
-  data,
-  flag_category,
-  icd_list,
-  flag_other_varname,
-  diag_type,
-  diag_type_custom_vars = NULL,
-  diag_type_custom_params
-)
+icd_flagging(data, flag_category, icd_list, flag_other_varname)
 }
 \description{
 This is an internal helper function.

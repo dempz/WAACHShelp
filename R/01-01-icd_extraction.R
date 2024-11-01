@@ -4,13 +4,11 @@
 #'
 #' @keywords internal
 
-
 icd_extraction <- function(data,
                            flag_category,
                            diag_type,
                            diag_type_custom_vars = NULL,
-                           diag_type_custom_params
-                           ){
+                           diag_type_custom_params){
   # Error messages!
   if (flag_category == "Other") {
     # Ensure that diag_type and diag_type_custom_vars are properly defined
@@ -20,7 +18,6 @@ icd_extraction <- function(data,
       stop(paste("Error: The following term(s) should be specified in `diag_type` and not in `diag_type_custom_vars`:",
                  paste(invalid_vars, collapse = ", ")))
     }
-
 
     # Make sure the diagnosis type is properly captured
     if (!all(diag_type %in% c("principal diagnosis", "additional diagnoses", "external cause of injury", "custom"))) {
@@ -67,8 +64,22 @@ icd_extraction <- function(data,
                  paste(missing_vars, collapse = ", ")))
     }
 
-  }
+    # Adjust error checking for diag_type_custom_params
+    for (var_name in names(diag_type_custom_params)) {
+      param_value <- diag_type_custom_params[[var_name]]
 
+      if (is.list(param_value) && all(c("letter", "lower", "upper") %in% names(param_value))) {
+        # Single parameter set; wrap it in a list
+        diag_type_custom_params[[var_name]] <- list(param_value)
+      } else if (is.list(param_value) && all(sapply(param_value, function(x) {
+        is.list(x) && all(c("letter", "lower", "upper") %in% names(x))
+      }))) {
+        # Already a list of parameter sets; do nothing
+      } else {
+        stop(paste("Error: The parameters for variable", var_name, "are not properly specified. Each parameter set must be a list with 'letter', 'lower', and 'upper'."))
+      }
+    }
+  }
 
   # 1) Extract variable categories
   # 1.1) If `flag_category` != "Other"
@@ -88,11 +99,11 @@ icd_extraction <- function(data,
       } else if (i %in% "custom"){
         vars <- diag_type_custom_vars
         observed_icds <- unique(unlist(data %>% select(!!vars), use.names = F))
-        }
+      }
 
-    custom_icd_categories[[i]] <- list(variables = vars,
-                                       icd_codes = observed_icds)
-  }
+      custom_icd_categories[[i]] <- list(variables = vars,
+                                         icd_codes = observed_icds)
+    }
   }
 
   # 2) Create flag sets (derived from flag_category)
@@ -125,28 +136,29 @@ icd_extraction <- function(data,
         }
         codes_ij <- sort(codes_ij)
         #print(codes_ij)
-      codes_ij <- sort(codes_ij)
+        codes_ij <- sort(codes_ij)
 
-      codes_i <- c(codes_i, codes_ij)
-      codes_i <- unique(codes_i)
-      admissible_icd[[i]] <- codes_i
+        codes_i <- c(codes_i, codes_ij)
+        codes_i <- unique(codes_i)
+        admissible_icd[[i]] <- codes_i
       }
-      }
+    }
   }
+  else if (flag_category == "Other") {
+    for (i in names(custom_icd_categories)){
+      custom_icd_categories_i <- custom_icd_categories[[i]] # "custom" vs other (pre-established)
+      all_icd_categories <- custom_icd_categories_i[["icd_codes"]]
 
-    else if (flag_category == "Other") {
-      for (i in names(custom_icd_categories)){
-        custom_icd_categories_i <- custom_icd_categories[[i]] # "custom" vs other (pre-established)
-        #print(custom_icd_categories)
-        if (i == "custom"){
-          custom_vars <- custom_icd_categories_i[["variables"]]
-          #print(custom_vars)
-          for (j in custom_vars){
-            #print(j)
-            all_icd_categories <- custom_icd_categories_i[["icd_codes"]]
-            letter <- diag_type_custom_params[[j]][["letter"]]
-            lower <- diag_type_custom_params[[j]][["lower"]]
-            upper <- diag_type_custom_params[[j]][["upper"]]
+      if (i == "custom"){
+        custom_vars <- custom_icd_categories_i[["variables"]]
+        for (j in custom_vars){
+          param_list <- diag_type_custom_params[[j]]
+          admissible_icd[[j]] <- c()  # Initialize as empty vector
+
+          for (k in param_list){
+            letter <- k[["letter"]]
+            lower <- k[["lower"]]
+            upper <- k[["upper"]]
 
             message(paste0("Search ", j, ": letter=", letter, ", lower=", lower, " upper=", upper))
 
@@ -154,30 +166,31 @@ icd_extraction <- function(data,
                                                 letter = letter,
                                                 lower  = lower,
                                                 upper  = upper)
-            filtered_icd_categories <- sort(filtered_icd_categories)
-            #print(filtered_icd_categories)
-            admissible_icd[[j]] <- filtered_icd_categories
+            admissible_icd[[j]] <- unique(c(admissible_icd[[j]], filtered_icd_categories))
           }
+          admissible_icd[[j]] <- sort(admissible_icd[[j]])
         }
-        else if (i != "custom"){
-          #print(i)
-          all_icd_categories <- custom_icd_categories_i[["icd_codes"]]
-          letter <- diag_type_custom_params[[i]][["letter"]]
-          lower <- diag_type_custom_params[[i]][["lower"]]
-          upper <- diag_type_custom_params[[i]][["upper"]]
+      }
+      else {
+        param_list <- diag_type_custom_params[[i]]
+        admissible_icd[[i]] <- c()  # Initialize as empty vector
 
-          message(paste0("Search ", i, ": letter=", letter, ", lower=", lower, " upper=", upper))
+        for (k in param_list){
+          letter <- k[["letter"]]
+          lower <- k[["lower"]]
+          upper <- k[["upper"]]
+
+          message(paste0("Search ", i, ": letter=", letter, ", lower=", lower, ", upper=", upper))
 
           filtered_icd_categories <- val_filt(all_icd_categories,
                                               letter = letter,
                                               lower  = lower,
                                               upper  = upper)
-          #print(filtered_icd_categories)
-          filtered_icd_categories <- sort(filtered_icd_categories)
-          admissible_icd[[i]] <- filtered_icd_categories
+          admissible_icd[[i]] <- unique(c(admissible_icd[[i]], filtered_icd_categories))
         }
+        admissible_icd[[i]] <- sort(admissible_icd[[i]])
       }
     }
-
+  }
   return(admissible_icd)
 }

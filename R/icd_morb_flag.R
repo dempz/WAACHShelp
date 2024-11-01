@@ -127,10 +127,11 @@ icd_morb_flag <- function(data,
   icd_flags <- icd_flagging(data = data,
                             flag_category = flag_category,
                             icd_list = icds,
-                            flag_other_varname = flag_other_varname,
-                            diag_type = diag_type,
-                            diag_type_custom_vars = diag_type_custom_vars,
-                            diag_type_custom_params = diag_type_custom_params)
+                            flag_other_varname = flag_other_varname#,
+                            #diag_type = diag_type#,
+                            #diag_type_custom_vars = diag_type_custom_vars,
+                            #diag_type_custom_params = diag_type_custom_params
+                            )
 
   data <- suppressMessages(left_join(data, icd_flags)) # Join by ALL variables to avoid double-ups
 
