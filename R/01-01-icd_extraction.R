@@ -11,9 +11,16 @@ icd_extraction <- function(data,
                            diag_type_custom_vars = NULL,
                            diag_type_custom_params
                            ){
-
   # Error messages!
   if (flag_category == "Other") {
+    # Ensure that diag_type and diag_type_custom_vars are properly defined
+    reserved_terms <- c("principal diagnosis", "additional diagnoses", "external cause of injury")
+    invalid_vars <- intersect(diag_type_custom_vars, reserved_terms)
+    if (length(invalid_vars) > 0) {
+      stop(paste("Error: The following term(s) should be specified in `diag_type` and not in `diag_type_custom_vars`:",
+                 paste(invalid_vars, collapse = ", ")))
+    }
+
 
     # Make sure the diagnosis type is properly captured
     if (!all(diag_type %in% c("principal diagnosis", "additional diagnoses", "external cause of injury", "custom"))) {
@@ -52,12 +59,14 @@ icd_extraction <- function(data,
       }
     }
 
-    # Ensure all required names are in `diag_type_custom_params`
-    if (length(setdiff(diag_type_custom_vars, names(diag_type_custom_params))) > 0) {
-      stop(paste0("Error: The following required names are missing from the `diag_type_custom_params`: ",
-                  paste(setdiff(diag_type_custom_vars, names(diag_type_custom_params)), collapse = ", "))
-      )
+    # Check proper specification of `diag_type_custom_params`
+    combined_vars <- c(diag_type[diag_type != "custom"], diag_type_custom_vars)
+    missing_vars <- setdiff(combined_vars, names(diag_type_custom_params))
+    if (length(missing_vars) > 0) {
+      stop(paste("Error: The following variable(s) require limits specified in `diag_type_custom_params`:",
+                 paste(missing_vars, collapse = ", ")))
     }
+
   }
 
 
@@ -88,7 +97,7 @@ icd_extraction <- function(data,
 
   # 2) Create flag sets (derived from flag_category)
   admissible_icd <- list()
-  if (flag_category != "Other"){
+  if (flag_category != "Other"){ # If one of "MH_morb", "Sub_morb" etc.
     icd_dat_flag <- icd_dat %>% filter(var == flag_category)
 
     for (i in unique(icd_dat_flag$classification)){
@@ -101,46 +110,70 @@ icd_extraction <- function(data,
         lower  <- icd_dat_flag_ij$lower
         upper  <- icd_dat_flag_ij$upper
 
-      if (i %in% c("principal diagnosis", "additional diagnoses")){ # diagnosis, ediag
-        codes_ij <- val_filt(diag_ediag_icd_categories,
-                             letter = letter,
-                             lower  = lower,
-                             upper  = upper)
-        } else if (j == "external cause of injury"){ # ecode
+        message(paste0("Search ", i, ": letter=", letter, ", lower=", lower, " upper=", upper))
+
+        if (i %in% c("principal diagnosis", "additional diagnoses")){ # diagnosis, ediag
+          codes_ij <- val_filt(diag_ediag_icd_categories,
+                               letter = letter,
+                               lower  = lower,
+                               upper  = upper)
+        } else if (i == "external cause of injury"){ # ecode
           codes_ij <- val_filt(ecode_icd_categories,
                                letter = letter,
                                lower  = lower,
                                upper  = upper)
-          }
+        }
+        codes_ij <- sort(codes_ij)
+        #print(codes_ij)
+      codes_ij <- sort(codes_ij)
 
       codes_i <- c(codes_i, codes_ij)
       codes_i <- unique(codes_i)
       admissible_icd[[i]] <- codes_i
       }
       }
-    }
+  }
+
     else if (flag_category == "Other") {
       for (i in names(custom_icd_categories)){
         custom_icd_categories_i <- custom_icd_categories[[i]] # "custom" vs other (pre-established)
-
+        #print(custom_icd_categories)
         if (i == "custom"){
           custom_vars <- custom_icd_categories_i[["variables"]]
+          #print(custom_vars)
           for (j in custom_vars){
+            #print(j)
             all_icd_categories <- custom_icd_categories_i[["icd_codes"]]
+            letter <- diag_type_custom_params[[j]][["letter"]]
+            lower <- diag_type_custom_params[[j]][["lower"]]
+            upper <- diag_type_custom_params[[j]][["upper"]]
+
+            message(paste0("Search ", j, ": letter=", letter, ", lower=", lower, " upper=", upper))
 
             filtered_icd_categories <- val_filt(all_icd_categories,
-                                                letter = diag_type_custom_params[[j]][["letter"]],
-                                                lower  = diag_type_custom_params[[j]][["lower"]],
-                                                upper  = diag_type_custom_params[[j]][["upper"]])
+                                                letter = letter,
+                                                lower  = lower,
+                                                upper  = upper)
+            filtered_icd_categories <- sort(filtered_icd_categories)
+            #print(filtered_icd_categories)
             admissible_icd[[j]] <- filtered_icd_categories
           }
-        } else if (i != "custom"){
+        }
+        else if (i != "custom"){
+          #print(i)
           all_icd_categories <- custom_icd_categories_i[["icd_codes"]]
+          letter <- diag_type_custom_params[[i]][["letter"]]
+          lower <- diag_type_custom_params[[i]][["lower"]]
+          upper <- diag_type_custom_params[[i]][["upper"]]
+
+          message(paste0("Search ", i, ": letter=", letter, ", lower=", lower, " upper=", upper))
 
           filtered_icd_categories <- val_filt(all_icd_categories,
-                                              letter = diag_type_custom_params[[i]][["letter"]],
-                                              lower  = diag_type_custom_params[[i]][["lower"]],
-                                              upper  = diag_type_custom_params[[i]][["upper"]])
+                                              letter = letter,
+                                              lower  = lower,
+                                              upper  = upper)
+          #print(filtered_icd_categories)
+          filtered_icd_categories <- sort(filtered_icd_categories)
           admissible_icd[[i]] <- filtered_icd_categories
         }
       }
@@ -148,60 +181,3 @@ icd_extraction <- function(data,
 
   return(admissible_icd)
 }
-
-
-### Testing
-# 1) Works for pre-defined (single) diagnosis type
-#test3 <- icd_extraction(data = coh1_morb,
-#               flag_category = "MH_morb"
-#               )
-#
-#icd_extraction(data = coh1_morb,
-#               flag_category = "Other",
-#               diag_type = "additional diagnoses"
-#               )
-#
-## 2) Works for custom diagnosis type
-#icd_extraction(data = coh1_morb,
-#               flag_category = "Other",
-#               diag_type = "custom",
-#               diag_type_custom_vars = c("diagnosis", "ediag20"),
-#               diag_type_custom_params = list("diagnosis" = list("letter" = "F",
-#                                                                 "lower" = 0,
-#                                                                 "upper" = 99.9999),
-#                                              "ediag20" = list("letter" = "",
-#                                                              "lower" = 0,
-#                                                              "upper" = 99.9999))
-#               )
-#
-#
-## 3) works for pre-defined multiple diagnosis type
-#icd_extraction(data = coh1_morb,
-#               flag_category = "Other",
-#               diag_type = c("custom", "additional diagnoses"),
-#               diag_type_custom_vars = c("dagger"),
-#               )
-#
-
-#test2 <- icd_extraction(data = coh1_morb,
-#               flag_category = "Other",
-#               diag_type = c("principal diagnosis", "custom"),
-#               diag_type_custom_vars = c("ediag1", "ediag2"),
-#               diag_type_custom_params = list("principal diagnosis" = list("letter" = "F",
-#                                                                           "lower" = 0,
-#                                                                           "upper" = 99.9999),
-#                                              "ediag1" = list("letter" = "",
-#                                                              "lower" = 0,
-#                                                              "upper" = 99.9999),
-#                                              "ediag2" = list("letter" = "",
-#                                                              "lower" = 0,
-#                                                              "upper" = 99.9999))
-#               )
-#
-#icd_extraction(data = coh1_morb,
-#               diag_type = c("additional diagnoses", "custom"),
-#               diag_type_custom_vars = c("dagger"),
-#               flag_category = "Other",
-#               diag_type_custom_params = list("additional diagnoses" = list("letter" = "F",
-#                                                                           "lower" = 0,
-#                                                                           "upper" = 99.9999)))

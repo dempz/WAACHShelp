@@ -33,30 +33,38 @@ icd_flagging <- function(data,
     }
   else if ("Other" %in% flag_category){
       icd_list_names <- names(icd_list)
+      flag_varnames <- c() # Initialise list to save flag_varname values to
       for (i in icd_list_names){
-        icd_list_i <- icd_list[[i]] # extract that particular variable out
-        icd_list_i_vars <- if (i %in% names(colname_classify_specific)) colname_classify_specific[[i]] else (i)
-        icd_list_i_varname <- paste0(icd_list_i_vars, "_flag")
+        icd_list_i <- icd_list[[i]] # List of the ICD values
+        flag_varname <- paste0("flag_", i)
+        #print(flag_varname)
+        flag_varnames <- c(flag_varnames, flag_varname)
 
-        data <- data %>%
-          mutate(!!rlang::sym(paste0(icd_list_i_varname)) := case_when(if_any(.cols = !!icd_list_i_vars,
-                                                                      .fns = ~.x %in% icd_list_i) ~ "Yes",
-                                                               if_all(.cols = !!icd_list_i_vars,
-                                                                      .fns = ~!.x %in% icd_list_i) ~ "No"))
+        if (i %in% names(colname_classify_specific)){ # If "additional diagnoses" etc.
+          icd_list_i_vars <- colname_classify_specific[[i]]
+
+          data <- data %>%
+            mutate(!!rlang::sym(flag_varname) := case_when(if_any(.cols = !!!rlang::syms(icd_list_i_vars),
+                                                                  .fns = ~.x %in% icd_list_i) ~ "Yes",
+                                                           if_all(.cols = !!!rlang::syms(icd_list_i_vars),
+                                                                  .fns = ~!.x %in% icd_list_i) ~ "No"))
+        }
+        else if (!i %in% names(colname_classify_specific)){
+          data <- data %>%
+            mutate(!!rlang::sym(flag_varname) := case_when(if_any(.cols = !!rlang::sym(i),
+                                                                  .fns = ~.x %in% icd_list_i) ~ "Yes",
+                                                           if_all(.cols = !!rlang::sym(i),
+                                                                  .fns = ~!.x %in% icd_list_i) ~ "No"))
+        }
       }
+
       data <- data %>%
-        mutate(!!rlang::sym(flag_other_varname) := case_when(if_any(.cols = !!icd_list_i_varname,
+        mutate(!!rlang::sym(flag_other_varname) := case_when(if_any(.cols = !!!rlang::syms(flag_varnames),
                                                                     .fns = ~.x == "Yes") ~ "Yes",
-                                                             if_all(.cols = !!icd_list_i_varname,
-                                                                    .fns = ~.x == "No") ~ "No"))
+                                                             if_all(.cols = !!!rlang::syms(flag_varnames),
+                                                                    .fns = ~.x == "No") ~ "No")) %>%
+        select(-c(!!!rlang::syms(flag_varnames)))
   }
 
   return(data)
 }
-
-
-#icd_flagging(data = coh1_morb,
-#             flag_category = "Other",
-#             flag_other_varname = "test_var",
-#             icd_list = test2) %>%
-#  select(contains("flag"), test_var)
