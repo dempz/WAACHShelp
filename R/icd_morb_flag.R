@@ -10,7 +10,7 @@
 #' @param flag_other_varname Flag variable name (specified only When `flag_category == "Other"`). Input as character string.
 #' @param diag_type Diagnosis type. Select from "principal diagnosis", (all) "additional diagnoses", "external cause of injury", "custom".
 #' @param diag_type_custom_vars Variables to search across when `diag_type == "custom"`.
-#' @param diag_type_custom_params Search parameters to search across when `diag_type == "custom"`. Must be a list where the keys are the variable names and values are the inputs to `WAACHShelp::val_filt`. See examples for specification
+#' @param diag_type_custom_params Search parameters to search across when `diag_type == "custom"`. Must be a list where the keys are the variable names and values are the inputs to `WAACHShelp::val_filt`. Can also be a list of lists where multiple ICD can be searched across for a single variable. See examples for specification.
 #' @param under_age Return additional variables corresponding to when participant was strictly under `age` y.o.. Uses DOBMap DOB and subadm morbidity admission date. Variables have suffix "_under{age}".
 #' @param age Integer. Age to consider for the `under_age` variable (default 18).
 #' @param person_summary Summarise results at a person-level.
@@ -80,6 +80,33 @@
 #'                                                              "upper" = 99.9999)),
 #'               flag_other_varname = "test_var3"
 #'               )
+#'
+#' # Example 6: Searching across multiple ICD code types within a variable
+#' ## Call this variable "test_var4" -- replicating MH_morb flag
+#' icd_morb_flag(data = morb,
+#'               dobmap = dob,
+#'               flag_category = "Other",
+#'               diag_type = c("additional diagnoses", "additional diagnoses", "external cause of injury"),
+#'               flag_other_varname = "test_var3",
+#'               diag_type_custom_params =
+#'               list("principal diagnosis" = list(list("letter" = "F",
+#'                                                      "lower" = 0,
+#'                                                      "upper" = 99.9999),
+#'                                                 list("letter" = "",
+#'                                                      "lower" = 290,
+#'                                                      "upper" = 319.9999)),
+#                     "additional diagnoses" = list(list("letter" = "F",
+#                                                        "lower" = 0,
+#                                                        "upper" = 99.9999),
+#                                                   list("letter" = "",
+#                                                        "lower" = 290,
+#                                                        "upper" = 319.9999)),
+#                     "external cause of injury" = list(list("letter" = "E",
+#                                                            "lower" = 950,
+#                                                            "upper" = 959.9999),
+#                                                       list("letter" = "X",
+#                                                            "lower" = 60,
+#                                                            "upper" = 84.9999))))
 #' @export
 
 icd_morb_flag <- function(data,
