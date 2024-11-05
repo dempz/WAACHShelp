@@ -7,9 +7,26 @@ Authors@R: c(person("Zac", "Dempsey", role = c("aut", "cre"),
 Author: Zac Dempsey [aut, cre]
 Maintainer: Zac Dempsey <zac.dempsey@thekids.org.au>
 Depends: R (>= 4.3), tidyverse (>= 2.0.0), gtsummary (>= 2.0), flextable (>= 0.9)
-Suggests: gtsummary, purrr, rlang, sjmisc, lubridate, haven, table1, flextable, officer, readr, grDevices, ggplot2, stringr, tcltk
+Suggests: 
+    gtsummary,
+    purrr,
+    rlang,
+    sjmisc,
+    lubridate,
+    haven,
+    table1,
+    flextable,
+    officer,
+    readr,
+    grDevices,
+    ggplot2,
+    stringr,
+    tcltk,
+    knitr,
+    rmarkdown
 Description: Data analysis requirements for the WAACHS project often involves a range of complex and nuanced functions. This is conflated by different analysts working across similar tasks at different points in time. This (local) package aims to ameliorate this with a set of functions applicable to all analysts (who use R)---aiding reproducibility.
 License: MIT
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
+VignetteBuilder: knitr
