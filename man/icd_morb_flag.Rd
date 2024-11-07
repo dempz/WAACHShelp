@@ -6,7 +6,7 @@
 \usage{
 icd_morb_flag(
   data,
-  dobmap,
+  dobmap = NULL,
   flag_category,
   flag_other_varname,
   diag_type,
