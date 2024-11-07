@@ -83,10 +83,12 @@ icd_extraction <- function(data,
 
   # 1) Extract variable categories
   # 1.1) If `flag_category` != "Other"
-  diag_ediag_icd_categories <- unique(unlist(data %>% select(diagnosis, ediag1:ediag20),
-                                             use.names = F))
-  ecode_icd_categories      <- unique(unlist(data %>% select(ecode1:ecode4),
-                                             use.names = F))
+  if (flag_category != "Other"){
+    diag_ediag_icd_categories <- unique(unlist(data %>% select(diagnosis, ediag1:ediag20),
+                                               use.names = F))
+    ecode_icd_categories      <- unique(unlist(data %>% select(ecode1:ecode4),
+                                               use.names = F))
+  }
 
   # 1.2) If `flag_category` == "Other"
   if (flag_category == "Other"){

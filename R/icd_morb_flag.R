@@ -110,7 +110,7 @@
 #' @export
 
 icd_morb_flag <- function(data,
-                          dobmap,
+                          dobmap = NULL,
                           flag_category,
                           flag_other_varname,
                           diag_type,
@@ -132,12 +132,15 @@ icd_morb_flag <- function(data,
 
   # 1) Calculate age at record
   ## 1.1) For morbidity data sets -> relative to `subadm`
-  age_test <- age - 1
-  data <- data %>%
-    left_join(dobmap %>% select(!!rlang::sym(joining_var), !!rlang::sym(dob_var)), by = joining_var) %>%
-    mutate(age_adm = lubridate::time_length(lubridate::interval(!!rlang::sym(dob_var), !!rlang::sym(morb_date_var)), unit = "years"),
-           adm_under_age = case_when(floor(age_adm) <= age_test ~ "Yes",
-                                     floor(age_adm) > age_test  ~ "No")) # Calculate ages
+  ## Only applicable if under_age == TRUE
+  if (under_age == TRUE){
+    age_test <- age - 1
+    data <- data %>%
+      left_join(dobmap %>% select(!!rlang::sym(joining_var), !!rlang::sym(dob_var)), by = joining_var) %>%
+      mutate(age_adm = lubridate::time_length(lubridate::interval(!!rlang::sym(dob_var), !!rlang::sym(morb_date_var)), unit = "years"),
+             adm_under_age = case_when(floor(age_adm) <= age_test ~ "Yes",
+                                       floor(age_adm) > age_test  ~ "No")) # Calculate ages
+  }
 
 
   # 2) Extract admissible ICD codes for the selected `flag_category`
