@@ -1,0 +1,44 @@
+---
+title: "Using `WAACHShelp::icd_morb_flag` in practice"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Using `WAACHShelp::icd_morb_flag` in practice}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE, echo = F}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# Setup
+
+```{r setup, echo = T, message=F, warning=FALSE}
+# Load the packages
+library(WAACHShelp)
+```
+
+# Data requirements
+
+`icd_morb_flag` has two dataframe inputs: `data`, and `dobmap`.
+
++ `data`
+  + A hospital morbidity dataset.
+  + We require of this dataset is:
+    + Some sort of ID value (to differentiate visits within an individual)
+    + A date variable (only if flagging whether a visit occurred below a certain age)
+    + The set of flagging variable(s) to search for ICD codes across. It does not matter what these flagging variables are called.
++ `dobmap`
+  + A DOBmap file.
+  + In reality, we only need two columns: some sort of ID value, and a dob value.
+
+The ID values must have the same name across the `data` and `dobmap` files. 
+
+By default, we assume the `rootnum` variable exists in both data sets. It does not matter what this variable is called in reality---the `joining_var` argument can be specified to any string.
+
+# Flagging
+
+Flagging can be handled by automatic or manual specification, via `flag_category`

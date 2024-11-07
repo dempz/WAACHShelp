@@ -9,7 +9,7 @@ A data frame where rows correspond to an event and columns correspond to the var
 \describe{
 \item{num}{Counter variable representing the number of rows associated with any given var}
 \item{var}{Variable name}
-\item{type}{Type of diagnosis field this ICD code corresponds to (diagnosis & ediag = "diag_ediag", ecode = "ecode")}
+\item{broad_type}{Type of diagnosis field this ICD code corresponds to (diagnosis & ediag = "diag_ediag", ecode = "ecode")}
 \item{letter}{Letter of ICD code (purely numeric is empty string "")}
 \item{lower}{Lower bound of numeric element of ICD code}
 \item{upper}{Upper bound of numeric element of ICD code}

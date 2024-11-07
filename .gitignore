@@ -1,2 +1,6 @@
 .Rproj.user
 .Rhistory
+tests/manual/
+inst/doc
+/Meta/
+/doc/
