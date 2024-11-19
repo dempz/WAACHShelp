@@ -343,7 +343,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <div id="setup" class="section level1">
 <h1>Setup</h1>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="co"># Load the packages</span></span>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="co"># Load the package</span></span>
 <span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="fu">library</span>(WAACHShelp)</span></code></pre></div>
 </div>
 <div id="data-requirements" class="section level1">
@@ -354,12 +354,12 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <li><code>data</code>
 <ul>
 <li>A hospital morbidity dataset.</li>
-<li>We require of this dataset is:
+<li>All we really require of this data set is:
 <ul>
-<li>Some sort of ID value (to differentiate visits within an
-individual)</li>
-<li>A date variable (only if flagging whether a visit occurred below a
-certain age)</li>
+<li>Some sort of ID value to differentiate visits within an individual
+(e.g., rootnum, NEWUID).</li>
+<li>Some sort of date variable (only necessary if flagging whether a
+visit occurred below a certain age).</li>
 <li>The set of flagging variable(s) to search for ICD codes across. It
 does not matter what these flagging variables are called.</li>
 </ul></li>
@@ -367,12 +367,18 @@ does not matter what these flagging variables are called.</li>
 <li><code>dobmap</code>
 <ul>
 <li>A DOBmap file.</li>
-<li>In reality, we only need two columns: some sort of ID value, and a
-dob value.</li>
+<li>All we really require of this data set is two columns.
+<ul>
+<li>Some sort of ID variable.</li>
+<li>Some sort of dob variable.</li>
+</ul></li>
+<li>The DOB variable can be called whatever we like. As a default, it is
+called “dob”, after the date of birth variable in the DOBmap files.</li>
 </ul></li>
 </ul>
-<p>The ID values must have the same name across the <code>data</code>
-and <code>dobmap</code> files.</p>
+<p>The ID variable of the DOBmap file must be called the same thing as
+in the <code>data</code> file. This is the variable that the joining is
+based on.</p>
 <p>By default, we assume the <code>rootnum</code> variable exists in
 both data sets. It does not matter what this variable is called in
 reality—the <code>joining_var</code> argument can be specified to any
@@ -380,8 +386,250 @@ string.</p>
 </div>
 <div id="flagging" class="section level1">
 <h1>Flagging</h1>
-<p>Flagging can be handled by automatic or manual specification, via
-<code>flag_category</code></p>
+<p>Flagging can be handled automatically, or via manual specification
+via <code>flag_category</code>.</p>
+<p><code>icd_morb_flag</code> can flag only one variable at a time.
+“Multiple flagging” (of multiple distinct variables) can be handled via
+for-loop.</p>
+<p>For the purpose of this vignette, the following
+parameters/assumptions will be made:</p>
+<ol style="list-style-type: decimal">
+<li>Morbidity data set is called <code>morb_dat</code>.</li>
+<li>DOBmap data set (if applicable) is called
+<code>dobmap_dat</code>.</li>
+<li>Want to create the <code>MH_morb</code> flag (unless othewise
+specified).</li>
+</ol>
+<div id="automatic-flagging" class="section level2">
+<h2>Automatic flagging</h2>
+<div id="flagging-variables" class="section level3">
+<h3>Flagging variables</h3>
+<p>The <code>icd_dat</code> dataset of the <code>WAACHShelp</code>
+package has a suite of flags that can be “automatically” flagged in the
+morbidity dataset.</p>
+<p>This dataset contains the variable name, and the parameters to search
+across ICD codes (via <code>WAACHShelp::val_filt</code>).</p>
+<p>To explore this, let’s load the package data:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">data</span>(icd_dat, <span class="at">package =</span> <span class="st">&quot;WAACHShelp&quot;</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="fu">head</span>(icd_dat)</span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a><span class="co">#&gt;   num     var broad_type           classification letter lower    upper</span></span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a><span class="co">#&gt; 1   1 MH_morb  diagnosis      principal diagnosis      F     0  99.9999</span></span>
+<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a><span class="co">#&gt; 2   2 MH_morb  diagnosis      principal diagnosis          290 319.9999</span></span>
+<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a><span class="co">#&gt; 3   1 MH_morb      ediag     additional diagnoses      F     0  99.9999</span></span>
+<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a><span class="co">#&gt; 4   2 MH_morb      ediag     additional diagnoses          290 319.9999</span></span>
+<span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a><span class="co">#&gt; 5   1 MH_morb      ecode external cause of injury      E   950 959.9999</span></span>
+<span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a><span class="co">#&gt; 6   2 MH_morb      ecode external cause of injury      X    60  84.9999</span></span></code></pre></div>
+<p>The full set of flags is printed below:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">unique</span>(icd_dat<span class="sc">$</span>var)</span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a><span class="co">#&gt;  [1] &quot;MH_morb&quot;       &quot;Sub_morb&quot;      &quot;Alc_morb&quot;      &quot;Tob_morb&quot;     </span></span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a><span class="co">#&gt;  [5] &quot;Opioid_morb&quot;   &quot;Cann_morb&quot;     &quot;Sed_morb&quot;      &quot;Coc_morb&quot;     </span></span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a><span class="co">#&gt;  [9] &quot;Stim_morb&quot;     &quot;Hall_morb&quot;     &quot;Solv_morb&quot;     &quot;Multdrug_morb&quot;</span></span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a><span class="co">#&gt; [13] &quot;SH_morb&quot;</span></span></code></pre></div>
+</div>
+<div id="applying-flags" class="section level3">
+<h3>Applying flags</h3>
+<p>Applying the function in these circumstances is simple.</p>
+<p>Let’s create the following flag, where we:</p>
+<ol style="list-style-type: decimal">
+<li>Want to flag at a visit-level (i.e., not collapsed to a person
+level).</li>
+<li>Do not want to filter based on age.</li>
+</ol>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="fu">icd_morb_flag</span>(<span class="at">data =</span> morb_dat, </span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>              <span class="at">flag_category =</span> <span class="st">&quot;MH_morb&quot;</span>)</span></code></pre></div>
+</div>
+</div>
+<div id="manual-flagging" class="section level2">
+<h2>Manual flagging</h2>
+<p>This is where the bulk of the function’s flexibility lies.</p>
+<p>We will present a couple more through examples, compared to the help
+of the package.</p>
+<p>This involves specifying <code>flag_category = &quot;Other&quot;</code>, and
+then specifying a diagnosis type (<code>diag_type</code>) to search
+across. <code>diag_type</code> can take on 4 distinct values</p>
+<ol style="list-style-type: decimal">
+<li><code>&quot;prinicipal diagnosis&quot;</code> – Search across principal
+diagnosis variable (morbidity data must contain <code>diag</code> which
+represents principal diagnosis field).</li>
+<li><code>&quot;additional diagnoses&quot;</code> – Search across ALL additional
+diagnoses variables (morbidity data must contain
+<code>ediag1</code>–<code>ediag20</code> Which represent all additional
+diagnosis fields).</li>
+<li><code>&quot;external cause of injury&quot;</code> – Search across ALL external
+cause of injury variables (morbiditiy data must contain
+<code>ecode1</code>–<code>ecode4</code> which represent all external
+cause of injury fields).</li>
+<li><code>&quot;custom&quot;</code> – Other!</li>
+</ol>
+<div id="example-1-basic-flag-creation" class="section level3">
+<h3>Example 1: Basic flag creation</h3>
+<p>Let’s re-create the <code>MH_morb</code> flag with manual
+flagging.</p>
+<div id="attempt-1-without-specifying-diag_typecustom" class="section level4">
+<h4>Attempt 1: without specifying <code>diag_type=&quot;custom&quot;</code></h4>
+<p>We must specify the boundaries to search across for each of the
+“principal diagnosis”, “additional diagnoses”, “external cause of
+injury” variable groups. This is fed into the
+<code>diag_type_custom_params</code> argument. The data structure must
+be a <strong>list of lists</strong>.</p>
+<p>The list of lists must have search keys equal to “letter” (letter of
+ICD code, empty string if strictly numeric), “lower” (lower bound of
+numeric element), “upper” (upper bound of numeric element).</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="fu">icd_morb_flag</span>(<span class="at">data =</span> morb_dat,</span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>              <span class="at">flag_category =</span> <span class="st">&quot;Other&quot;</span>,</span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a>              <span class="at">diag_type =</span> <span class="fu">c</span>(<span class="st">&quot;principal diagnosis&quot;</span>, <span class="st">&quot;additional diagnoses&quot;</span>, <span class="st">&quot;external cause of injury&quot;</span>),</span>
+<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a>              <span class="at">diag_type_custom_params =</span> <span class="fu">list</span>(<span class="st">&quot;principal diagnosis&quot;</span> <span class="ot">=</span> <span class="fu">list</span>(<span class="fu">list</span>(<span class="at">letter =</span> <span class="st">&quot;F&quot;</span>, </span>
+<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a>                                                                               <span class="at">lower =</span> <span class="dv">0</span>, </span>
+<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a>                                                                               <span class="at">upper =</span> <span class="fl">99.9999</span>),</span>
+<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a>                                                                          <span class="fu">list</span>(<span class="at">letter =</span> <span class="st">&quot;&quot;</span> , </span>
+<span id="cb5-8"><a href="#cb5-8" tabindex="-1"></a>                                                                               <span class="at">lower =</span> <span class="dv">290</span>, </span>
+<span id="cb5-9"><a href="#cb5-9" tabindex="-1"></a>                                                                               <span class="at">upper =</span> <span class="fl">319.9999</span>)),</span>
+<span id="cb5-10"><a href="#cb5-10" tabindex="-1"></a>                                             <span class="st">&quot;additional diagnoses&quot;</span> <span class="ot">=</span> <span class="fu">list</span>(<span class="fu">list</span>(<span class="at">letter =</span> <span class="st">&quot;F&quot;</span>, </span>
+<span id="cb5-11"><a href="#cb5-11" tabindex="-1"></a>                                                                                <span class="at">lower =</span> <span class="dv">0</span>, </span>
+<span id="cb5-12"><a href="#cb5-12" tabindex="-1"></a>                                                                                <span class="at">upper =</span> <span class="fl">99.9999</span>),</span>
+<span id="cb5-13"><a href="#cb5-13" tabindex="-1"></a>                                                                           <span class="fu">list</span>(<span class="at">letter =</span> <span class="st">&quot;&quot;</span>, </span>
+<span id="cb5-14"><a href="#cb5-14" tabindex="-1"></a>                                                                                <span class="at">lower =</span> <span class="dv">290</span>, </span>
+<span id="cb5-15"><a href="#cb5-15" tabindex="-1"></a>                                                                                <span class="at">upper =</span> <span class="fl">319.9999</span>)),</span>
+<span id="cb5-16"><a href="#cb5-16" tabindex="-1"></a>                                             <span class="st">&quot;external cause of injury&quot;</span> <span class="ot">=</span> <span class="fu">list</span>(<span class="fu">list</span>(<span class="at">letter =</span> <span class="st">&quot;E&quot;</span>, </span>
+<span id="cb5-17"><a href="#cb5-17" tabindex="-1"></a>                                                                                    <span class="at">lower =</span> <span class="dv">950</span>, </span>
+<span id="cb5-18"><a href="#cb5-18" tabindex="-1"></a>                                                                                    <span class="at">upper =</span> <span class="fl">959.9999</span>),</span>
+<span id="cb5-19"><a href="#cb5-19" tabindex="-1"></a>                                                                               <span class="fu">list</span>(<span class="at">letter =</span> <span class="st">&quot;X&quot;</span>, </span>
+<span id="cb5-20"><a href="#cb5-20" tabindex="-1"></a>                                                                                    <span class="at">lower =</span> <span class="dv">60</span>, </span>
+<span id="cb5-21"><a href="#cb5-21" tabindex="-1"></a>                                                                                    <span class="at">upper =</span> <span class="fl">84.9999</span>))),</span>
+<span id="cb5-22"><a href="#cb5-22" tabindex="-1"></a>              <span class="at">flag_other_varname =</span> <span class="st">&quot;MH_morb_custom&quot;</span>)</span></code></pre></div>
+</div>
+<div id="attempt-2-specifying-diag_typecustom" class="section level4">
+<h4>Attempt 2: specifying <code>diag_type=&quot;custom&quot;</code></h4>
+<p>This specific example is a little (a lot) more tedious, but we will
+still proceed for illustrative purposes. In this instance, we must
+individually specify the search parameters for every variable.</p>
+<p>Therefore, we must set <code>diag_type=&quot;custom&quot;</code>, and name the
+variables we would like to search across using the
+<code>diag_type_custom_vars</code> argument.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="co"># Set search parameters for principal, additional diagnoses</span></span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>diag_ediag_params <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="fu">list</span>(<span class="at">letter =</span> <span class="st">&quot;F&quot;</span>, </span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a>                               <span class="at">lower =</span> <span class="dv">0</span>, </span>
+<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a>                               <span class="at">upper =</span> <span class="fl">99.9999</span>),</span>
+<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a>                          <span class="fu">list</span>(<span class="at">letter =</span> <span class="st">&quot;&quot;</span> , </span>
+<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a>                               <span class="at">lower =</span> <span class="dv">290</span>, </span>
+<span id="cb6-7"><a href="#cb6-7" tabindex="-1"></a>                               <span class="at">upper =</span> <span class="fl">319.9999</span>))</span>
+<span id="cb6-8"><a href="#cb6-8" tabindex="-1"></a></span>
+<span id="cb6-9"><a href="#cb6-9" tabindex="-1"></a><span class="co"># Set search parameters for ecode variables</span></span>
+<span id="cb6-10"><a href="#cb6-10" tabindex="-1"></a>ecode_params <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="fu">list</span>(<span class="at">letter =</span> <span class="st">&quot;E&quot;</span>, </span>
+<span id="cb6-11"><a href="#cb6-11" tabindex="-1"></a>                          <span class="at">lower =</span> <span class="dv">950</span>, </span>
+<span id="cb6-12"><a href="#cb6-12" tabindex="-1"></a>                          <span class="at">upper =</span> <span class="fl">959.9999</span>),</span>
+<span id="cb6-13"><a href="#cb6-13" tabindex="-1"></a>                     <span class="fu">list</span>(<span class="at">letter =</span> <span class="st">&quot;X&quot;</span>, </span>
+<span id="cb6-14"><a href="#cb6-14" tabindex="-1"></a>                          <span class="at">lower =</span> <span class="dv">60</span>, </span>
+<span id="cb6-15"><a href="#cb6-15" tabindex="-1"></a>                          <span class="at">upper =</span> <span class="fl">84.9999</span>))</span>
+<span id="cb6-16"><a href="#cb6-16" tabindex="-1"></a></span>
+<span id="cb6-17"><a href="#cb6-17" tabindex="-1"></a></span>
+<span id="cb6-18"><a href="#cb6-18" tabindex="-1"></a><span class="fu">icd_morb_flag</span>(<span class="at">data =</span> morb_dat,</span>
+<span id="cb6-19"><a href="#cb6-19" tabindex="-1"></a>              <span class="at">flag_category =</span> <span class="st">&quot;Other&quot;</span>,</span>
+<span id="cb6-20"><a href="#cb6-20" tabindex="-1"></a>              <span class="at">diag_type =</span> <span class="st">&quot;custom&quot;</span>,</span>
+<span id="cb6-21"><a href="#cb6-21" tabindex="-1"></a>              <span class="at">diag_type_custom_vars =</span> <span class="fu">c</span>(<span class="st">&quot;diag&quot;</span>,                <span class="co"># Principal diagnosis variables</span></span>
+<span id="cb6-22"><a href="#cb6-22" tabindex="-1"></a>                                        <span class="fu">paste0</span>(<span class="st">&quot;ediag&quot;</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">20</span>), <span class="co"># Additional diagnosis variables</span></span>
+<span id="cb6-23"><a href="#cb6-23" tabindex="-1"></a>                                        <span class="fu">paste0</span>(<span class="st">&quot;ecode&quot;</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>)   <span class="co"># External cause of injury variables</span></span>
+<span id="cb6-24"><a href="#cb6-24" tabindex="-1"></a>                                        ),</span>
+<span id="cb6-25"><a href="#cb6-25" tabindex="-1"></a>              <span class="at">diag_type_custom_params =</span> <span class="fu">list</span>(<span class="st">&quot;diag&quot;</span> <span class="ot">=</span> diag_ediag_params,</span>
+<span id="cb6-26"><a href="#cb6-26" tabindex="-1"></a>                                             <span class="fu">setNames</span>(<span class="fu">rep</span>(<span class="fu">list</span>(diag_ediag_params), <span class="dv">20</span>), <span class="fu">paste0</span>(<span class="st">&quot;ediag&quot;</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">20</span>)),</span>
+<span id="cb6-27"><a href="#cb6-27" tabindex="-1"></a>                                             <span class="fu">setNames</span>(<span class="fu">rep</span>(<span class="fu">list</span>(ecode_params), <span class="dv">20</span>), <span class="fu">paste0</span>(<span class="st">&quot;ecode&quot;</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>))),</span>
+<span id="cb6-28"><a href="#cb6-28" tabindex="-1"></a>              <span class="at">flag_other_varname =</span> <span class="st">&quot;MH_morb_custom&quot;</span>)</span></code></pre></div>
+</div>
+</div>
+<div id="example-2-combining-diag_type-values" class="section level3">
+<h3>Example 2: Combining <code>diag_type</code> values</h3>
+<p>We can flexibly specify <code>diag_type</code>—we can search across
+any pre-defined group (principal diagnosis, additional diagnoses,
+external cause of injury) <em>in addition to</em> a (set of) custom
+variable(s).</p>
+<p>For example, if we would like to search across all additional
+diagnoses variables, in addition to a variable named
+<code>dagger</code>, we can do this:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="fu">icd_morb_flag</span>(<span class="at">data =</span> morb_dat,</span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a>              <span class="at">flag_category =</span> <span class="st">&quot;Other&quot;</span>,</span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a>              <span class="at">diag_type =</span> <span class="fu">c</span>(<span class="st">&quot;additional diagnoses&quot;</span>, <span class="st">&quot;custom&quot;</span>),</span>
+<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a>              <span class="at">diag_type_custom_vars =</span> <span class="st">&quot;dagger&quot;</span>,</span>
+<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a>              <span class="at">diag_type_custom_params =</span> <span class="fu">list</span>(<span class="st">&quot;additional diagnoses&quot;</span> <span class="ot">=</span> diag_ediag_params,</span>
+<span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a>                                             <span class="st">&quot;dagger&quot;</span> <span class="ot">=</span> diag_ediag_params),</span>
+<span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a>              <span class="at">flag_other_varname =</span> <span class="st">&quot;MH_morb_custom&quot;</span>)</span></code></pre></div>
+</div>
+<div id="example-3-specifying-person_summary" class="section level3">
+<h3>Example 3: Specifying <code>person_summary</code></h3>
+<p>TRUE/FALSE argument on whether to collapse records to a person level,
+instead of an admission (record) level.</p>
+<p>The summary works such that if <em>any</em> record for an individual
+is flagged “yes”, then the collapsed record for that individual is
+“yes”. Otherwise, if <em>all</em> records for an individual are flagged
+“no”, then the collapsed record for that individual is “no”.</p>
+<p>The number of rows in the flagged data set when
+<code>person_summary = TRUE</code> correspond to the number of unique
+values of the <code>joining_var</code> (e.g., rootnum, NEWUID).</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="fu">icd_morb_flag</span>(<span class="at">data =</span> morb_dat, </span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a>              <span class="at">flag_category =</span> <span class="st">&quot;MH_morb&quot;</span>,</span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a>              <span class="at">person_summary =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+</div>
+<div id="example-4-flagging-records-below-strictly-below-a-certain-age" class="section level3">
+<h3>Example 4: Flagging records below strictly below a certain age</h3>
+<p>We can create a flag based on an individual’s admission age. This
+requires a “DOBmap” file to be specified, so an age can actuall be
+calculated.</p>
+<p>This flags records if the record occurred strictly below the age
+specified (e.g., if individual is strictly below 18). Therefore, for a
+non-missing flag to be returned, both an individual’s <em>date of
+birth</em> and <em>date of admission</em> must exist.</p>
+<p><strong>Note:</strong></p>
+<ul>
+<li>The DOB variable in the DOBmap (if not called <code>dob</code>) can
+be specified using the <code>dob_var</code> argument.</li>
+<li>The admission date variable in the morbidity file (if not called
+<code>subadm</code>) can be specified using the
+<code>morb_date_var</code> argument.</li>
+</ul>
+<p>All we have to do is specify <code>under_age = TRUE</code> and and a
+numeric <code>age</code> value (default is 18).</p>
+<p>Let’s create the following flag:</p>
+<ol style="list-style-type: decimal">
+<li>Only flag records under 25.</li>
+<li>Explore what this looks like depending on whether
+<code>person_summary</code> is TRUE or FALSE.</li>
+</ol>
+<div id="attempt-1-if-person_summary-false" class="section level4">
+<h4>Attempt 1: if <code>person_summary = FALSE</code></h4>
+<p>If <code>person_summary = F</code>, we are returned with two flag
+variables: one with the variable name and one with the variable name and
+“_under{age}” suffix.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="co"># Creates variables `MH_morb`, `MH_morb_under18`</span></span>
+<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a><span class="fu">icd_morb_flag</span>(<span class="at">data =</span> morb_dat,</span>
+<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a>              <span class="at">dobmap =</span> dobmap_dat,</span>
+<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a>              <span class="at">flag_category =</span> <span class="st">&quot;MH_morb&quot;</span>,</span>
+<span id="cb9-5"><a href="#cb9-5" tabindex="-1"></a>              <span class="at">under_age =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb9-6"><a href="#cb9-6" tabindex="-1"></a>              <span class="at">age =</span> <span class="dv">25</span>)</span></code></pre></div>
+</div>
+<div id="attempt-2-if-person_summary-true" class="section level4">
+<h4>Attempt 2: if <code>person_summary = TRUE</code></h4>
+<p>If <code>person_summary = T</code>, we are returned only with one
+flag variable for the under age group.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="co"># Creates variable `MH_morb_under18`</span></span>
+<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a><span class="fu">icd_morb_flag</span>(<span class="at">data =</span> morb_dat,</span>
+<span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a>              <span class="at">dobmap =</span> dobmap_dat,</span>
+<span id="cb10-4"><a href="#cb10-4" tabindex="-1"></a>              <span class="at">flag_category =</span> <span class="st">&quot;MH_morb&quot;</span>,</span>
+<span id="cb10-5"><a href="#cb10-5" tabindex="-1"></a>              <span class="at">under_age =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb10-6"><a href="#cb10-6" tabindex="-1"></a>              <span class="at">age =</span> <span class="dv">25</span>,</span>
+<span id="cb10-7"><a href="#cb10-7" tabindex="-1"></a>              <span class="at">person_summary =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+</div>
+</div>
+</div>
+</div>
+<div id="conclusion" class="section level1">
+<h1>Conclusion</h1>
+<p>The <code>icd_morb_flag</code> function prototype is useful for
+consistently flagging morbidity (or other) data sets across a
+pre-specified range of ICD values—aiding reproducibility across analysts
+and across tasks. It does not require converted or necessarily
+consistent ICD codes (i.e., does not require ICD-9, ICD-10 formatted
+codes), and simply searches across the codes that exist in the data
+set.</p>
 </div>
 
 

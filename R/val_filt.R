@@ -14,8 +14,8 @@
 
 val_filt <- function(input_vec, letter, lower, upper){
 
-  regex_pattern <- sprintf("^%s(\\d+\\.?\\d*)$", letter)
-  filt <- input_vec[grep(regex_pattern, input_vec)]
-  filt <- filt[as.numeric(gsub(paste0("^", letter), "", filt)) %>% between(lower, upper)]
+  regex_pattern <- base::sprintf("^%s(\\d+\\.?\\d*)$", letter)
+  filt <- input_vec[base::grep(regex_pattern, input_vec)]
+  filt <- filt[as.numeric(base::gsub(paste0("^", letter), "", filt)) %>% dplyr::between(lower, upper)]
   return(filt)
   }

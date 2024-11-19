@@ -8,7 +8,7 @@ knitr::opts_chunk$set(
 library(WAACHShelp) # Let's load the WAACHShelp package
 
 ## ----eval = F-----------------------------------------------------------------
-#  create_project(project_name = "test_project")
+# create_project(project_name = "test_project")
 
 ## ----echo=FALSE, out.width="95%"----------------------------------------------
 knitr::include_graphics("images/create_project/2_prompt.png")

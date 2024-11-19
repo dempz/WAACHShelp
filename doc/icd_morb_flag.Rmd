@@ -17,7 +17,7 @@ knitr::opts_chunk$set(
 # Setup
 
 ```{r setup, echo = T, message=F, warning=FALSE}
-# Load the packages
+# Load the package
 library(WAACHShelp)
 ```
 
@@ -27,18 +27,239 @@ library(WAACHShelp)
 
 + `data`
   + A hospital morbidity dataset.
-  + We require of this dataset is:
-    + Some sort of ID value (to differentiate visits within an individual)
-    + A date variable (only if flagging whether a visit occurred below a certain age)
+  + All we really require of this data set is:
+    + Some sort of ID value to differentiate visits within an individual (e.g., rootnum, NEWUID).
+    + Some sort of date variable (only necessary if flagging whether a visit occurred below a certain age).
     + The set of flagging variable(s) to search for ICD codes across. It does not matter what these flagging variables are called.
 + `dobmap`
   + A DOBmap file.
-  + In reality, we only need two columns: some sort of ID value, and a dob value.
+  + All we really require of this data set is two columns.
+    + Some sort of ID variable.
+    + Some sort of dob variable.
+  + The DOB variable can be called whatever we like. As a default, it is called "dob", after the date of birth variable in the DOBmap files.
+  
 
-The ID values must have the same name across the `data` and `dobmap` files. 
+The ID variable of the DOBmap file must be called the same thing as in the `data` file. This is the variable that the joining is based on.
 
 By default, we assume the `rootnum` variable exists in both data sets. It does not matter what this variable is called in reality---the `joining_var` argument can be specified to any string.
 
 # Flagging
 
-Flagging can be handled by automatic or manual specification, via `flag_category`
+Flagging can be handled automatically, or via manual specification via `flag_category`.
+
+`icd_morb_flag` can flag only one variable at a time. "Multiple flagging" (of multiple distinct variables) can be handled via for-loop.
+
+For the purpose of this vignette, the following parameters/assumptions will be made:
+
+1. Morbidity data set is called `morb_dat`.
+2. DOBmap data set (if applicable) is called `dobmap_dat`.
+2. Want to create the `MH_morb` flag (unless othewise specified).
+
+## Automatic flagging
+
+### Flagging variables
+
+The `icd_dat` dataset of the `WAACHShelp` package has a suite of flags that can be "automatically" flagged in the morbidity dataset.
+
+This dataset contains the variable name, and the parameters to search across ICD codes (via `WAACHShelp::val_filt`).
+
+To explore this, let's load the package data:
+
+```{r echo = T}
+data(icd_dat, package = "WAACHShelp")
+
+head(icd_dat)
+```
+
+The full set of flags is printed below:
+
+```{r}
+unique(icd_dat$var)
+```
+
+### Applying flags
+
+Applying the function in these circumstances is simple.
+
+Let's create the following flag, where we:
+
+1. Want to flag at a visit-level (i.e., not collapsed to a person level).
+2. Do not want to filter based on age.
+
+
+```{r echo = T, eval=FALSE}
+icd_morb_flag(data = morb_dat, 
+              flag_category = "MH_morb")
+```
+
+
+## Manual flagging
+
+This is where the bulk of the function's flexibility lies.
+
+We will present a couple more through examples, compared to the help of the package.
+
+This involves specifying `flag_category = "Other"`, and then specifying a diagnosis type (`diag_type`) to search across.
+`diag_type` can take on 4 distinct values
+
+1. `"prinicipal diagnosis"` -- Search across principal diagnosis variable (morbidity data must contain `diag` which represents principal diagnosis field).
+2. `"additional diagnoses"` -- Search across ALL additional diagnoses variables (morbidity data must contain `ediag1`--`ediag20` Which represent all additional diagnosis fields).
+3. `"external cause of injury"` -- Search across ALL external cause of injury variables (morbiditiy data must contain `ecode1`--`ecode4` which represent all external cause of injury fields).
+4. `"custom"` -- Other!
+
+### Example 1: Basic flag creation
+
+Let's re-create the `MH_morb` flag with manual flagging.
+
+
+#### Attempt 1: without specifying `diag_type="custom"`
+
+We must specify the boundaries to search across for each of the "principal diagnosis", "additional diagnoses", "external cause of injury" variable groups. This is fed into the `diag_type_custom_params` argument. The data structure must be a **list of lists**.
+
+The list of lists must have search keys equal to "letter" (letter of ICD code, empty string if strictly numeric), "lower" (lower bound of numeric element), "upper" (upper bound of numeric element).
+
+```{r eval=FALSE, echo=TRUE}
+icd_morb_flag(data = morb_dat,
+              flag_category = "Other",
+              diag_type = c("principal diagnosis", "additional diagnoses", "external cause of injury"),
+              diag_type_custom_params = list("principal diagnosis" = list(list(letter = "F", 
+                                                                               lower = 0, 
+                                                                               upper = 99.9999),
+                                                                          list(letter = "" , 
+                                                                               lower = 290, 
+                                                                               upper = 319.9999)),
+                                             "additional diagnoses" = list(list(letter = "F", 
+                                                                                lower = 0, 
+                                                                                upper = 99.9999),
+                                                                           list(letter = "", 
+                                                                                lower = 290, 
+                                                                                upper = 319.9999)),
+                                             "external cause of injury" = list(list(letter = "E", 
+                                                                                    lower = 950, 
+                                                                                    upper = 959.9999),
+                                                                               list(letter = "X", 
+                                                                                    lower = 60, 
+                                                                                    upper = 84.9999))),
+              flag_other_varname = "MH_morb_custom")
+```
+
+
+#### Attempt 2: specifying `diag_type="custom"`
+
+This specific example is a little (a lot) more tedious, but we will still proceed for illustrative purposes. In this instance, we must individually specify the search parameters for every variable.
+
+Therefore, we must set `diag_type="custom"`, and name the variables we would like to search across using the `diag_type_custom_vars` argument.
+
+```{r eval=FALSE, echo=TRUE}
+# Set search parameters for principal, additional diagnoses
+diag_ediag_params <- list(list(letter = "F", 
+                               lower = 0, 
+                               upper = 99.9999),
+                          list(letter = "" , 
+                               lower = 290, 
+                               upper = 319.9999))
+
+# Set search parameters for ecode variables
+ecode_params <- list(list(letter = "E", 
+                          lower = 950, 
+                          upper = 959.9999),
+                     list(letter = "X", 
+                          lower = 60, 
+                          upper = 84.9999))
+
+
+icd_morb_flag(data = morb_dat,
+              flag_category = "Other",
+              diag_type = "custom",
+              diag_type_custom_vars = c("diag",                # Principal diagnosis variables
+                                        paste0("ediag", 1:20), # Additional diagnosis variables
+                                        paste0("ecode", 1:4)   # External cause of injury variables
+                                        ),
+              diag_type_custom_params = list("diag" = diag_ediag_params,
+                                             setNames(rep(list(diag_ediag_params), 20), paste0("ediag", 1:20)),
+                                             setNames(rep(list(ecode_params), 20), paste0("ecode", 1:4))),
+              flag_other_varname = "MH_morb_custom")
+```
+
+
+### Example 2: Combining `diag_type` values
+
+We can flexibly specify `diag_type`---we can search across any pre-defined group (principal diagnosis, additional diagnoses, external cause of injury) *in addition to* a (set of) custom variable(s).
+
+For example, if we would like to search across all additional diagnoses variables, in addition to a variable named `dagger`, we can do this:
+
+```{r eval=FALSE, echo=TRUE}
+icd_morb_flag(data = morb_dat,
+              flag_category = "Other",
+              diag_type = c("additional diagnoses", "custom"),
+              diag_type_custom_vars = "dagger",
+              diag_type_custom_params = list("additional diagnoses" = diag_ediag_params,
+                                             "dagger" = diag_ediag_params),
+              flag_other_varname = "MH_morb_custom")
+```
+
+### Example 3: Specifying `person_summary`
+
+TRUE/FALSE argument on whether to collapse records to a person level, instead of an admission (record) level.
+
+The summary works such that if *any* record for an individual is flagged "yes", then the collapsed record for that individual is "yes".
+Otherwise, if *all* records for an individual are flagged "no", then the collapsed record for that individual is "no".
+
+The number of rows in the flagged data set when `person_summary = TRUE` correspond to the number of unique values of the `joining_var` (e.g., rootnum, NEWUID).
+
+```{r eval = F, echo = T}
+icd_morb_flag(data = morb_dat, 
+              flag_category = "MH_morb",
+              person_summary = TRUE)
+```
+
+
+### Example 4: Flagging records below strictly below a certain age
+
+We can create a flag based on an individual's admission age. This requires a "DOBmap" file to be specified, so an age can actuall be calculated.
+
+This flags records if the record occurred strictly below the age specified (e.g., if individual is strictly below 18). Therefore, for a non-missing flag to be returned, both an individual's *date of birth* and *date of admission* must exist.
+
+**Note:**
+
++ The DOB variable in the DOBmap (if not called `dob`) can be specified using the `dob_var` argument.
++ The admission date variable in the morbidity file (if not called `subadm`) can be specified using the `morb_date_var` argument.
+
+
+All we have to do is specify `under_age = TRUE` and and a numeric `age` value (default is 18).
+
+Let's create the following flag:
+
+1. Only flag records under 25.
+2. Explore what this looks like depending on whether `person_summary` is TRUE or FALSE.
+
+#### Attempt 1: if `person_summary = FALSE`
+
+If `person_summary = F`, we are returned with two flag variables: one with the variable name and one with the variable name and "_under\{age\}" suffix.
+
+```{r eval=FALSE, echo=TRUE}
+# Creates variables `MH_morb`, `MH_morb_under18`
+icd_morb_flag(data = morb_dat,
+              dobmap = dobmap_dat,
+              flag_category = "MH_morb",
+              under_age = TRUE,
+              age = 25)
+```
+
+#### Attempt 2: if `person_summary = TRUE`
+
+If `person_summary = T`, we are returned only with one flag variable for the under age group.
+
+```{r eval=FALSE, echo=TRUE}
+# Creates variable `MH_morb_under18`
+icd_morb_flag(data = morb_dat,
+              dobmap = dobmap_dat,
+              flag_category = "MH_morb",
+              under_age = TRUE,
+              age = 25,
+              person_summary = TRUE)
+```
+
+# Conclusion
+
+The `icd_morb_flag` function prototype is useful for consistently flagging morbidity (or other) data sets across a pre-specified range of ICD values---aiding reproducibility across analysts and across tasks. It does not require converted or necessarily consistent ICD codes (i.e., does not require ICD-9, ICD-10 formatted codes), and simply searches across the codes that exist in the data set.

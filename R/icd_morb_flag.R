@@ -4,6 +4,8 @@
 #' Flags can be added for general categories based on pre-established ICD codes (e.g., any mental health contact, any substance-related contact, any alcohol/tobacco-related contact etc.) or add a custom set of ICD codes.
 #' The file with these pre-established ICD codes are saved as an .RData file and are trivial to change.
 #'
+#' @details For more details, see the \href{../doc/icd_morb_flag.html}{vignette}.
+#'
 #' @param data Input dataset (morbidity).
 #' @param dobmap DOBMap file corresponding to input dataset.
 #' @param flag_category Type of flag to generate. Takes values from reference file (e.g., MH_morb, Sub_morb, etc.) or "Other" for custom ICD specification and flagging.
@@ -33,14 +35,12 @@
 #' # Example 2: Basic use
 #' ## Create any substance-related morbidity flag, "Sub_morb"
 #' icd_morb_flag(data = morb,
-#'               dobmap = dob,
 #'               flag_category = "Sub_morb" # Create any MH contact flag
 #'               )
 #'
 #' # Example 3: Search only *principal diagnosis* and *first additional diagnosis* for a custom set of ICD codes
 #' ## Call this variable "test_var"
 #' icd_morb_flag(data = morb,
-#'               dobmap = dob,
 #'               flag_category = "Other",
 #'               diag_type = "custom",
 #'               diag_type_custom_vars = c("diagnosis", "ediag20"),
@@ -56,7 +56,6 @@
 #' # Example 4: Search only across primary diagnosis and (all) additional diagnosis fields for a custom set of ICD codes
 #' ## Call this variable "test_var2"
 #' icd_morb_flag(data = morb,
-#'               dobmap = dob,
 #'               flag_category = "Other",
 #'               diag_type = c("principal diagnosis", "additional diagnoses"),
 #'               diag_type_custom_params = list("principal diagnosis" = list("letter" = "F",
@@ -71,7 +70,6 @@
 #' # Example 5: Search across (all) additional diagnosis fields and another random field, `dagger`
 #' ## Call this variable "test_var3"
 #' icd_morb_flag(data = morb,
-#'               dobmap = dob,
 #'               flag_category = "Other",
 #'               diag_type = c("custom", "additional diagnoses"),
 #'               diag_type_custom_vars = "dagger",
@@ -84,7 +82,6 @@
 #' # Example 6: Searching across multiple ICD code types within a variable
 #' ## Call this variable "test_var4" -- replicating MH_morb flag
 #' icd_morb_flag(data = morb,
-#'               dobmap = dob,
 #'               flag_category = "Other",
 #'               diag_type = c("additional diagnoses", "additional diagnoses", "external cause of injury"),
 #'               flag_other_varname = "test_var3",
