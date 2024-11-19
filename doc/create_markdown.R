@@ -8,8 +8,8 @@ knitr::opts_chunk$set(
 library(WAACHShelp)
 
 ## ----eval = F-----------------------------------------------------------------
-#  create_markdown(file_name = "draft_1",
-#                  ext_name = "html")
+# create_markdown(file_name = "draft_1",
+#                 ext_name = "html")
 
 ## ----echo=FALSE, out.width="95%"----------------------------------------------
 knitr::include_graphics("images/create_markdown/1_prompt.png")

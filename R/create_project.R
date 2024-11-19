@@ -16,6 +16,8 @@
 #' An interactive window will appear prompting the user to select the folder where the project structure should be created.
 #' The default is the current working directory.
 #'
+#' @details For more details, see the \href{../doc/create_project.html}{vignette}.
+#'
 #' @examples
 #' create_project(project_name = "investigation_x" # Folder where RProject is called "investigation_x"
 #'                )

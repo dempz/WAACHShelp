@@ -16,6 +16,8 @@
 #' package's internal data to the `_extensions/` directory. Finally, it creates
 #' a new Quarto markdown file based on the extension template.
 #'
+#' @details For more details, see the \href{../doc/create_markdown.html}{vignette}.
+#'
 #' @note
 #' The function assumes that the package `WAACHShelp` contains the necessary extension files
 #' under `ext_qmd/_extensions/`.
