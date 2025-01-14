@@ -47,7 +47,7 @@ create_project <- function(project_name = "standard",
   if (reports) {
     if (!file.exists(file.path(project_dir, "reports"))) dir.create(file.path(project_dir, "reports"))
   }
-  if (docs) {
+  if (documentation) {
     if (!file.exists(file.path(project_dir, "documentation"))) dir.create(file.path(project_dir, "documentation"))
   }
   if (output) {
