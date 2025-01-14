@@ -7,10 +7,11 @@
 #' The function copies specific files and folders from the chosen extension to the project directory.
 #'
 #' @param project_name String. Default `"standard"`. Name of R Project object to be created.
-#' @param data Logical. If `TRUE`, a `data` directory will be created in the project. Defaults to `TRUE`.
-#' @param reports Logical. If `TRUE`, a `reports` directory will be created in the project. Defaults to `TRUE`.
-#' @param output Logical. If `TRUE`, an `output` direction will be created for the project. Defaults to `TRUE`.
-#' @param docs Logical. If `TRUE`, a `docs` directory will be created in the project. Defaults to `TRUE`.
+#' @param data Logical. If `TRUE`, a `data` directory will be created in the selected folder. Defaults to `TRUE`.
+#' @param reports Logical. If `TRUE`, a `reports` directory will be created in the selected folder. Defaults to `TRUE`.
+#' @param output Logical. If `TRUE`, an `output` direction will be created in the selected folder. Defaults to `TRUE`.
+#' @param docs Logical. If `TRUE`, a `docs` directory will be created in the selected folder. Defaults to `TRUE`.
+#' @param R Logical. If `TRUE`, an `R` directory will be created in the selected folder. Defaults to `TRUE`.
 #'
 #' @note
 #' An interactive window will appear prompting the user to select the folder where the project structure should be created.
@@ -28,7 +29,8 @@ create_project <- function(project_name = "standard",
                            data = TRUE,
                            reports = TRUE,
                            output = TRUE,
-                           docs = TRUE) {
+                           documentation = TRUE,
+                           R = TRUE) {
 
   base_dir <- rstudioapi::selectDirectory(caption = "Select a folder for the new project structure")
 
@@ -46,10 +48,13 @@ create_project <- function(project_name = "standard",
     if (!file.exists(file.path(project_dir, "reports"))) dir.create(file.path(project_dir, "reports"))
   }
   if (docs) {
-    if (!file.exists(file.path(project_dir, "docs"))) dir.create(file.path(project_dir, "docs"))
+    if (!file.exists(file.path(project_dir, "documentation"))) dir.create(file.path(project_dir, "documentation"))
   }
   if (output) {
     if (!file.exists(file.path(project_dir, "output"))) dir.create(file.path(project_dir, "output"))
+  }
+  if (R) {
+    if (!file.exists(file.path(project_dir, "R"))) dir.create(file.path(project_dir, "R"))
   }
 
   # Create the R Project file in the selected directory

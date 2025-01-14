@@ -9,19 +9,22 @@ create_project(
   data = TRUE,
   reports = TRUE,
   output = TRUE,
-  docs = TRUE
+  documentation = TRUE,
+  R = TRUE
 )
 }
 \arguments{
 \item{project_name}{String. Default \code{"standard"}. Name of R Project object to be created.}
 
-\item{data}{Logical. If \code{TRUE}, a \code{data} directory will be created in the project. Defaults to \code{TRUE}.}
+\item{data}{Logical. If \code{TRUE}, a \code{data} directory will be created in the selected folder. Defaults to \code{TRUE}.}
 
-\item{reports}{Logical. If \code{TRUE}, a \code{reports} directory will be created in the project. Defaults to \code{TRUE}.}
+\item{reports}{Logical. If \code{TRUE}, a \code{reports} directory will be created in the selected folder. Defaults to \code{TRUE}.}
 
-\item{output}{Logical. If \code{TRUE}, an \code{output} direction will be created for the project. Defaults to \code{TRUE}.}
+\item{output}{Logical. If \code{TRUE}, an \code{output} direction will be created in the selected folder. Defaults to \code{TRUE}.}
 
-\item{docs}{Logical. If \code{TRUE}, a \code{docs} directory will be created in the project. Defaults to \code{TRUE}.}
+\item{R}{Logical. If \code{TRUE}, an \code{R} directory will be created in the selected folder. Defaults to \code{TRUE}.}
+
+\item{docs}{Logical. If \code{TRUE}, a \code{docs} directory will be created in the selected folder. Defaults to \code{TRUE}.}
 }
 \description{
 Adapted from \link[thekidsbiostats:create_project]{create_project} from \url{https://github.com/The-Kids-Biostats/thekidsbiostats}.
