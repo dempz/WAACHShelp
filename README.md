@@ -2,7 +2,7 @@
 General helper functions for the WAACHS linked data project.
 
 ## Installation instructions
-`remotes::install_github(repo = "dempz/WAACHShelp", build_vignettes = TRUE)`
+`remotes::install_github(repo = "dempz/WAACHShelp", build_vignettes = TRUE)` or `devtools::install_github(repo = "dempz/WAACHShelp", build_vignettes = TRUE)`
 
 ## Accessing vignettes
 
@@ -10,11 +10,11 @@ Vignettes have been built for some of the functions. These can be opened (using 
 
 At the moment, vignettes exist for:
 
-+ `icd_morb_flag` (work in progress)
++ `icd_morb_flag`
 + `create_project`
 + `create_markdown`
 
-Accessing these vignettes can be done two ways
+Accessing these vignettes can be done two ways:
 
 1) Using `utils::browseVignettes(package = "WAACHShelp")`
      + Opens vignette via web browser.
