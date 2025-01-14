@@ -30,8 +30,7 @@ create_project <- function(project_name = "standard",
                            output = TRUE,
                            docs = TRUE) {
 
-  base_dir <- tcltk::tk_choose.dir(default = getwd(),
-                                   caption = "Select a folder for the new project structure")
+  base_dir <- rstudioapi::selectDirectory(caption = "Select a folder for the new project structure")
 
   if (is.na(base_dir) || base_dir == "") {
     stop("Please select a directory. Project creation cancelled.")
