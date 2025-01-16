@@ -15,15 +15,16 @@ icd_morb_flag(
   under_age = FALSE,
   age = 18,
   person_summary = FALSE,
-  joining_var = "rootnum",
-  dob_var = "dob",
-  morb_date_var = "subadm"
+  id_var = "rootnum",
+  morb_date_var = "subadm",
+  dobmap_dob_var = "dob",
+  dobmap_other_vars = NULL
 )
 }
 \arguments{
 \item{data}{Input dataset (morbidity).}
 
-\item{dobmap}{DOBMap file corresponding to input dataset.}
+\item{dobmap}{DOBmap file corresponding to input dataset.}
 
 \item{flag_category}{Type of flag to generate. Takes values from reference file (e.g., MH_morb, Sub_morb, etc.) or "Other" for custom ICD specification and flagging.}
 
@@ -35,17 +36,19 @@ icd_morb_flag(
 
 \item{diag_type_custom_params}{Search parameters to search across when \code{diag_type == "custom"}. Must be a list where the keys are the variable names and values are the inputs to \code{WAACHShelp::val_filt}. Can also be a list of lists where multiple ICD can be searched across for a single variable. See examples for specification.}
 
-\item{under_age}{Return additional variables corresponding to when participant was strictly under \code{age} y.o.. Uses DOBMap DOB and subadm morbidity admission date. Variables have suffix "_under{age}".}
+\item{under_age}{Return additional variables corresponding to when participant was strictly under \code{age} y.o.. Uses DOBmap DOB and subadm morbidity admission date. Variables have suffix "_under{age}".}
 
 \item{age}{Integer. Age to consider for the \code{under_age} variable (default 18).}
 
 \item{person_summary}{Summarise results at a person-level.}
 
-\item{joining_var}{Joining (ID) variable consistent between \code{data} and \code{dobmap}. Default \code{rootnum}.}
-
-\item{dob_var}{Date of birth (DOB) variable in \code{dobmap}. Default \code{"dob"}.}
+\item{id_var}{Joining (ID) variable consistent between \code{data} and \code{dobmap}. Default \code{rootnum}.}
 
 \item{morb_date_var}{Hospital morbidity date variable in \code{data}. Default \code{"subadm"}.}
+
+\item{dobmap_dob_var}{Date of birth (DOB) variable in \code{dobmap}. Default \code{"dob"}.}
+
+\item{dobmap_other_vars}{Other variables to carry across from DOBmap file when joining to \code{data}. Default \code{NULL}. Can be a vector of strings.}
 }
 \value{
 Flagged dataframe.
@@ -67,7 +70,8 @@ icd_morb_flag(data = morb,
               dobmap = dob,
               flag_category = "MH_morb", # Create any MH contact flag
               under_age = T, # Return additional set of flags depending on whether participant is under 18 at time of admission.
-              age = 18
+              age = 18,
+              dobmap_other_vars = c("xyz123", "abc456") # Also select variables `xyz123`, `abc456` from DOBmap and join onto `data` file.
               )
 
 # Example 2: Basic use

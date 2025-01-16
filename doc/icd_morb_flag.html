@@ -374,6 +374,8 @@ does not matter what these flagging variables are called.</li>
 </ul></li>
 <li>The DOB variable can be called whatever we like. As a default, it is
 called “dob”, after the date of birth variable in the DOBmap files.</li>
+<li>Other variables can be carried across from DOBmap file. These can be
+specified in <code>dobmap_other_vars</code>.</li>
 </ul></li>
 </ul>
 <p>The ID variable of the DOBmap file must be called the same thing as
@@ -381,7 +383,7 @@ in the <code>data</code> file. This is the variable that the joining is
 based on.</p>
 <p>By default, we assume the <code>rootnum</code> variable exists in
 both data sets. It does not matter what this variable is called in
-reality—the <code>joining_var</code> argument can be specified to any
+reality—the <code>id_var</code> argument can be specified to any
 string.</p>
 </div>
 <div id="flagging" class="section level1">
@@ -564,7 +566,7 @@ is flagged “yes”, then the collapsed record for that individual is
 “no”, then the collapsed record for that individual is “no”.</p>
 <p>The number of rows in the flagged data set when
 <code>person_summary = TRUE</code> correspond to the number of unique
-values of the <code>joining_var</code> (e.g., rootnum, NEWUID).</p>
+values of the <code>id_var</code> (e.g., rootnum, NEWUID).</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="fu">icd_morb_flag</span>(<span class="at">data =</span> morb_dat, </span>
 <span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a>              <span class="at">flag_category =</span> <span class="st">&quot;MH_morb&quot;</span>,</span>
 <span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a>              <span class="at">person_summary =</span> <span class="cn">TRUE</span>)</span></code></pre></div>

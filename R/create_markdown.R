@@ -42,7 +42,7 @@ create_markdown <- function(file_name = "report",
   }
 
   # Aid user in selecting where to create this template
-  directory <- tcltk::tk_choose.dir(default = getwd(), caption = "Select a folder to create the QMD template")
+  directory <- rstudioapi::selectDirectory(caption = "Select a folder to create the QMD template")
 
   if (is.na(directory) || directory == "") {
     stop("No directory selected. Template creation cancelled.")
