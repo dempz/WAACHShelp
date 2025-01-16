@@ -137,7 +137,7 @@ icd_morb_flag <- function(data,
     age_test <- age - 1
     data <- data %>%
       left_join(dobmap %>% select(!!rlang::sym(id_var), !!rlang::sym(dobmap_dob_var), !!!rlang::syms(dobmap_other_vars)),
-                by = dobmap_joining_id) %>%
+                by = id_var) %>%
       mutate(age_adm = lubridate::time_length(lubridate::interval(!!rlang::sym(dobmap_dob_var), !!rlang::sym(morb_date_var)), unit = "years"),
              adm_under_age = case_when(floor(age_adm) <= age_test ~ "Yes",
                                        floor(age_adm) > age_test  ~ "No")) # Calculate ages
