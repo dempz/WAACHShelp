@@ -7,18 +7,19 @@
 #' @details For more details, see the \href{../doc/icd_morb_flag.html}{vignette}.
 #'
 #' @param data Input dataset (morbidity).
-#' @param dobmap DOBMap file corresponding to input dataset.
+#' @param dobmap DOBmap file corresponding to input dataset.
 #' @param flag_category Type of flag to generate. Takes values from reference file (e.g., MH_morb, Sub_morb, etc.) or "Other" for custom ICD specification and flagging.
 #' @param flag_other_varname Flag variable name (specified only When `flag_category == "Other"`). Input as character string.
 #' @param diag_type Diagnosis type. Select from "principal diagnosis", (all) "additional diagnoses", "external cause of injury", "custom".
 #' @param diag_type_custom_vars Variables to search across when `diag_type == "custom"`.
 #' @param diag_type_custom_params Search parameters to search across when `diag_type == "custom"`. Must be a list where the keys are the variable names and values are the inputs to `WAACHShelp::val_filt`. Can also be a list of lists where multiple ICD can be searched across for a single variable. See examples for specification.
-#' @param under_age Return additional variables corresponding to when participant was strictly under `age` y.o.. Uses DOBMap DOB and subadm morbidity admission date. Variables have suffix "_under{age}".
+#' @param under_age Return additional variables corresponding to when participant was strictly under `age` y.o.. Uses DOBmap DOB and subadm morbidity admission date. Variables have suffix "_under{age}".
 #' @param age Integer. Age to consider for the `under_age` variable (default 18).
 #' @param person_summary Summarise results at a person-level.
-#' @param joining_var Joining (ID) variable consistent between `data` and `dobmap`. Default `rootnum`.
-#' @param dob_var Date of birth (DOB) variable in `dobmap`. Default `"dob"`.
+#' @param id_var Joining (ID) variable consistent between `data` and `dobmap`. Default `rootnum`.
 #' @param morb_date_var Hospital morbidity date variable in `data`. Default `"subadm"`.
+#' @param dobmap_dob_var Date of birth (DOB) variable in `dobmap`. Default `"dob"`.
+#' @param dobmap_other_vars Other variables to carry across from DOBmap file when joining to `data`. Default `NULL`. Can be a vector of strings.
 #' @return Flagged dataframe.
 #' @examples
 #' # Example 1: Basic use
@@ -29,7 +30,8 @@
 #'               dobmap = dob,
 #'               flag_category = "MH_morb", # Create any MH contact flag
 #'               under_age = T, # Return additional set of flags depending on whether participant is under 18 at time of admission.
-#'               age = 18
+#'               age = 18,
+#'               dobmap_other_vars = c("xyz123", "abc456") # Also select variables `xyz123`, `abc456` from DOBmap and join onto `data` file.
 #'               )
 #'
 #' # Example 2: Basic use
@@ -116,9 +118,10 @@ icd_morb_flag <- function(data,
                           under_age = FALSE,
                           age = 18,
                           person_summary = FALSE,
-                          joining_var = "rootnum",
-                          dob_var = "dob",
-                          morb_date_var = "subadm"){
+                          id_var = "rootnum",
+                          morb_date_var = "subadm",
+                          dobmap_dob_var = "dob",
+                          dobmap_other_vars = NULL){
 
   data("icd_dat", package = "WAACHShelp")
 
@@ -133,8 +136,9 @@ icd_morb_flag <- function(data,
   if (under_age == TRUE){
     age_test <- age - 1
     data <- data %>%
-      left_join(dobmap %>% select(!!rlang::sym(joining_var), !!rlang::sym(dob_var)), by = joining_var) %>%
-      mutate(age_adm = lubridate::time_length(lubridate::interval(!!rlang::sym(dob_var), !!rlang::sym(morb_date_var)), unit = "years"),
+      left_join(dobmap %>% select(!!rlang::sym(id_var), !!rlang::sym(dobmap_dob_var), !!!rlang::syms(dobmap_other_vars)),
+                by = dobmap_joining_id) %>%
+      mutate(age_adm = lubridate::time_length(lubridate::interval(!!rlang::sym(dobmap_dob_var), !!rlang::sym(morb_date_var)), unit = "years"),
              adm_under_age = case_when(floor(age_adm) <= age_test ~ "Yes",
                                        floor(age_adm) > age_test  ~ "No")) # Calculate ages
   }
@@ -197,12 +201,12 @@ icd_morb_flag <- function(data,
       if (under_age == FALSE){
         data <- person_level(data = data,
                              flag_category = flag_category,
-                             joining_var = joining_var)
+                             joining_var = id_var)
 
       } else if (under_age == TRUE) {
         data <- person_level(data = data,
                              flag_category = paste0(flag_category, "_under", age),
-                             joining_var = joining_var
+                             joining_var = id_var
                              )
 
       }
@@ -210,12 +214,12 @@ icd_morb_flag <- function(data,
       if (under_age == FALSE){
         data <- person_level(data = data,
                              flag_category = flag_other_varname,
-                             joining_var = joining_var)
+                             joining_var = id_var)
 
       } else if (under_age == TRUE){
         data <- person_level(data = data,
                              flag_category = paste0(flag_other_varname, "_under", age),
-                             joining_var = joining_var)
+                             joining_var = id_var)
 
       }
     }

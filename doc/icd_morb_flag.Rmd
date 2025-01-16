@@ -37,11 +37,12 @@ library(WAACHShelp)
     + Some sort of ID variable.
     + Some sort of dob variable.
   + The DOB variable can be called whatever we like. As a default, it is called "dob", after the date of birth variable in the DOBmap files.
+  + Other variables can be carried across from DOBmap file. These can be specified in `dobmap_other_vars`.
   
 
 The ID variable of the DOBmap file must be called the same thing as in the `data` file. This is the variable that the joining is based on.
 
-By default, we assume the `rootnum` variable exists in both data sets. It does not matter what this variable is called in reality---the `joining_var` argument can be specified to any string.
+By default, we assume the `rootnum` variable exists in both data sets. It does not matter what this variable is called in reality---the `id_var` argument can be specified to any string.
 
 # Flagging
 
@@ -205,7 +206,7 @@ TRUE/FALSE argument on whether to collapse records to a person level, instead of
 The summary works such that if *any* record for an individual is flagged "yes", then the collapsed record for that individual is "yes".
 Otherwise, if *all* records for an individual are flagged "no", then the collapsed record for that individual is "no".
 
-The number of rows in the flagged data set when `person_summary = TRUE` correspond to the number of unique values of the `joining_var` (e.g., rootnum, NEWUID).
+The number of rows in the flagged data set when `person_summary = TRUE` correspond to the number of unique values of the `id_var` (e.g., rootnum, NEWUID).
 
 ```{r eval = F, echo = T}
 icd_morb_flag(data = morb_dat, 
