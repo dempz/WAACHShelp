@@ -28,8 +28,8 @@ execute:
 ```{r init, include = F}
 # Some useful packages to get started
 library(tidyverse)
-library(WAACHShelp)
-library(thekidsbiostats)
+library(WAACHShelp)      # Installation: `devtools::install_github(repo = "dempz/WAACHShelp", build_vignettes = TRUE)`
+library(thekidsbiostats) # Installation: `devtools::install_github(repo = "The-Kids-Biostats/thekidsbiostats")
 ```
 
 
