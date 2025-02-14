@@ -10,7 +10,6 @@ create_project(
   reports = TRUE,
   output = TRUE,
   documentation = TRUE,
-  other_folders = NULL,
   R = TRUE
 )
 }
@@ -22,8 +21,6 @@ create_project(
 \item{reports}{Logical. If \code{TRUE}, a \code{reports} directory will be created in the selected folder. Defaults to \code{TRUE}.}
 
 \item{output}{Logical. If \code{TRUE}, an \code{output} direction will be created in the selected folder. Defaults to \code{TRUE}.}
-
-\item{other_folders}{Vector of strings that contain any other folders that should also be created. Elements should be unique. Default \code{NULL}.}
 
 \item{R}{Logical. If \code{TRUE}, an \code{R} directory will be created in the selected folder. Defaults to \code{TRUE}.}
 
@@ -44,8 +41,7 @@ An interactive window will appear prompting the user to select the folder where 
 The default is the current working directory.
 }
 \examples{
-create_project(project_name = "investigation_x",       # Folder where RProject is called "investigation_x"
-               other_folders = c("folder1", "folder2") # Create additional folders
+create_project(project_name = "investigation_x" # Folder where RProject is called "investigation_x"
                )
 
 }

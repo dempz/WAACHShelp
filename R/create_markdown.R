@@ -16,8 +16,6 @@
 #' package's internal data to the `_extensions/` directory. Finally, it creates
 #' a new Quarto markdown file based on the extension template.
 #'
-#' By default, the `reports` folder will be selected to house the report.
-#'
 #' @details For more details, see the \href{../doc/create_markdown.html}{vignette}.
 #'
 #' @note
@@ -29,8 +27,8 @@
 #'
 #' @export
 
-create_markdown <- function(file_name = NULL,
-                            directory = "reports",
+create_markdown <- function(file_name = "report",
+                            directory = NULL,
                             ext_name = "html") {
 
   # Ensure valid extension type is selected
@@ -43,14 +41,10 @@ create_markdown <- function(file_name = NULL,
     stop("You must provide a valid file_name.")
   }
 
-  # Check if the "reports" folder exists, otherwise use the current working directory
-  default_dir <- ifelse(dir.exists(directory), directory, getwd())
-
   # Aid user in selecting where to create this template
-  directory <- rstudioapi::selectDirectory(caption = "Select a folder to create the QMD template",
-                                           path = default_dir)
+  directory <- rstudioapi::selectDirectory(caption = "Select a folder to create the QMD template")
 
-  if (is.na(directory) || directory == "" || is.null(directory)) {
+  if (is.na(directory) || directory == "") {
     stop("No directory selected. Template creation cancelled.")
   }
 
