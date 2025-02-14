@@ -34,11 +34,13 @@ The `create_project` has a small set of arguments:
 
 + Project name
   + `project_name`
-+ Folders -- should the following folders be created for the project? The default for these is true.
++ Folders -- should the following folders be created for the project? The default for these is `TRUE`.
   + `data`
   + `reports`
   + `output`
   + `docs`
++ Other folders
+  + Should any other folders (not contained in the above) be created?
 
 # Running the function
 
