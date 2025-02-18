@@ -12,6 +12,7 @@
 #' @param output Logical. If `TRUE`, an `output` direction will be created in the selected folder. Defaults to `TRUE`.
 #' @param docs Logical. If `TRUE`, a `docs` directory will be created in the selected folder. Defaults to `TRUE`.
 #' @param R Logical. If `TRUE`, an `R` directory will be created in the selected folder. Defaults to `TRUE`.
+#' @param other_folders Vector of strings that contain any other folders that should also be created. Elements should be unique. Default `NULL`.
 #'
 #' @note
 #' An interactive window will appear prompting the user to select the folder where the project structure should be created.
@@ -20,7 +21,8 @@
 #' @details For more details, see the \href{../doc/create_project.html}{vignette}.
 #'
 #' @examples
-#' create_project(project_name = "investigation_x" # Folder where RProject is called "investigation_x"
+#' create_project(project_name = "investigation_x",       # Folder where RProject is called "investigation_x"
+#'                other_folders = c("folder1", "folder2") # Create additional folders
 #'                )
 #'
 #' @export
@@ -30,7 +32,12 @@ create_project <- function(project_name = "standard",
                            reports = TRUE,
                            output = TRUE,
                            documentation = TRUE,
+                           other_folders = NULL,
                            R = TRUE) {
+
+  if (length(unique(other_folders)) != length(other_folders)){
+    stop("The `other_folder` values specified are not unique! Project creation cancelled.")
+  }
 
   base_dir <- rstudioapi::selectDirectory(caption = "Select a folder for the new project structure")
 
@@ -40,25 +47,33 @@ create_project <- function(project_name = "standard",
 
   project_dir <- base_dir
 
+  # add home directory
+  dir.create(file.path(project_dir, project_name))
+
   # Add necessary directories
   if (data) {
-    if (!file.exists(file.path(project_dir, "data"))) dir.create(file.path(project_dir, "data"))
+    if (!file.exists(file.path(project_dir, project_name, "data"))) dir.create(file.path(project_dir, project_name, "data"))
   }
   if (reports) {
-    if (!file.exists(file.path(project_dir, "reports"))) dir.create(file.path(project_dir, "reports"))
+    if (!file.exists(file.path(project_dir, project_name, "reports"))) dir.create(file.path(project_dir, project_name, "reports"))
   }
   if (documentation) {
-    if (!file.exists(file.path(project_dir, "documentation"))) dir.create(file.path(project_dir, "documentation"))
+    if (!file.exists(file.path(project_dir, project_name, "documentation"))) dir.create(file.path(project_dir, project_name, "documentation"))
   }
   if (output) {
-    if (!file.exists(file.path(project_dir, "output"))) dir.create(file.path(project_dir, "output"))
+    if (!file.exists(file.path(project_dir, project_name, "output"))) dir.create(file.path(project_dir, project_name, "output"))
   }
   if (R) {
-    if (!file.exists(file.path(project_dir, "R"))) dir.create(file.path(project_dir, "R"))
+    if (!file.exists(file.path(project_dir, project_name, "R"))) dir.create(file.path(project_dir, project_name, "R"))
+  }
+  if (!is.null(other_folders)){
+    for (i in other_folders){
+      if (!file.exists(file.path(project_dir, project_name, i))) dir.create(file.path(project_dir, project_name, i))
+    }
   }
 
   # Create the R Project file in the selected directory
-  rproj_file <- file.path(project_dir, paste0(project_name, ".Rproj"))
+  rproj_file <- file.path(project_dir, project_name, paste0(project_name, ".Rproj"))
   rproj_contents <- c("Version: 1.0") # Required
 
   writeLines(rproj_contents, rproj_file)
