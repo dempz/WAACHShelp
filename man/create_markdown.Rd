@@ -4,7 +4,7 @@
 \alias{create_markdown}
 \title{Create Template for Quarto Markdown}
 \usage{
-create_markdown(file_name = "report", directory = NULL, ext_name = "html")
+create_markdown(file_name = NULL, directory = "reports", ext_name = "html")
 }
 \arguments{
 \item{file_name}{A string. The name of the new Quarto markdown (.qmd) file. This must be provided.}
@@ -25,6 +25,8 @@ The function first checks whether a \verb{_extensions/} directory exists in the 
 directory. If not, it creates one. It then copies the necessary extension files from the
 package's internal data to the \verb{_extensions/} directory. Finally, it creates
 a new Quarto markdown file based on the extension template.
+
+By default, the \code{reports} folder will be selected to house the report.
 
 For more details, see the \href{../doc/create_markdown.html}{vignette}.
 }
