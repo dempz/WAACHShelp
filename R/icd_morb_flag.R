@@ -136,11 +136,11 @@ icd_morb_flag <- function(data,
   if (under_age == TRUE){
     age_test <- age - 1
     data <- data %>%
-      left_join(dobmap %>% select(!!rlang::sym(id_var), !!rlang::sym(dobmap_dob_var), !!!rlang::syms(dobmap_other_vars)),
+      dplyr::left_join(dobmap %>% dplyr::select(!!rlang::sym(id_var), !!rlang::sym(dobmap_dob_var), !!!rlang::syms(dobmap_other_vars)),
                 by = id_var) %>%
-      mutate(age_adm = lubridate::time_length(lubridate::interval(!!rlang::sym(dobmap_dob_var), !!rlang::sym(morb_date_var)), unit = "years"),
-             adm_under_age = case_when(floor(age_adm) <= age_test ~ "Yes",
-                                       floor(age_adm) > age_test  ~ "No")) # Calculate ages
+      dplyr::mutate(age_adm = lubridate::time_length(lubridate::interval(!!rlang::sym(dobmap_dob_var), !!rlang::sym(morb_date_var)), unit = "years"),
+             adm_under_age = dplyr::case_when(floor(age_adm) <= age_test ~ "Yes",
+                                              floor(age_adm) > age_test  ~ "No")) # Calculate ages
   }
 
 
@@ -164,7 +164,7 @@ icd_morb_flag <- function(data,
                             #diag_type_custom_params = diag_type_custom_params
                             )
 
-  data <- suppressMessages(left_join(data, icd_flags)) # Join by ALL variables to avoid double-ups
+  data <- suppressMessages(dplyr::left_join(data, icd_flags)) # Join by ALL variables to avoid double-ups
 
 
 
@@ -172,19 +172,19 @@ icd_morb_flag <- function(data,
   if (under_age == TRUE){
     if (!"Other" %in% flag_category){
       data <- data %>%
-        mutate(across(!!flag_category, ~case_when(adm_under_age == "Yes" ~ .,
-                                                  adm_under_age == "No" ~ "No"),
+        dplyr::mutate(dplyr::across(!!flag_category, ~dplyr::case_when(adm_under_age == "Yes" ~ .,
+                                                                       adm_under_age == "No" ~ "No"),
                       .names = "{.col}_under_temp")
                ) %>%
-        rename_with(~ sub("_under_temp$", paste0("_under", age), .x), ends_with("_under_temp"))
+        dplyr::rename_with(~ sub("_under_temp$", paste0("_under", age), .x), tidyselect::ends_with("_under_temp"))
 
     } else if ("Other" %in% flag_category){
       data <- data %>%
-        mutate(across(!!flag_other_varname, ~case_when(adm_under_age == "Yes" ~ .,
-                                                       adm_under_age == "No" ~ "No"),
+        dplyr::mutate(dplyr::across(!!flag_other_varname, ~dplyr::case_when(adm_under_age == "Yes" ~ .,
+                                                                            adm_under_age == "No" ~ "No"),
                       .names = "{.col}_under_temp")
                ) %>%
-        rename_with(~ sub("_under_temp$", paste0("_under", age), .x), ends_with("_under_temp"))
+        dplyr::rename_with(~ sub("_under_temp$", paste0("_under", age), .x), tidyselect::ends_with("_under_temp"))
     }
   } else if (under_age == FALSE){
     data <- data

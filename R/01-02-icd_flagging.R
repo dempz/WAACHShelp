@@ -16,16 +16,16 @@ icd_flagging <- function(data,
       icd_list_i_vars <- colname_classify_specific[[i]]
 
       data <- data %>%
-        mutate(!!rlang::sym(i) := case_when(if_any(.cols = all_of(icd_list_i_vars),
-                                                   .fns = ~.x %in% icd_list_i) ~ "Yes",
-                                            if_all(.cols = all_of(icd_list_i_vars),
-                                                   .fns = ~!.x %in% icd_list_i) ~ "No"))
+        mutate(!!rlang::sym(i) := dplyr::case_when(dplyr::if_any(.cols = tidyselect::all_of(icd_list_i_vars),
+                                                                 .fns = ~.x %in% icd_list_i) ~ "Yes",
+                                                   dplyr::if_all(.cols = tidyselect::all_of(icd_list_i_vars),
+                                                                 .fns = ~!.x %in% icd_list_i) ~ "No"))
     }
     data <- data %>%
-      mutate(!!rlang::sym(flag_category) := case_when(if_any(.cols = all_of(icd_list_names),
-                                                             .fns = ~.x == "Yes") ~ "Yes",
-                                                      if_all(.cols = all_of(icd_list_names),
-                                                             .fns = ~.x == "No") ~ "No"))
+      dplyr::mutate(!!rlang::sym(flag_category) := dplyr::case_when(dplyr::if_any(.cols = tidyselect::all_of(icd_list_names),
+                                                                                  .fns = ~.x == "Yes") ~ "Yes",
+                                                                    dplyr::if_all(.cols = tidyselect::all_of(icd_list_names),
+                                                                                  .fns = ~.x == "No") ~ "No"))
 
     }
   else if ("Other" %in% flag_category){
@@ -44,27 +44,27 @@ icd_flagging <- function(data,
           #print(paste0("Variable category=", i, " , variable names=", paste0(icd_list_i_vars, collapse = ", ")))
 
           data <- data %>%
-            mutate(!!rlang::sym(flag_varname) := case_when(if_any(.cols = all_of(icd_list_i_vars),
-                                                                  .fns = ~.x %in% icd_list_i) ~ "Yes",
-                                                           if_all(.cols = all_of(icd_list_i_vars),
-                                                                  .fns = ~!.x %in% icd_list_i) ~ "No"))
+            dplyr::mutate(!!rlang::sym(flag_varname) := dplyr::case_when(dplyr::if_any(.cols = tidyselect::all_of(icd_list_i_vars),
+                                                                                       .fns = ~.x %in% icd_list_i) ~ "Yes",
+                                                                         dplyr::if_all(.cols = tidyselect::all_of(icd_list_i_vars),
+                                                                                       .fns = ~!.x %in% icd_list_i) ~ "No"))
 
         }
         else if (!i %in% names(colname_classify_specific)){
           data <- data %>%
-            mutate(!!rlang::sym(flag_varname) := case_when(if_any(.cols = !!rlang::sym(i),
-                                                                  .fns = ~.x %in% icd_list_i) ~ "Yes",
-                                                           if_all(.cols = !!rlang::sym(i),
-                                                                  .fns = ~!.x %in% icd_list_i) ~ "No"))
+            dplyr::mutate(!!rlang::sym(flag_varname) := dplyr::case_when(dplyr::if_any(.cols = !!rlang::sym(i),
+                                                                                       .fns = ~.x %in% icd_list_i) ~ "Yes",
+                                                                         dplyr::if_all(.cols = !!rlang::sym(i),
+                                                                                       .fns = ~!.x %in% icd_list_i) ~ "No"))
         }
       }
 
       data <- data %>%
-        mutate(!!rlang::sym(flag_other_varname) := case_when(if_any(.cols = all_of(flag_varnames),
-                                                                    .fns = ~.x == "Yes") ~ "Yes",
-                                                             if_all(.cols = all_of(flag_varnames),
-                                                                    .fns = ~.x == "No") ~ "No")) %>%
-        select(-all_of(flag_varnames))
+        dplyr::mutate(!!rlang::sym(flag_other_varname) := dplyr::case_when(dplyr::if_any(.cols = tidyselect::all_of(flag_varnames),
+                                                                                         .fns = ~.x == "Yes") ~ "Yes",
+                                                                           dplyr::if_all(.cols = tidyselect::all_of(flag_varnames),
+                                                                                         .fns = ~.x == "No") ~ "No")) %>%
+        dplyr::select(-tidyselect::all_of(flag_varnames))
   }
 
   return(data)

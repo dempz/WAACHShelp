@@ -10,10 +10,10 @@ person_level <- function(data,
 
   # Process the morbidity data
   data <- data %>%
-    group_by(!!rlang::sym(joining_var)) %>%
-    mutate(!!rlang::sym(flag_category) := case_when(any(!!rlang::sym(flag_category) == "Yes") ~ "Yes",
-                                                    TRUE ~ "No")) %>%
-    distinct(!!rlang::sym(joining_var), !!rlang::sym(flag_category)) %>%
+    dplyr::group_by(!!rlang::sym(joining_var)) %>%
+    dplyr::mutate(!!rlang::sym(flag_category) := dplyr::case_when(any(!!rlang::sym(flag_category) == "Yes") ~ "Yes",
+                                                                  TRUE ~ "No")) %>%
+    dplyr::distinct(!!rlang::sym(joining_var), !!rlang::sym(flag_category)) %>%
     ungroup
 
   return(data)
