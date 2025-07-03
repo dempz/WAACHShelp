@@ -84,9 +84,9 @@ icd_extraction <- function(data,
   # 1) Extract variable categories
   # 1.1) If `flag_category` != "Other"
   if (flag_category != "Other"){
-    diag_ediag_icd_categories <- unique(unlist(data %>% select(diagnosis, ediag1:ediag20),
+    diag_ediag_icd_categories <- unique(unlist(data %>% dplyr::select(diagnosis, ediag1:ediag20),
                                                use.names = F))
-    ecode_icd_categories      <- unique(unlist(data %>% select(ecode1:ecode4),
+    ecode_icd_categories      <- unique(unlist(data %>% dplyr::select(ecode1:ecode4),
                                                use.names = F))
   }
 
@@ -96,11 +96,11 @@ icd_extraction <- function(data,
     for (i in diag_type){
       if (i %in% c("principal diagnosis", "additional diagnoses", "external cause of injury")){ # The pre-defined cases
         vars <- colname_classify_specific[[i]] # Extract all the salient variables
-        observed_icds <- unique(unlist(data %>% select(!!vars), use.names = F)) # Extract all the ICD codes observed here
+        observed_icds <- unique(unlist(data %>% dplyr::select(!!vars), use.names = F)) # Extract all the ICD codes observed here
 
       } else if (i %in% "custom"){
         vars <- diag_type_custom_vars
-        observed_icds <- unique(unlist(data %>% select(!!vars), use.names = F))
+        observed_icds <- unique(unlist(data %>% dplyr::select(!!vars), use.names = F))
       }
 
       custom_icd_categories[[i]] <- list(variables = vars,
@@ -111,14 +111,14 @@ icd_extraction <- function(data,
   # 2) Create flag sets (derived from flag_category)
   admissible_icd <- list()
   if (flag_category != "Other"){ # If one of "MH_morb", "Sub_morb" etc.
-    icd_dat_flag <- icd_dat %>% filter(var == flag_category)
+    icd_dat_flag <- icd_dat %>% dplyr::filter(var == flag_category)
 
     for (i in unique(icd_dat_flag$classification)){
-      icd_dat_flag_i <- icd_dat_flag %>% filter(classification == i)
+      icd_dat_flag_i <- icd_dat_flag %>% dplyr::filter(classification == i)
       codes_i <- c()
 
       for (j in icd_dat_flag_i$num){
-        icd_dat_flag_ij <- icd_dat_flag_i %>% filter(num == j)
+        icd_dat_flag_ij <- icd_dat_flag_i %>% dplyr::filter(num == j)
         letter <- icd_dat_flag_ij$letter
         lower  <- icd_dat_flag_ij$lower
         upper  <- icd_dat_flag_ij$upper

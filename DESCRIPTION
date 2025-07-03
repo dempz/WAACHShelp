@@ -7,15 +7,16 @@ Authors@R: c(person("Zac", "Dempsey", role = c("aut", "cre"),
 Author: Zac Dempsey [aut, cre]
 Maintainer: Zac Dempsey <zac.dempsey@thekids.org.au>
 Depends: R (>= 4.3), tidyverse (>= 2.0.0), gtsummary (>= 2.0), flextable (>= 0.9)
+Imports:
+    colorspace,
+    flextable
 Suggests: 
-    gtsummary,
     purrr,
     rlang,
     sjmisc,
     lubridate,
     haven,
     table1,
-    flextable,
     officer,
     readr,
     grDevices,

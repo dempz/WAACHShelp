@@ -6,14 +6,17 @@
 \usage{
 waachs_table(
   x,
-  font.size = 8,
-  font.size.header = 10,
+  font.size = 10,
+  font.size.header = 11,
   line.spacing = 1.5,
-  padding = 2,
+  padding = 2.5,
   body_bg_col = "#FEF0D8",
   header_bg_col = "#89A1AD",
   header_text_col = "black",
-  font.family = "Barlow"
+  highlight = NULL,
+  highlight_darken = 0.3,
+  font_family = "Barlow",
+  ...
 )
 }
 \arguments{
@@ -32,6 +35,10 @@ waachs_table(
 \item{header_bg_col}{Header background colour (default WAACHS blue).}
 
 \item{header_text_col}{Header text colour (default black).}
+
+\item{highlight}{A numeric vector specifying rows to highlight.}
+
+\item{highlight_darken}{A numeric value specifying the amount by which \code{body_bg_col} should be "darkened" (tinted) (default 0.3).}
 
 \item{font.family}{Font family for plot (default Barlow).}
 }

@@ -130,17 +130,36 @@ icd_morb_flag <- function(data,
                  flag_category, paste(c(unique(icd_dat$var)), collapse = ", ")))
   }
 
+  # Warn if unused arguments are specified when using a standard flag_category
+  if (flag_category %in% unique(icd_dat$var)) {
+    extra_args <- c(
+      flag_other_varname = !missing(flag_other_varname) && !is.null(flag_other_varname),
+      diag_type = !missing(diag_type) && !is.null(diag_type),
+      diag_type_custom_vars = !missing(diag_type_custom_vars) && !is.null(diag_type_custom_vars),
+      diag_type_custom_params = !missing(diag_type_custom_params) && !is.null(diag_type_custom_params)
+    )
+
+    if (any(extra_args)) {
+      ignored <- names(extra_args[extra_args])
+      warning(sprintf("Because `flag_category = '%s'` is predefined, the following arguments are ignored: %s.",
+                      flag_category,
+                      paste0(ignored, collapse = ", ")),
+              call. = FALSE)
+    }
+  }
+
+
   # 1) Calculate age at record
   ## 1.1) For morbidity data sets -> relative to `subadm`
   ## Only applicable if under_age == TRUE
   if (under_age == TRUE){
     age_test <- age - 1
     data <- data %>%
-      left_join(dobmap %>% select(!!rlang::sym(id_var), !!rlang::sym(dobmap_dob_var), !!!rlang::syms(dobmap_other_vars)),
+      dplyr::left_join(dobmap %>% dplyr::select(!!rlang::sym(id_var), !!rlang::sym(dobmap_dob_var), !!!rlang::syms(dobmap_other_vars)),
                 by = id_var) %>%
-      mutate(age_adm = lubridate::time_length(lubridate::interval(!!rlang::sym(dobmap_dob_var), !!rlang::sym(morb_date_var)), unit = "years"),
-             adm_under_age = case_when(floor(age_adm) <= age_test ~ "Yes",
-                                       floor(age_adm) > age_test  ~ "No")) # Calculate ages
+      dplyr::mutate(age_adm = lubridate::time_length(lubridate::interval(!!rlang::sym(dobmap_dob_var), !!rlang::sym(morb_date_var)), unit = "years"),
+             adm_under_age = dplyr::case_when(floor(age_adm) <= age_test ~ "Yes",
+                                              floor(age_adm) > age_test  ~ "No")) # Calculate ages
   }
 
 
@@ -164,7 +183,7 @@ icd_morb_flag <- function(data,
                             #diag_type_custom_params = diag_type_custom_params
                             )
 
-  data <- suppressMessages(left_join(data, icd_flags)) # Join by ALL variables to avoid double-ups
+  data <- suppressMessages(dplyr::left_join(data, icd_flags)) # Join by ALL variables to avoid double-ups
 
 
 
@@ -172,19 +191,19 @@ icd_morb_flag <- function(data,
   if (under_age == TRUE){
     if (!"Other" %in% flag_category){
       data <- data %>%
-        mutate(across(!!flag_category, ~case_when(adm_under_age == "Yes" ~ .,
-                                                  adm_under_age == "No" ~ "No"),
+        dplyr::mutate(dplyr::across(!!flag_category, ~dplyr::case_when(adm_under_age == "Yes" ~ .,
+                                                                       adm_under_age == "No" ~ "No"),
                       .names = "{.col}_under_temp")
                ) %>%
-        rename_with(~ sub("_under_temp$", paste0("_under", age), .x), ends_with("_under_temp"))
+        dplyr::rename_with(~ sub("_under_temp$", paste0("_under", age), .x), tidyselect::ends_with("_under_temp"))
 
     } else if ("Other" %in% flag_category){
       data <- data %>%
-        mutate(across(!!flag_other_varname, ~case_when(adm_under_age == "Yes" ~ .,
-                                                       adm_under_age == "No" ~ "No"),
+        dplyr::mutate(dplyr::across(!!flag_other_varname, ~dplyr::case_when(adm_under_age == "Yes" ~ .,
+                                                                            adm_under_age == "No" ~ "No"),
                       .names = "{.col}_under_temp")
                ) %>%
-        rename_with(~ sub("_under_temp$", paste0("_under", age), .x), ends_with("_under_temp"))
+        dplyr::rename_with(~ sub("_under_temp$", paste0("_under", age), .x), tidyselect::ends_with("_under_temp"))
     }
   } else if (under_age == FALSE){
     data <- data
