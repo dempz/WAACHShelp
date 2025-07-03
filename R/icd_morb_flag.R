@@ -130,6 +130,25 @@ icd_morb_flag <- function(data,
                  flag_category, paste(c(unique(icd_dat$var)), collapse = ", ")))
   }
 
+  # Warn if unused arguments are specified when using a standard flag_category
+  if (flag_category %in% unique(icd_dat$var)) {
+    extra_args <- c(
+      flag_other_varname = !missing(flag_other_varname) && !is.null(flag_other_varname),
+      diag_type = !missing(diag_type) && !is.null(diag_type),
+      diag_type_custom_vars = !missing(diag_type_custom_vars) && !is.null(diag_type_custom_vars),
+      diag_type_custom_params = !missing(diag_type_custom_params) && !is.null(diag_type_custom_params)
+    )
+
+    if (any(extra_args)) {
+      ignored <- names(extra_args[extra_args])
+      warning(sprintf("Because `flag_category = '%s'` is predefined, the following arguments are ignored: %s.",
+                      flag_category,
+                      paste0(ignored, collapse = ", ")),
+              call. = FALSE)
+    }
+  }
+
+
   # 1) Calculate age at record
   ## 1.1) For morbidity data sets -> relative to `subadm`
   ## Only applicable if under_age == TRUE

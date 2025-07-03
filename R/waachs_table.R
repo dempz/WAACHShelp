@@ -12,6 +12,8 @@
 #' @param body_bg_col Body background colour (default WAACHS cream).
 #' @param header_bg_col Header background colour (default WAACHS blue).
 #' @param header_text_col Header text colour (default black).
+#' @param highlight A numeric vector specifying rows to highlight.
+#' @param highlight_darken A numeric value specifying the amount by which `body_bg_col` should be "darkened" (tinted) (default 0.3).
 #' @param font.family Font family for plot (default Barlow).
 #'
 #' @examples
@@ -21,96 +23,80 @@
 #' @export
 
 waachs_table <- function(x,
-                         font.size = 8,
-                         font.size.header = 10,
+                         font.size = 10,
+                         font.size.header = 11,
                          line.spacing = 1.5,
-                         padding = 2,
+                         padding = 2.5,
                          body_bg_col = "#FEF0D8",
                          header_bg_col = "#89A1AD",
                          header_text_col = "black",
-                         font.family = "Barlow"){
+                         highlight = NULL,
+                         highlight_darken = 0.3,
+                         font_family = "Barlow",
+                         ...) {
 
-  # Set global defaults for flextable
-  set_flextable_defaults(font.family = font.family,
-                         font.size = font.size,
-                         line_spacing = line.spacing,
-                         padding = padding,
-                         big.mark = "",
-                         table.layout = "autofit")
 
-  # Define the colors for the headers and the body
-  header_bg_col <- header_bg_col
-  body_bg_col <- body_bg_col
-  header_text_col <- header_text_col
+  # Check font family availability
+  font_family <- check_font_family(font_family)
 
-  if (any(class(x) %in% c("gtsummary"))) {
-    x %>%
-      as_flex_table() %>%
-      fontsize(part = "header",
-               size = font.size.header) %>%
-      color(color = header_text_col,
-            part = "header") %>%
-      bg(bg = header_bg_col,
-         part = "header") %>%  # Apply header background color
-      color(color = "#111921",
-            part = "body") %>%
-      bold(part = "header") %>%
-      bg(bg = body_bg_col,
-         part = "body") %>%     # Apply cream background to the body
-      autofit()
+
+  # Check if x is already class flextable
+  if (inherits(x, "flextable")) {
+    warning("Object of class 'flextable' detected. Please note that some flextable formatting may not carry over as expected.\n\nPlease consider applying `waachs_table()` in place of `flextable()` call in your workflow.")
   }
-  else if (any(class(x) %in% c("flextable"))) {
-    x %>%
-      fontsize(part = "header",
-               size = font.size.header) %>%
-      color(color = header_text_col,
-            part = "header") %>%
-      bg(bg = header_bg_col,
-         part = "header") %>%  # Apply header background color
-      color(color = "#111921",
-            part = "body") %>%
-      bg(bg = body_bg_col,
-         part = "body") %>%     # Apply cream background to the body
-      bold(part = "header") %>%
-      hline_top(part = "all") %>%
-      hline_bottom() %>%
-      autofit()
+
+
+  # Save *existing* flextable defaults so they can be restored at the end
+  old_defaults <- flextable::get_flextable_defaults()
+
+  # Ensure these existing defaults are reset on any exit
+  #on.exit(flextable::init_flextable_defaults(), add = TRUE) ## This works! But resets to package default options on exit
+  on.exit(do.call(flextable::set_flextable_defaults, old_defaults),
+          add = TRUE)
+
+  # NOW set the flextable defaults
+  if (!is.null(highlight)){
+    flextable::set_flextable_defaults(font.family = font_family,
+                                      font.size = font.size,
+                                      theme_fun = function(y) table_highlight(y,
+                                                                              header_bg_col = header_bg_col,
+                                                                              body_bg_col = body_bg_col,
+                                                                              highlight = highlight,
+                                                                              highlight_darken = highlight_darken),
+                                      line_spacing = line.spacing,
+                                      padding = padding,
+                                      big.mark = "",
+                                      table.layout = "autofit",
+                                      ...)
+  } else {
+    flextable::set_flextable_defaults(font.family = font_family,
+                                      font.size = font.size,
+                                      theme_fun = function(y) table_plain_theme(y,
+                                                                                header_bg_col = header_bg_col,
+                                                                                body_bg_col = body_bg_col),
+                                      line_spacing = line.spacing,
+                                      padding = padding,
+                                      big.mark = "",
+                                      table.layout = "autofit",
+                                      ...)
   }
-  else if (any(class(x) %in% c("gt_tbl"))) {
-    x %>%
-      data.frame() %>%
-      flextable() %>%
-      fontsize(part = "header",
-               size = font.size.header) %>%
-      color(color = header_text_col,
-            part = "header") %>%
-      bg(bg = header_bg_col,
-         part = "header") %>%  # Apply header background color
-      color(color = "#111921",
-            part = "body") %>%
-      bg(bg = body_bg_col,
-         part = "body") %>%     # Apply cream background to the body
-      bold(part = "header") %>%
-      hline_top(part = "all") %>%
-      hline_bottom() %>%
-      autofit()
-  }
-  else {
-    x %>%
-      flextable() %>%
-      fontsize(part = "header",
-               size = font.size.header) %>%
-      color(color = header_text_col,
-            part = "header") %>%
-      bg(bg = header_bg_col,
-         part = "header") %>%  # Apply header background color
-      color(color = "#111921",
-            part = "body") %>%
-      bg(bg = body_bg_col,
-         part = "body") %>%     # Apply cream background to the body
-      bold(part = "header") %>%
-      hline_top(part = "all") %>%
-      hline_bottom() %>%
-      autofit()
-  }
+
+  # Coerce x to flextable
+  ## amended flextable defaults will be applied within function environment
+  table_out <- table_coerce(x)
+
+  table_out <- table_out %>%
+    flextable::fontsize(size = font.size.header,
+                        part = "header") %>%
+    #flextable::bg(bg = header_bg_col,
+    #              part = "header") %>%
+    #flextable::bg(bg = body_bg_col,
+    #              part = "body") %>%
+    flextable::bold(part = "header") %>%
+    flextable::hline_top(part = "all") %>%
+    flextable::hline_bottom() %>%
+    flextable::autofit()
+
+  return(table_out)
+
 }
