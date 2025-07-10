@@ -148,6 +148,23 @@ icd_morb_flag <- function(data,
     }
   }
 
+  # Error if `under_age=T` but DOBmap is not identified
+  if (under_age == TRUE & is.null(dobmap)){
+    stop("Error: `dobmap` but be specified when `under_age = TRUE`.")
+  }
+
+  # Error if `dob` variable doesn't exist in DOBmap
+  if (!dobmap_dob_var %in% colnames(dobmap)){
+    stop(sprintf("Error: `dobmap` does not contain a column named '%s'. Consider changing the `dobmap_dob_var` argument, if necessary.",
+                 dobmap_dob_var))
+  }
+
+  # Error if `morb_date_var` is not in the data
+  if (!morb_date_var %in% colnames(data)) {
+    stop(sprintf("Error: `data` does not contain a column named '%s'. Consider changing the `morb_date_var` argument, if necessary.",
+                 morb_date_var))
+  }
+
 
   # 1) Calculate age at record
   ## 1.1) For morbidity data sets -> relative to `subadm`
