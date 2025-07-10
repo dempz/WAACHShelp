@@ -154,13 +154,13 @@ icd_morb_flag <- function(data,
   }
 
   # Error if `dob` variable doesn't exist in DOBmap
-  if (!dobmap_dob_var %in% colnames(dobmap)){
+  if (under_age == TRUE & !dobmap_dob_var %in% colnames(dobmap)){
     stop(sprintf("Error: `dobmap` does not contain a column named '%s'. Consider changing the `dobmap_dob_var` argument, if necessary.",
                  dobmap_dob_var))
   }
 
   # Error if `morb_date_var` is not in the data
-  if (!morb_date_var %in% colnames(data)) {
+  if (under_age == TRUE & !morb_date_var %in% colnames(data)) {
     stop(sprintf("Error: `data` does not contain a column named '%s'. Consider changing the `morb_date_var` argument, if necessary.",
                  morb_date_var))
   }
