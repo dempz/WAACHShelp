@@ -21,40 +21,37 @@
 
 proc_freq <- function(var1, data = NULL, sort = NULL, min.frq = 0){
 
-  suppressMessages(library(haven))
-  suppressMessages(library(table1))
-  suppressMessages(library(flextable))
-
   # Pick up the arguments and
   arg <- match.call()
   cc  <- as.character(arg$var1)
-  dd  <- select(data, arg$var1)
+  dd  <- dplyr::select(data, arg$var1)
   ll <-  attr(dd[,cc, drop = T], "label")
   ff <-  attr(dd[,cc, drop = T], "labels")
 
   # Try to pick up some labels:
   if(is.null(ll)) lab = cc else lab = ll
   if(!is.null(ff))  dd[,cc] <- haven::as_factor(dd[,cc, drop = T])
-  dd.na <- na.omit(dd)
+  dd.na <- stats::na.omit(dd)
 
   # Start with the basic table:
-  ft <- dd.na %>% group_by_at(cc) %>%
-    summarise(Frequency = n())
+  ft <- dd.na %>%
+    dplyr::group_by(cc) %>%
+    dplyr::summarise(Frequency = dplyr::n())
 
 
   if(is.numeric(min.frq) & min.frq > 0){
 
     ft[,1] <- ifelse(ft[,2, drop = T] < min.frq, paste("n <", min.frq), ft[,1, drop = T])
-    ft <- ft %>% group_by_at(cc) %>% summarise(Frequency = sum(Frequency))
+    ft <- ft %>% dplyr::group_by(cc) %>% dplyr::summarise(Frequency = sum(Frequency))
 
   }
 
-  ft <- ft %>% mutate(Percent = 100*Frequency/nrow(dd.na))
+  ft <- ft %>% dplyr::mutate(Percent = 100*Frequency/nrow(dd.na))
 
   # sort it as required:
   if(!is.null(sort)){
-    if(sort == "asc")  {ft <- ft %>% arrange( Frequency)}
-    if(sort == "desc") {ft <- ft %>% arrange(-Frequency)}
+    if(sort == "asc")  {ft <- ft %>% dplyr::arrange( Frequency)}
+    if(sort == "desc") {ft <- ft %>% dplyr::arrange(-Frequency)}
   }
 
   ## If min.frq is used, place that category at the end:
@@ -65,7 +62,7 @@ proc_freq <- function(var1, data = NULL, sort = NULL, min.frq = 0){
   }
 
   # Add the cumulative columns:
-  ft <- mutate(ft,
+  ft <- dplyr::mutate(ft,
                "Cumulative Frequency" = round(cumsum(Frequency), 1),
                "Cumulative Percent" = round(cumsum(Percent), 1),
                Percent = round(Percent, 1))
@@ -73,20 +70,21 @@ proc_freq <- function(var1, data = NULL, sort = NULL, min.frq = 0){
   an_fpar <- officer::fpar(officer::run_linebreak())
 
   # Taransform it into an html table
-  ft <- ft %>% flextable() %>%
-    border_inner() %>%
-    border_outer() %>%
-    add_header_row(values = lab,  colwidths = 5) %>%
-    add_footer_row(values = paste("Frequency Missing =",
+  ft <- ft %>%
+    flextable::flextable() %>%
+    flextable::border_inner() %>%
+    flextable::border_outer() %>%
+    flextable::add_header_row(values = lab,  colwidths = 5) %>%
+    flextable::add_footer_row(values = paste("Frequency Missing =",
                                   sum(is.na(dd[,cc, drop = T]))),
                    colwidths = 5) %>%
     #set_table_properties(width = 1, layout = "autofit") %>%
-    theme_box %>%
-    set_caption(caption = " ", fp_p = an_fpar)
+    flextable::theme_box %>%
+    flextable::set_caption(caption = " ", fp_p = an_fpar)
 
-  pdim = dim_pretty(ft)
+  pdim = flextable::dim_pretty(ft)
 
-  ft <- width(ft, width = pdim$width)
+  ft <- flextable::width(ft, width = pdim$width)
 
   #ft <- height(ft, height = pdim$height)
   ft

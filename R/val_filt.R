@@ -8,7 +8,8 @@
 #' @param upper Upper bound on the numeric element of the ICD code (includes numerics <=upper).
 #' @return Vector with filtered ICD codes.
 #' @examples
-#' val_filt(val3, "F", 10.0, 10.9) # Filter ICD codes in val3 to those between F10 and F10.9 (inclusive).
+#' # Filter ICD codes in val3 to those between F10 and F10.9 (inclusive).
+#' val_filt(val3, "F", 10.0, 10.9)
 #'
 #' @export
 

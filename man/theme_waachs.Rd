@@ -10,6 +10,13 @@ theme_waachs(
   base_rect_size = base_size/22
 )
 }
+\arguments{
+\item{base_size}{Base font size}
+
+\item{base_line_size}{Base line size (default \code{base_size/22})}
+
+\item{base_rect_size}{Base rectangle size (default \code{base_size/22})}
+}
 \value{
 A list of ggplot2 theme elements and scale adjustments.
 }
@@ -20,7 +27,6 @@ This function applies a custom theme to ggplot2 plots, incorporating colors to a
 The function determines the operating system and selects appropriate font names for Windows or other systems. It also adjusts color scales.
 }
 \examples{
-library(ggplot2)
 
 ggplot(mtcars,
        aes(x = mpg, y = wt, col = factor(cyl))) +

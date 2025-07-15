@@ -3,14 +3,14 @@
 #' Adapted from \link[thekidsbiostats:create_project]{create_project} from \url{https://github.com/The-Kids-Biostats/thekidsbiostats}.
 #'
 #' This function creates a directory structure for a new project based on a specified extension.
-#' It can also create additional folders such as `data`, `reports`, `output` and `docs`.
+#' It can also create additional folders such as `data`, `reports`, `output` and `documentation`.
 #' The function copies specific files and folders from the chosen extension to the project directory.
 #'
 #' @param project_name String. Default `"standard"`. Name of R Project object to be created.
 #' @param data Logical. If `TRUE`, a `data` directory will be created in the selected folder. Defaults to `TRUE`.
 #' @param reports Logical. If `TRUE`, a `reports` directory will be created in the selected folder. Defaults to `TRUE`.
 #' @param output Logical. If `TRUE`, an `output` direction will be created in the selected folder. Defaults to `TRUE`.
-#' @param docs Logical. If `TRUE`, a `docs` directory will be created in the selected folder. Defaults to `TRUE`.
+#' @param documentation Logical. If `TRUE`, a `documentation` directory will be created in the selected folder. Defaults to `TRUE`.
 #' @param R Logical. If `TRUE`, an `R` directory will be created in the selected folder. Defaults to `TRUE`.
 #' @param other_folders Vector of strings that contain any other folders that should also be created. Elements should be unique. Default `NULL`.
 #'
@@ -21,9 +21,13 @@
 #' @details For more details, see the \href{../doc/create_project.html}{vignette}.
 #'
 #' @examples
-#' create_project(project_name = "investigation_x",       # Folder where RProject is called "investigation_x"
-#'                other_folders = c("folder1", "folder2") # Create additional folders
+#' # Folder where RProject is called "investigation_x"
+#' # Create additional folders with names "folder1", "folder2"
+#' \dontrun{
+#' create_project(project_name = "investigation_x",
+#'                other_folders = c("folder1", "folder2")
 #'                )
+#' }
 #'
 #' @export
 
@@ -35,7 +39,7 @@ create_project <- function(project_name = "standard",
                            other_folders = NULL,
                            R = TRUE) {
 
-  if (length(unique(other_folders)) != length(other_folders)){
+  if (length(unique(other_folders)) != length(other_folders)) {
     stop("The `other_folder` values specified are not unique! Project creation cancelled.")
   }
 

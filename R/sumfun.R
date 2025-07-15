@@ -15,10 +15,10 @@ sumfun <- function(x, na.rm = TRUE, ...){
   data.frame(n = length(x),
              miss = sum(is.na(x)),
              mean = mean(x, na.rm = na.rm, ...),
-             sd = sd(x, na.rm = na.rm, ...),
-             med = median(x, na.rm = na.rm, ...),
-             q25 = quantile(x, prob = c(0.25), na.rm = na.rm, names = F, ...),
-             q75 = quantile(x, prob = c(0.75), na.rm = na.rm, names = F, ...),
+             sd = stats::sd(x, na.rm = na.rm, ...),
+             med = stats::median(x, na.rm = na.rm, ...),
+             q25 = stats::quantile(x, prob = c(0.25), na.rm = na.rm, names = F, ...),
+             q75 = stats::quantile(x, prob = c(0.75), na.rm = na.rm, names = F, ...),
              min = min(x, na.rm = na.rm, ...),
              max = max(x, na.rm = na.rm, ...)
   )

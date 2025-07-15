@@ -7,7 +7,9 @@
 twoway(var1, var2, data = NULL, var2lab = NULL)
 }
 \arguments{
-\item{var1}{Vector of first variable.}
+\item{var1}{Vector of first variable}
+
+\item{var2}{Vector of second variable}
 
 \item{data}{Dataset containing \code{var1} and \code{var2}}
 

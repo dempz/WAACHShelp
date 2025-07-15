@@ -16,7 +16,7 @@ icd_flagging <- function(data,
       icd_list_i_vars <- colname_classify_specific[[i]]
 
       data <- data %>%
-        mutate(!!rlang::sym(i) := dplyr::case_when(dplyr::if_any(.cols = tidyselect::all_of(icd_list_i_vars),
+        dplyr::mutate(!!rlang::sym(i) := dplyr::case_when(dplyr::if_any(.cols = tidyselect::all_of(icd_list_i_vars),
                                                                  .fns = ~.x %in% icd_list_i) ~ "Yes",
                                                    dplyr::if_all(.cols = tidyselect::all_of(icd_list_i_vars),
                                                                  .fns = ~!.x %in% icd_list_i) ~ "No"))

@@ -3,7 +3,8 @@
 #' Two-way table similar to the "proc freq" function of SAS with two variables
 #'
 #' Created by PV (2023).
-#' @param var1 Vector of first variable.
+#' @param var1 Vector of first variable
+#' @param var2 Vector of second variable
 #' @param data Vector of second variable
 #' @param data Dataset containing `var1` and `var2`
 #' @param var2lab Label for `var2`.
@@ -17,8 +18,8 @@ twoway <- function(var1, var2, data = NULL, var2lab = NULL){
   arg <- match.call()
   v1  <- as.character(arg$var1)
   v2  <- as.character(arg$var2)
-  dd  <- select(data, all_of(c(v1, v2)))
-  dd[,v2] <- as_factor(dd[, v2, drop = T])
+  dd  <- dplyr::select(data, dplyr::all_of(c(v1, v2)))
+  dd[,v2] <- forcats::as_factor(dd[, v2, drop = T])
 
   # Sort out the labels:
   ll = attr(dd[,v2, drop = T], "label")
@@ -27,7 +28,7 @@ twoway <- function(var1, var2, data = NULL, var2lab = NULL){
 
   ## Create a constant columns which we use in the formula:
   dd$tt <- lab
-  ff = as.formula(paste0("~ " , v1, " | tt*", v2))
+  ff = stats::as.formula(paste0("~ " , v1, " | tt*", v2))
 
   # Output the table.
   table1::table1(ff, data = dd, overall = F)

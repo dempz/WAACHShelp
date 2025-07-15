@@ -13,7 +13,7 @@
 #' @param diag_type Diagnosis type. Select from "principal diagnosis", (all) "additional diagnoses", "external cause of injury", "custom".
 #' @param diag_type_custom_vars Variables to search across when `diag_type == "custom"`.
 #' @param diag_type_custom_params Search parameters to search across when `diag_type == "custom"`. Must be a list where the keys are the variable names and values are the inputs to `WAACHShelp::val_filt`. Can also be a list of lists where multiple ICD can be searched across for a single variable. See examples for specification.
-#' @param under_age Return additional variables corresponding to when participant was strictly under `age` y.o.. Uses DOBmap DOB and subadm morbidity admission date. Variables have suffix "_under{age}".
+#' @param under_age Return additional variables corresponding to when participant was strictly under `age` y.o.. Uses DOBmap DOB and subadm morbidity admission date. Variables have suffix "_under\{age\}".
 #' @param age Integer. Age to consider for the `under_age` variable (default 18).
 #' @param person_summary Summarise results at a person-level.
 #' @param id_var Joining (ID) variable consistent between `data` and `dobmap`. Default `rootnum`.
@@ -24,15 +24,16 @@
 #' @examples
 #' # Example 1: Basic use
 #' ## Create any mental health or substance-related morbidity flag, "MH_morb"
-#' ## This automatically searches across all "principal diagnosis", "additional diagnoses", "external cause of injury" codes.
+#' ## Searches "principal diagnosis", "additional diagnoses", "external cause of injury".
 #' ## Create additional flag for whether admission occurred when under 18 years of age
-#' icd_morb_flag(data = morb,
-#'               dobmap = dob,
-#'               flag_category = "MH_morb", # Create any MH contact flag
-#'               under_age = T, # Return additional set of flags depending on whether participant is under 18 at time of admission.
-#'               age = 18,
-#'               dobmap_other_vars = c("xyz123", "abc456") # Also select variables `xyz123`, `abc456` from DOBmap and join onto `data` file.
-#'               )
+#' icd_morb_flag(
+#'   data = morb,
+#'   dobmap = dob,
+#'   flag_category = "MH_morb",
+#'   under_age = T,
+#'   age = 18,
+#'   dobmap_other_vars = c("xyz123", "abc456") # Also join `xyz123`, `abc456` from DOBmap
+#'   )
 #'
 #' # Example 2: Basic use
 #' ## Create any substance-related morbidity flag, "Sub_morb"
@@ -40,7 +41,8 @@
 #'               flag_category = "Sub_morb" # Create any MH contact flag
 #'               )
 #'
-#' # Example 3: Search only *principal diagnosis* and *first additional diagnosis* for a custom set of ICD codes
+#' # Example 3: Search  *principal diagnosis* and *first additional diagnosis*
+#' # for a custom set of ICD codes
 #' ## Call this variable "test_var"
 #' icd_morb_flag(data = morb,
 #'               flag_category = "Other",
@@ -55,7 +57,9 @@
 #'               flag_other_varname = "test_var"
 #'               )
 #'
-#' # Example 4: Search only across primary diagnosis and (all) additional diagnosis fields for a custom set of ICD codes
+#' # Example 4:
+#' # Search only across primary diagnosis and
+#' # (all) additional diagnosis fields for a custom set of ICD codes.
 #' ## Call this variable "test_var2"
 #' icd_morb_flag(data = morb,
 #'               flag_category = "Other",
@@ -85,7 +89,9 @@
 #' ## Call this variable "test_var4" -- replicating MH_morb flag
 #' icd_morb_flag(data = morb,
 #'               flag_category = "Other",
-#'               diag_type = c("additional diagnoses", "additional diagnoses", "external cause of injury"),
+#'               diag_type = c("additional diagnoses",
+#'                             "additional diagnoses",
+#'                             "external cause of injury"),
 #'               flag_other_varname = "test_var3",
 #'               diag_type_custom_params =
 #'               list("principal diagnosis" = list(list("letter" = "F",
@@ -123,7 +129,7 @@ icd_morb_flag <- function(data,
                           dobmap_dob_var = "dob",
                           dobmap_other_vars = NULL){
 
-  data("icd_dat", package = "WAACHShelp")
+  icd_dat <- WAACHShelp::icd_dat
 
   if (!(flag_category %in% c(unique(icd_dat$var), "Other"))) {
     stop(sprintf("Error: '%s' is not a valid input. Please choose from %s. If variable not contained in this list, please specify `flag_category == \"Other\"` and use the `flag_other_varname` and `flag_other_vals` arguments.",

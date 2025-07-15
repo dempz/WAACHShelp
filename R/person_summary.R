@@ -14,10 +14,10 @@
 #' @param grouping_var Grouping ID variable that identifies potentially multiple records per participant.
 #'
 #' @examples
-#' person_summary(data = dat,                   # Input dataframe
-#'                flag_category = "variable_x", # Look across the values of `variable_x`
-#'                flag_category_val = "Yes",    # If any value of `variable_x` for a participant is "Yes", then return "Yes"
-#'                grouping_var = "record_id"    # Grouping ID variable.
+#' person_summary(data = dat,
+#'                flag_category = "variable_x",
+#'                flag_category_val = "Yes",
+#'                grouping_var = "record_id"
 #'                )
 #'
 #' @export
@@ -28,10 +28,10 @@ person_summary <- function(data,
                            grouping_var){
 
   data <- data %>%
-    group_by(!!rlang::sym(grouping_var)) %>%
-    mutate(!!rlang::sym(flag_category) := case_when(any(!!rlang::sym(flag_category) == flag_category_val) ~ "Yes",
+    dplyr::group_by(!!rlang::sym(grouping_var)) %>%
+    dplyr::mutate(!!rlang::sym(flag_category) := dplyr::case_when(any(!!rlang::sym(flag_category) == flag_category_val) ~ "Yes",
                                                     TRUE ~ "No")) %>%
-    distinct(!!rlang::sym(grouping_var), !!rlang::sym(flag_category)) %>%
+    dplyr::distinct(!!rlang::sym(grouping_var), !!rlang::sym(flag_category)) %>%
     ungroup
 
   return(data)

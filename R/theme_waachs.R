@@ -2,12 +2,17 @@
 #'
 #' This function applies a custom theme to ggplot2 plots, incorporating colors to align with the project's visual identity.
 #'
+#' @param base_size Base font size
+#' @param base_line_size Base line size (default `base_size/22`)
+#' @param base_rect_size Base rectangle size (default `base_size/22`)
+#'
 #' @details The function determines the operating system and selects appropriate font names for Windows or other systems. It also adjusts color scales.
 #'
 #' @return A list of ggplot2 theme elements and scale adjustments.
 #'
+#' @importFrom ggplot2 ggplot
+#'
 #' @examples
-#' library(ggplot2)
 #'
 #' ggplot(mtcars,
 #'        aes(x = mpg, y = wt, col = factor(cyl))) +
@@ -24,20 +29,18 @@ theme_waachs <- function(base_size = 12,
   waachs_palette <- c("#D58957", "#FCD16B", "#89A1AD", "#FEF0D8")
 
   list(
-    theme_minimal(base_size = base_size,
+    ggplot2::theme_minimal(base_size = base_size,
                   base_line_size = base_line_size,
                   base_rect_size = base_rect_size) +
-    theme(#text = element_text(family = font_family),
-          panel.grid.minor = element_blank(),
-          plot.title = element_text(#family = font_family
-                                    ),
-          axis.title = element_text(#family = font_family
-                                    ),
-          strip.text = element_text(#family = font_family,
-                                    size = rel(1), hjust = 0
-                                    ),
-          plot.background = element_rect(fill = "white", colour = "white"),
-          strip.background = element_rect(fill = "grey80", colour = NA)),
-    scale_colour_manual(values = waachs_palette)
+      ggplot2::theme(panel.grid.minor = ggplot2::element_blank(),
+                     plot.title = ggplot2::element_text(),
+                     axis.title = ggplot2::element_text(),
+                     strip.text = ggplot2::element_text(size = ggplot2::rel(1),
+                                                        hjust = 0),
+                     plot.background = ggplot2::element_rect(fill = "white",
+                                                             colour = "white"),
+                     strip.background = ggplot2::element_rect(fill = "grey80",
+                                                              colour = NA)),
+    ggplot2::scale_colour_manual(values = waachs_palette)
     )
 }

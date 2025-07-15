@@ -14,7 +14,7 @@ person_level <- function(data,
     dplyr::mutate(!!rlang::sym(flag_category) := dplyr::case_when(any(!!rlang::sym(flag_category) == "Yes") ~ "Yes",
                                                                   TRUE ~ "No")) %>%
     dplyr::distinct(!!rlang::sym(joining_var), !!rlang::sym(flag_category)) %>%
-    ungroup
+    dplyr::ungroup
 
   return(data)
 }

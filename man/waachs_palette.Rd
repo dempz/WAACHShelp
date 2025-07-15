@@ -20,6 +20,10 @@ waachs_palette(
 
 \item{visualisation}{(Default \code{TRUE}). Return visualisation of the colour spectrum to aid in decision making.}
 
+\item{bias}{A positive nmber representing the spacing between colours at the high end. Parsed to \code{grDevices::colorRamp} (default 2).}
+
+\item{interpolate}{Interpolation algorithm to parse to \code{grDevices::colorRamp} (default "spline").}
+
 \item{...}{Miscellaneous arguments to parse to \code{grDevices::colorRampPalette}.}
 }
 \value{

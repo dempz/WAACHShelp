@@ -23,18 +23,18 @@ create_project(
 
 \item{output}{Logical. If \code{TRUE}, an \code{output} direction will be created in the selected folder. Defaults to \code{TRUE}.}
 
+\item{documentation}{Logical. If \code{TRUE}, a \code{documentation} directory will be created in the selected folder. Defaults to \code{TRUE}.}
+
 \item{other_folders}{Vector of strings that contain any other folders that should also be created. Elements should be unique. Default \code{NULL}.}
 
 \item{R}{Logical. If \code{TRUE}, an \code{R} directory will be created in the selected folder. Defaults to \code{TRUE}.}
-
-\item{docs}{Logical. If \code{TRUE}, a \code{docs} directory will be created in the selected folder. Defaults to \code{TRUE}.}
 }
 \description{
 Adapted from \link[thekidsbiostats:create_project]{create_project} from \url{https://github.com/The-Kids-Biostats/thekidsbiostats}.
 }
 \details{
 This function creates a directory structure for a new project based on a specified extension.
-It can also create additional folders such as \code{data}, \code{reports}, \code{output} and \code{docs}.
+It can also create additional folders such as \code{data}, \code{reports}, \code{output} and \code{documentation}.
 The function copies specific files and folders from the chosen extension to the project directory.
 
 For more details, see the \href{../doc/create_project.html}{vignette}.
@@ -44,8 +44,12 @@ An interactive window will appear prompting the user to select the folder where 
 The default is the current working directory.
 }
 \examples{
-create_project(project_name = "investigation_x",       # Folder where RProject is called "investigation_x"
-               other_folders = c("folder1", "folder2") # Create additional folders
+# Folder where RProject is called "investigation_x"
+# Create additional folders with names "folder1", "folder2"
+\dontrun{
+create_project(project_name = "investigation_x",
+               other_folders = c("folder1", "folder2")
                )
+}
 
 }

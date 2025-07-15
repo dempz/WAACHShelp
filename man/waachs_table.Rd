@@ -40,7 +40,9 @@ waachs_table(
 
 \item{highlight_darken}{A numeric value specifying the amount by which \code{body_bg_col} should be "darkened" (tinted) (default 0.3).}
 
-\item{font.family}{Font family for plot (default Barlow).}
+\item{font_family}{Font family for plot (default Barlow).}
+
+\item{...}{Other arguments parsed to \code{flextable::set_flextable_defaults}.}
 }
 \description{
 Function to apply consistent formatting to summary tables rendered using R. Works with functions from the \code{gtsummary} package, or dataframes.
