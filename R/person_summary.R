@@ -13,12 +13,17 @@
 #' @param flag_category_val String value of the `flag_category` variable the flag will be judged against. Defaults to "Yes".
 #' @param grouping_var Grouping ID variable that identifies potentially multiple records per participant.
 #'
+#' @importFrom magrittr %>%
+#' @importFrom data.table :=
+#'
 #' @examples
-#' person_summary(data = dat,                   # Input dataframe
-#'                flag_category = "variable_x", # Look across the values of `variable_x`
-#'                flag_category_val = "Yes",    # If any value of `variable_x` for a participant is "Yes", then return "Yes"
-#'                grouping_var = "record_id"    # Grouping ID variable.
+#' \dontrun{
+#' person_summary(data = dat,
+#'                flag_category = "variable_x",
+#'                flag_category_val = "Yes",
+#'                grouping_var = "record_id"
 #'                )
+#' }
 #'
 #' @export
 
@@ -28,11 +33,11 @@ person_summary <- function(data,
                            grouping_var){
 
   data <- data %>%
-    group_by(!!rlang::sym(grouping_var)) %>%
-    mutate(!!rlang::sym(flag_category) := case_when(any(!!rlang::sym(flag_category) == flag_category_val) ~ "Yes",
+    dplyr::group_by(!!rlang::sym(grouping_var)) %>%
+    dplyr::mutate(!!rlang::sym(flag_category) := dplyr::case_when(any(!!rlang::sym(flag_category) == flag_category_val) ~ "Yes",
                                                     TRUE ~ "No")) %>%
-    distinct(!!rlang::sym(grouping_var), !!rlang::sym(flag_category)) %>%
-    ungroup
+    dplyr::distinct(!!rlang::sym(grouping_var), !!rlang::sym(flag_category)) %>%
+    dplyr::ungroup
 
   return(data)
 }

@@ -28,10 +28,12 @@ Specifically, records will be collapsed such that:
 }
 }
 \examples{
-person_summary(data = dat,                   # Input dataframe
-               flag_category = "variable_x", # Look across the values of `variable_x`
-               flag_category_val = "Yes",    # If any value of `variable_x` for a participant is "Yes", then return "Yes"
-               grouping_var = "record_id"    # Grouping ID variable.
+\dontrun{
+person_summary(data = dat,
+               flag_category = "variable_x",
+               flag_category_val = "Yes",
+               grouping_var = "record_id"
                )
+}
 
 }

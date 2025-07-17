@@ -25,7 +25,9 @@
 #' under `ext_qmd/_extensions/`.
 #'
 #' @examples
-#' create_markdown(file_name = "my_doc", ext_name = "thekids-word")
+#' \dontrun{
+#' create_markdown(file_name = "my_doc", ext_name = "word")
+#' }
 #'
 #' @export
 

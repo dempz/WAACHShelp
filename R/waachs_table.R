@@ -14,7 +14,11 @@
 #' @param header_text_col Header text colour (default black).
 #' @param highlight A numeric vector specifying rows to highlight.
 #' @param highlight_darken A numeric value specifying the amount by which `body_bg_col` should be "darkened" (tinted) (default 0.3).
-#' @param font.family Font family for plot (default Barlow).
+#' @param font_family Font family for plot (default Barlow).
+#' @param ... Other arguments parsed to `flextable::set_flextable_defaults`.
+#'
+#' @importFrom gtsummary tbl_summary
+#' @importFrom magrittr %>%
 #'
 #' @examples
 #' head(mtcars) %>%

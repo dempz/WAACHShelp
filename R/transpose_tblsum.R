@@ -21,21 +21,23 @@
 transpose_tblsum <- function(tbl,
                              ...){
 
+  rowname <- NULL
+
   new_tab <- tbl %>%
     as.data.frame() %>%
     t() %>%
     as.data.frame() %>%
-    rownames_to_column() %>%
-    mutate(across(-c(rowname), ~gsub("^_(.*)_$",
+    tibble::rownames_to_column() %>%
+    dplyr::mutate(dplyr::across(-c(rowname), ~gsub("^_(.*)_$",
                                      "\\1",
                                      .))) %>%
-    mutate(rowname = gsub("\\*\\*(.*?)\\*\\*", "\\1", rowname),
-           rowname = str_replace(rowname, "\n", ""),
-           rowname = gsub("(N = [0-9,]+)", "(\\1)", rowname))
+    dplyr::mutate(rowname = gsub("\\*\\*(.*?)\\*\\*", "\\1", rowname),
+                  rowname = stringr::str_replace(rowname, "\n", ""),
+                  rowname = gsub("(N = [0-9,]+)", "(\\1)", rowname))
 
   new_tab <- new_tab %>%
-    rename_with(~unlist(new_tab[1,])) %>%
-    slice(-1)
+    dplyr::rename_with(~unlist(new_tab[1,])) %>%
+    dplyr::slice(-1)
 
   return(new_tab)
 }

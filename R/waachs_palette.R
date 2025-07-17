@@ -5,6 +5,8 @@
 #' @param type Type of colour palette to render (values "discrete", "continuous").
 #' @param n Number of colours to generate in palette (if `type == "continuous"`).
 #' @param visualisation (Default `TRUE`). Return visualisation of the colour spectrum to aid in decision making.
+#' @param bias A positive nmber representing the spacing between colours at the high end. Parsed to `grDevices::colorRamp` (default 2).
+#' @param interpolate Interpolation algorithm to parse to `grDevices::colorRamp` (default "spline").
 #' @param ... Miscellaneous arguments to parse to `grDevices::colorRampPalette`.
 #'
 #' @return Vector with colour hex codes. If `type == "continuous"` returns vector of length `n`. If `visualisation == TRUE` returns a list containing colour palette vector and `ggplot2` visualisation of colour spectrum.
@@ -24,6 +26,8 @@ waachs_palette <- function(type = "discrete",
                            bias = 2,
                            interpolate = "spline",
                            ...){
+  x <- y <- colours <- NULL
+
   waachs_palette <- c("#D58957",
                       "#FCD16B",
                       "#89A1AD",
@@ -33,8 +37,7 @@ waachs_palette <- function(type = "discrete",
     palette <- waachs_palette
 
   } else if (type == "continuous"){
-    spectrum <- grDevices::colorRampPalette(waachs_palette, ...)
-    palette <- spectrum(n)
+    palette <- grDevices::colorRampPalette(waachs_palette, ...)(n)
 
   } else {
     stop(sprintf("Error: Please select from colour categories 'continuous' or 'discrete'."))

@@ -1,4 +1,7 @@
 # WAACHShelp
+
+![R-CMD-check](https://github.com/dempz/WAACHShelp/actions/workflows/R-CMD-check.yaml/badge.svg)
+
 General helper functions for the WAACHS linked data project.
 
 ## Installation instructions

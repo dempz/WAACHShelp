@@ -7,7 +7,9 @@
 icd_flagging <- function(data,
                          flag_category,
                          icd_list, # Output from`01-01-icd_extraction`
-                         flag_other_varname){
+                         flag_other_varname,
+                         icd_dat,
+                         colname_classify_specific){
 
   if (!"Other" %in% flag_category){
     icd_list_names <- names(icd_list)
@@ -16,7 +18,7 @@ icd_flagging <- function(data,
       icd_list_i_vars <- colname_classify_specific[[i]]
 
       data <- data %>%
-        mutate(!!rlang::sym(i) := dplyr::case_when(dplyr::if_any(.cols = tidyselect::all_of(icd_list_i_vars),
+        dplyr::mutate(!!rlang::sym(i) := dplyr::case_when(dplyr::if_any(.cols = tidyselect::all_of(icd_list_i_vars),
                                                                  .fns = ~.x %in% icd_list_i) ~ "Yes",
                                                    dplyr::if_all(.cols = tidyselect::all_of(icd_list_i_vars),
                                                                  .fns = ~!.x %in% icd_list_i) ~ "No"))

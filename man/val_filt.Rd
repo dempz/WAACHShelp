@@ -22,6 +22,9 @@ Vector with filtered ICD codes.
 This function is already used by the team, and filters alphanumeric ICD-9 and ICD-10 codes pursuant to requirements.
 }
 \examples{
-val_filt(val3, "F", 10.0, 10.9) # Filter ICD codes in val3 to those between F10 and F10.9 (inclusive).
+# Filter ICD codes in val3 to those between F10 and F10.9 (inclusive).
+\dontrun{
+val_filt(val3, "F", 10.0, 10.9)
+}
 
 }
