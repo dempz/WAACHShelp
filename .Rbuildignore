@@ -5,4 +5,3 @@
 ^\.github$
 ^LICENSE\.md$
 ^data-raw$
-^inst/ext_qmd$
