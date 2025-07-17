@@ -135,11 +135,9 @@ icd_morb_flag <- function(data,
                           dobmap_other_vars = NULL){
 
   utils::data("colname_classify_specific",
-              package = "WAACHShelp",
-              envir = environment())
+              package = "WAACHShelp")
   utils::data("icd_dat",
-              package = "WAACHShelp",
-              envir = environment())
+              package = "WAACHShelp")
 
   if (!(flag_category %in% c(unique(icd_dat$var), "Other"))) {
     stop(sprintf("Error: '%s' is not a valid input. Please choose from %s. If variable not contained in this list, please specify `flag_category == \"Other\"` and use the `flag_other_varname` and `flag_other_vals` arguments.",
@@ -202,7 +200,9 @@ icd_morb_flag <- function(data,
                          flag_category = flag_category,
                          diag_type = diag_type,
                          diag_type_custom_vars = diag_type_custom_vars,
-                         diag_type_custom_params = diag_type_custom_params)
+                         diag_type_custom_params = diag_type_custom_params,
+                         icd_dat = icd_dat,
+                         colname_classify_specific = colname_classify_specific)
 
 
   # 3) Create flagging variables
@@ -210,7 +210,9 @@ icd_morb_flag <- function(data,
   icd_flags <- icd_flagging(data = data,
                             flag_category = flag_category,
                             icd_list = icds,
-                            flag_other_varname = flag_other_varname#,
+                            flag_other_varname = flag_other_varname,
+                            icd_dat = icd_dat,
+                            colname_classify_specific = colname_classify_specific
                             #diag_type = diag_type#,
                             #diag_type_custom_vars = diag_type_custom_vars,
                             #diag_type_custom_params = diag_type_custom_params

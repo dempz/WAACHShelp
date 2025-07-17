@@ -7,7 +7,9 @@
 icd_flagging <- function(data,
                          flag_category,
                          icd_list, # Output from`01-01-icd_extraction`
-                         flag_other_varname){
+                         flag_other_varname,
+                         icd_dat,
+                         colname_classify_specific){
 
   if (!"Other" %in% flag_category){
     icd_list_names <- names(icd_list)

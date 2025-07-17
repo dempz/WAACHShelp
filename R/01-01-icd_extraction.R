@@ -8,7 +8,9 @@ icd_extraction <- function(data,
                            flag_category,
                            diag_type,
                            diag_type_custom_vars = NULL,
-                           diag_type_custom_params){
+                           diag_type_custom_params,
+                           icd_dat,
+                           colname_classify_specific){
 
   # Error messages!
   if (flag_category == "Other") {
