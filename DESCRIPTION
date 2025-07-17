@@ -9,12 +9,13 @@ Maintainer: Zac Dempsey <zac.dempsey@thekids.org.au>
 Depends: R (>= 4.3), tidyverse (>= 2.0.0), gtsummary (>= 2.0)
 Imports:
     colorspace,
+    data.table,
     flextable,
     ggplot2,
     grDevices,
+    magrittr,
     table1,
-    tibble,
-    usethis
+    tibble
 Suggests: 
     dplyr,
     gt,

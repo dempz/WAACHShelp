@@ -26,6 +26,8 @@ waachs_palette <- function(type = "discrete",
                            bias = 2,
                            interpolate = "spline",
                            ...){
+  x <- y <- colours <- NULL
+
   waachs_palette <- c("#D58957",
                       "#FCD16B",
                       "#89A1AD",
@@ -35,8 +37,7 @@ waachs_palette <- function(type = "discrete",
     palette <- waachs_palette
 
   } else if (type == "continuous"){
-    spectrum <- grDevices::colorRampPalette(waachs_palette, ...)
-    palette <- stats::spectrum(n)
+    palette <- grDevices::colorRampPalette(waachs_palette, ...)(n)
 
   } else {
     stop(sprintf("Error: Please select from colour categories 'continuous' or 'discrete'."))

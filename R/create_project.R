@@ -21,12 +21,8 @@
 #' @details For more details, see the \href{../doc/create_project.html}{vignette}.
 #'
 #' @examples
-#' # Folder where RProject is called "investigation_x"
-#' # Create additional folders with names "folder1", "folder2"
 #' \dontrun{
-#' create_project(project_name = "investigation_x",
-#'                other_folders = c("folder1", "folder2")
-#'                )
+#' create_project(project_name = "investigation_x", other_folders = c("folder1", "folder2"))
 #' }
 #'
 #' @export

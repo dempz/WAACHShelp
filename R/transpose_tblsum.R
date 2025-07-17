@@ -21,6 +21,8 @@
 transpose_tblsum <- function(tbl,
                              ...){
 
+  rowname <- NULL
+
   new_tab <- tbl %>%
     as.data.frame() %>%
     t() %>%

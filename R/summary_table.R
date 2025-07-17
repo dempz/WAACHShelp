@@ -5,6 +5,9 @@
 #'
 #' @param data Input dataset.
 #' @param ... Any other argument relevant to `gtsummary::tbl_summary`.
+#'
+#' @importFrom magrittr %>%
+#'
 #' @return Summary table.
 #' @export
 

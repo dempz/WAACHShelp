@@ -6,6 +6,9 @@
 #' @param shading Vector denoting the lines of the table that might want to be shaded. For example, to shade the first, third and fifth rows, supply `shading = c(1, 3, 5)`.
 #' @param caption Caption to add to the data set.
 #' @param bodysize Text size of the table's content.
+#'
+#' @importFrom magrittr %>%
+#'
 #' @return Two-way table
 #'
 #' @export

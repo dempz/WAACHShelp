@@ -9,6 +9,7 @@ icd_extraction <- function(data,
                            diag_type,
                            diag_type_custom_vars = NULL,
                            diag_type_custom_params){
+
   # Error messages!
   if (flag_category == "Other") {
     # Ensure that diag_type and diag_type_custom_vars are properly defined
@@ -84,9 +85,12 @@ icd_extraction <- function(data,
   # 1) Extract variable categories
   # 1.1) If `flag_category` != "Other"
   if (flag_category != "Other"){
-    diag_ediag_icd_categories <- unique(unlist(data %>% dplyr::select(diagnosis, ediag1:ediag20),
+    vars_diag_ediag <- c("diagnosis", paste0("ediag", 1:20))
+    vars_ecodes     <- paste0("ecode", 1:4)
+
+    diag_ediag_icd_categories <- unique(unlist(dplyr::select(data, dplyr::all_of(vars_diag_ediag)),
                                                use.names = F))
-    ecode_icd_categories      <- unique(unlist(data %>% dplyr::select(ecode1:ecode4),
+    ecode_icd_categories      <- unique(unlist(dplyr::select(data, dplyr::all_of(vars_ecodes)),
                                                use.names = F))
   }
 
@@ -111,14 +115,14 @@ icd_extraction <- function(data,
   # 2) Create flag sets (derived from flag_category)
   admissible_icd <- list()
   if (flag_category != "Other"){ # If one of "MH_morb", "Sub_morb" etc.
-    icd_dat_flag <- icd_dat %>% dplyr::filter(var == flag_category)
+    icd_dat_flag <- icd_dat %>% dplyr::filter(.data$var == flag_category)
 
     for (i in unique(icd_dat_flag$classification)){
-      icd_dat_flag_i <- icd_dat_flag %>% dplyr::filter(classification == i)
+      icd_dat_flag_i <- icd_dat_flag %>% dplyr::filter(.data$classification == i)
       codes_i <- c()
 
       for (j in icd_dat_flag_i$num){
-        icd_dat_flag_ij <- icd_dat_flag_i %>% dplyr::filter(num == j)
+        icd_dat_flag_ij <- icd_dat_flag_i %>% dplyr::filter(.data$num == j)
         letter <- icd_dat_flag_ij$letter
         lower  <- icd_dat_flag_ij$lower
         upper  <- icd_dat_flag_ij$upper

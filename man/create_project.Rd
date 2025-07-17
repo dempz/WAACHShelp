@@ -44,12 +44,8 @@ An interactive window will appear prompting the user to select the folder where 
 The default is the current working directory.
 }
 \examples{
-# Folder where RProject is called "investigation_x"
-# Create additional folders with names "folder1", "folder2"
 \dontrun{
-create_project(project_name = "investigation_x",
-               other_folders = c("folder1", "folder2")
-               )
+create_project(project_name = "investigation_x", other_folders = c("folder1", "folder2"))
 }
 
 }

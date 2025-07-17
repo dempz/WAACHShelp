@@ -23,6 +23,8 @@ This function is already used by the team, and filters alphanumeric ICD-9 and IC
 }
 \examples{
 # Filter ICD codes in val3 to those between F10 and F10.9 (inclusive).
+\dontrun{
 val_filt(val3, "F", 10.0, 10.9)
+}
 
 }

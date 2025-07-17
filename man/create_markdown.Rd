@@ -36,8 +36,7 @@ under \verb{ext_qmd/_extensions/}.
 }
 \examples{
 \dontrun{
-create_markdown(file_name = "my_doc",
-                ext_name = "word")
+create_markdown(file_name = "my_doc", ext_name = "word")
 }
 
 }

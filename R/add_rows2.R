@@ -8,6 +8,8 @@
 #' @param ... Other parameters to parse to function.
 #' @return SAS labelled dataframe
 #'
+#' @importFrom magrittr %>%
+#'
 #' @export
 
 add_rows2 <- function (..., id = NULL) {

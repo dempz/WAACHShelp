@@ -9,7 +9,9 @@
 #' @return Vector with filtered ICD codes.
 #' @examples
 #' # Filter ICD codes in val3 to those between F10 and F10.9 (inclusive).
+#' \dontrun{
 #' val_filt(val3, "F", 10.0, 10.9)
+#' }
 #'
 #' @export
 

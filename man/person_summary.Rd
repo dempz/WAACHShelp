@@ -28,10 +28,12 @@ Specifically, records will be collapsed such that:
 }
 }
 \examples{
+\dontrun{
 person_summary(data = dat,
                flag_category = "variable_x",
                flag_category_val = "Yes",
                grouping_var = "record_id"
                )
+}
 
 }

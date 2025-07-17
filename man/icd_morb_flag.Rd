@@ -62,6 +62,7 @@ The file with these pre-established ICD codes are saved as an .RData file and ar
 For more details, see the \href{../doc/icd_morb_flag.html}{vignette}.
 }
 \examples{
+\dontrun{
 # Example 1: Basic use
 ## Create any mental health or substance-related morbidity flag, "MH_morb"
 ## Searches "principal diagnosis", "additional diagnoses", "external cause of injury".
@@ -140,4 +141,17 @@ icd_morb_flag(data = morb,
                                                 list("letter" = "",
                                                      "lower" = 290,
                                                      "upper" = 319.9999)),
+                    "additional diagnoses" = list(list("letter" = "F",
+                                                       "lower" = 0,
+                                                       "upper" = 99.9999),
+                                                  list("letter" = "",
+                                                       "lower" = 290,
+                                                       "upper" = 319.9999)),
+                    "external cause of injury" = list(list("letter" = "E",
+                                                           "lower" = 950,
+                                                           "upper" = 959.9999),
+                                                      list("letter" = "X",
+                                                           "lower" = 60,
+                                                           "upper" = 84.9999))))
+}
 }

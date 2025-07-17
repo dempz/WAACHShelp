@@ -21,7 +21,11 @@
 #' @param dobmap_dob_var Date of birth (DOB) variable in `dobmap`. Default `"dob"`.
 #' @param dobmap_other_vars Other variables to carry across from DOBmap file when joining to `data`. Default `NULL`. Can be a vector of strings.
 #' @return Flagged dataframe.
+#'
+#' @importFrom magrittr %>%
+#'
 #' @examples
+#' \dontrun{
 #' # Example 1: Basic use
 #' ## Create any mental health or substance-related morbidity flag, "MH_morb"
 #' ## Searches "principal diagnosis", "additional diagnoses", "external cause of injury".
@@ -100,18 +104,19 @@
 #'                                                 list("letter" = "",
 #'                                                      "lower" = 290,
 #'                                                      "upper" = 319.9999)),
-#                     "additional diagnoses" = list(list("letter" = "F",
-#                                                        "lower" = 0,
-#                                                        "upper" = 99.9999),
-#                                                   list("letter" = "",
-#                                                        "lower" = 290,
-#                                                        "upper" = 319.9999)),
-#                     "external cause of injury" = list(list("letter" = "E",
-#                                                            "lower" = 950,
-#                                                            "upper" = 959.9999),
-#                                                       list("letter" = "X",
-#                                                            "lower" = 60,
-#                                                            "upper" = 84.9999))))
+#'                     "additional diagnoses" = list(list("letter" = "F",
+#'                                                        "lower" = 0,
+#'                                                        "upper" = 99.9999),
+#'                                                   list("letter" = "",
+#'                                                        "lower" = 290,
+#'                                                        "upper" = 319.9999)),
+#'                     "external cause of injury" = list(list("letter" = "E",
+#'                                                            "lower" = 950,
+#'                                                            "upper" = 959.9999),
+#'                                                       list("letter" = "X",
+#'                                                            "lower" = 60,
+#'                                                            "upper" = 84.9999))))
+#' }
 #' @export
 
 icd_morb_flag <- function(data,
@@ -129,7 +134,12 @@ icd_morb_flag <- function(data,
                           dobmap_dob_var = "dob",
                           dobmap_other_vars = NULL){
 
-  icd_dat <- WAACHShelp::icd_dat
+  utils::data("colname_classify_specific",
+              package = "WAACHShelp",
+              envir = environment())
+  utils::data("icd_dat",
+              package = "WAACHShelp",
+              envir = environment())
 
   if (!(flag_category %in% c(unique(icd_dat$var), "Other"))) {
     stop(sprintf("Error: '%s' is not a valid input. Please choose from %s. If variable not contained in this list, please specify `flag_category == \"Other\"` and use the `flag_other_varname` and `flag_other_vals` arguments.",

@@ -18,6 +18,7 @@
 #' @param ... Other arguments parsed to `flextable::set_flextable_defaults`.
 #'
 #' @importFrom gtsummary tbl_summary
+#' @importFrom magrittr %>%
 #'
 #' @examples
 #' head(mtcars) %>%
