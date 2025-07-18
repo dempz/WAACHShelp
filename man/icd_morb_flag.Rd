@@ -38,7 +38,7 @@ icd_morb_flag(
 
 \item{under_age}{Return additional variables corresponding to when participant was strictly under \code{age} y.o.. Uses DOBmap DOB and subadm morbidity admission date. Variables have suffix "_under\{age\}".}
 
-\item{age}{Integer. Age to consider for the \code{under_age} variable (default 18).}
+\item{age}{Numeric. Age (years) to consider for the \code{under_age} variable (default 18).}
 
 \item{person_summary}{Summarise results at a person-level.}
 
