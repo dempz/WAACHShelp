@@ -10,8 +10,6 @@ colname_classify_specific <- list("principal diagnosis" = actual_colnames[str_de
 
 
 usethis::use_data(colname_classify_specific,
-                  internal = T,
-                  overwrite = T)
-usethis::use_data(colname_classify_broad,
+                  colname_classify_broad,
                   internal = T,
                   overwrite = T)
