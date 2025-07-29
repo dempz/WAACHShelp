@@ -189,15 +189,11 @@ icd_morb_flag <- function(data,
   }
 
   # Warning if dobmap is not unique
-  if (under_age == TRUE & !is.null(dobmap)){
-    dobmap_rows <- dobmap %>%
-      dplyr::group_by(!!rlang::sym(id_var)) %>%
-      dplyr::summarise(n_records = dplyr::n()) %>%
-      dplyr::ungroup() %>%
-      dplyr::filter(n_records > 1) %>%
-      nrow()
-
-    if (dobmap_rows > 0){
+  if (under_age == TRUE & !is.null(dobmap)) {
+    if (dobmap %>%
+        dplyr::count(!!rlang::sym(id_var)) %>%
+        dplyr::filter(n > 1) %>%
+        nrow() > 0) {
       warning(sprintf("`dobmap` is not uniquely defined. Multiple records exist per `%s`.\nOutput may have more rows than input data set.", id_var), call. = FALSE)
     }
   }
