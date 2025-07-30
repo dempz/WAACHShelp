@@ -190,10 +190,7 @@ icd_morb_flag <- function(data,
 
   # Warning if dobmap is not unique
   if (under_age == TRUE & !is.null(dobmap)) {
-    if (dobmap %>%
-        dplyr::count(!!rlang::sym(id_var)) %>%
-        dplyr::filter(n > 1) %>%
-        nrow() > 0) {
+    if ((any(duplicated(dobmap[[id_var]])))) {
       warning(sprintf("`dobmap` is not uniquely defined. Multiple records exist per `%s`.\nOutput may have more rows than input data set.", id_var), call. = FALSE)
     }
   }
