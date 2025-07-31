@@ -36,6 +36,53 @@ Sub_morb_ediag <- data.frame(num    = 1:5,
                              lower  = c(291,      292, 303, 10, 55),
                              upper  = c(291.9999, 292.9999, 305.9999, 19.9999, 55.9999))
 
+### 1.2.1) Poisoning
+Poison_morb_diag <-
+  list(list(letter = "X", lower = 60.0,   upper = 64.9  ),
+       list(letter = "E", lower = 950.0,  upper = 950.9 ),
+       list(letter = "T", lower = 40.0,   upper = 40.9  ),
+       list(letter =  "", lower = 965.00, upper = 965.02),
+       list(letter =  "", lower = 965.09, upper = 965.09),
+       list(letter =  "", lower = 969.6,  upper = 969.6 ),
+       list(letter =  "", lower = 970.81, upper = 970.81),
+       list(letter = "T", lower = 43.6,   upper = 43.6  ),
+       list(letter =  "", lower = 969.7,  upper = 969.7 ),
+       list(letter = "T", lower = 42.3,   upper = 42.3  ),
+       list(letter =  "", lower = 967.0,  upper = 967.0 ),
+       list(letter = "T", lower = 42.4,   upper = 42.4  ),
+       list(letter =  "", lower = 969.4,  upper = 969.4 ),
+       list(letter = "T", lower = 41.2,   upper = 41.2  ),
+       list(letter =  "", lower = 968.4,  upper = 968.4 ),
+       list(letter = "T", lower = 52.0,   upper = 52.0  ),
+       list(letter =  "", lower = 981,    upper = 981   ),
+       list(letter = "T", lower = 52.1,   upper = 52.2  ),
+       list(letter =  "", lower = 982.0,  upper = 982.0 ),
+       list(letter = "T", lower = 59.0,   upper = 59.0  ),
+       list(letter =  "", lower = 987.2,  upper = 987.2 )) %>%
+  dplyr::bind_rows() %>%
+  as.data.frame() %>%
+  dplyr::mutate(num = dplyr::row_number(),
+                var = "Poison_morb",
+                broad_type = "diagnosis",
+                .before = 1) %>%
+  {. ->> tmp} %>%
+  dplyr::bind_rows(tmp %>% dplyr::mutate(broad_type = "ediag")) %>%
+  dplyr::bind_rows(tmp %>% dplyr::mutate(broad_type = "ecode")) %>%
+  dplyr::bind_rows(tmp %>% dplyr::mutate(broad_type = "dagger"))
+### Must update data-raw/colname_classify_list.R to include "dagger"
+
+### 1.2.2) Any poisoning or substance
+Sub_poison_morb_diag <- Poison_morb_diag %>%
+  dplyr::mutate(var = "Sub_poison_morb") %>%
+  dplyr::bind_rows(Sub_morb_diag %>% dplyr::mutate(var = "Sub_poison_morb")) %>%
+  dplyr::bind_rows(Sub_morb_ediag %>% dplyr::mutate(var = "Sub_poison_morb")) %>%
+  dplyr::group_by(var, broad_type) %>%
+  dplyr::arrange(broad_type, num) %>%
+  dplyr::mutate(num = dplyr::row_number()) %>%
+  dplyr::ungroup() %>%
+  as.data.frame()
+
+
 ## 1.5) Substance-specific
 
 ### 1.5.1) Alcohol
@@ -203,6 +250,10 @@ icd_dat <- dplyr::bind_rows(MH_morb_diag,
                             Sub_morb_diag,
                             Sub_morb_ediag,
 
+                            Poison_morb_diag, # New poisoning only flag
+
+                            Sub_poison_morb_diag, # New poisoning or substance flag
+
                             Alc_morb_diag,
                             Alc_morb_ediag,
 
@@ -242,7 +293,6 @@ icd_dat <- icd_dat %>%
 
 
 # Save our data set
-#save(icd_dat, file = "data/icd_dat.RData")
 usethis::use_data(icd_dat, overwrite = TRUE)
 
 
@@ -272,6 +322,7 @@ rm(MH_morb_diag,
    Solv_morb_ediag,
    Multdrug_morb_diag,
    Multdrug_morb_ediag,
-   SH_morb)
+   SH_morb,
+   Poison_morb_diag, tmp)
 
 
