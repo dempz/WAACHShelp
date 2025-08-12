@@ -31,4 +31,4 @@ morb_list <- lapply(dob_min$rootnum, function(id) {
 
 morb_min <- do.call(rbind, morb_list) %>% as_tibble()
 
-rm(morb_list, n_records, rootnum_expanded, rand_code, random_icd)
+rm(morb_list, rand_code)
