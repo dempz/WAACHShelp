@@ -23,8 +23,8 @@ icd_extraction <- function(data,
     }
 
     # Make sure the diagnosis type is properly captured
-    if (!all(diag_type %in% c("principal diagnosis", "additional diagnoses", "external cause of injury", "custom"))) {
-      stop("Error: 'diag_type' must be one of 'principal diagnosis', 'additional diagnoses', 'external cause of injury', or 'custom'.")
+    if (!all(diag_type %in% c("principal diagnosis", "additional diagnoses", "external cause of injury", "dagger", "custom"))) {
+      stop("Error: 'diag_type' must be one of 'principal diagnosis', 'additional diagnoses', 'external cause of injury', 'dagger', or 'custom'.")
     }
 
     # If `diag_type`=="custom", make sure that variables to search across are specified
@@ -89,18 +89,22 @@ icd_extraction <- function(data,
   if (flag_category != "Other"){
     vars_diag_ediag <- c("diagnosis", paste0("ediag", 1:20))
     vars_ecodes     <- paste0("ecode", 1:4)
+    vars_dagger     <- "dagger"
 
     diag_ediag_icd_categories <- unique(unlist(dplyr::select(data, dplyr::all_of(vars_diag_ediag)),
                                                use.names = F))
     ecode_icd_categories      <- unique(unlist(dplyr::select(data, dplyr::all_of(vars_ecodes)),
                                                use.names = F))
+    dagger_icd_categories     <- unique(unlist(dplyr::select(data, dplyr::all_of(vars_dagger)),
+                                               use.names = F))
+
   }
 
   # 1.2) If `flag_category` == "Other"
   if (flag_category == "Other"){
     custom_icd_categories <- list()
     for (i in diag_type){
-      if (i %in% c("principal diagnosis", "additional diagnoses", "external cause of injury")){ # The pre-defined cases
+      if (i %in% c("principal diagnosis", "additional diagnoses", "external cause of injury", "dagger")){ # The pre-defined cases
         vars <- colname_classify_specific[[i]] # Extract all the salient variables
         observed_icds <- unique(unlist(data %>% dplyr::select(!!vars), use.names = F)) # Extract all the ICD codes observed here
 
@@ -141,7 +145,13 @@ icd_extraction <- function(data,
                                letter = letter,
                                lower  = lower,
                                upper  = upper)
+        } else if (i == "dagger"){ # dagger
+          codes_ij <- val_filt(dagger_icd_categories,
+                               letter = letter,
+                               lower  = lower,
+                               upper  = upper)
         }
+
         codes_ij <- sort(codes_ij)
         #print(codes_ij)
         codes_ij <- sort(codes_ij)

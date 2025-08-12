@@ -201,6 +201,17 @@ icd_morb_flag <- function(data,
                  morb_date_var))
   }
 
+  if (flag_category != "Other"){
+    reqd_vars <- colname_classify_specific[{icd_dat %>% dplyr::filter(var == flag_category) %>% pull(classification) %>% unique}] %>%
+      unlist %>%
+      as.vector()
+    if (!all(reqd_vars %in% colnames(data))){
+      missing_vars <- setdiff(reqd_vars, colnames(data))
+      stop(sprintf("The following variable(s) are required to calculate '%s' but do not exist in `data`:\n%s",
+                   flag_category,
+                   paste0("`", missing_vars, "`", collapse = ", ")))
+    }
+  }
 
   # 1) Calculate age at record
   ## 1.1) For morbidity data sets -> relative to `subadm`
