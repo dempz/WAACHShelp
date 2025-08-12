@@ -37,7 +37,7 @@ Sub_morb_ediag <- data.frame(num    = 1:5,
                              upper  = c(291.9999, 292.9999, 305.9999, 19.9999, 55.9999))
 
 ### 1.2.1) Poisoning
-Poison_morb_diag <-
+Poison_morb <-
   list(list(letter = "X", lower = 60.0,   upper = 64.9  ),
        list(letter = "E", lower = 950.0,  upper = 950.9 ),
        list(letter = "T", lower = 40.0,   upper = 40.9  ),
@@ -72,13 +72,15 @@ Poison_morb_diag <-
 ### Must update data-raw/colname_classify_list.R to include "dagger"
 
 ### 1.2.2) Any poisoning or substance
-Sub_poison_morb_diag <- Poison_morb_diag %>%
+Sub_poison_morb <- Poison_morb %>%
+  dplyr::bind_rows(Sub_morb_diag) %>%
+  dplyr::bind_rows(Sub_morb_ediag) %>%
+  dplyr::select(-num) %>%
   dplyr::mutate(var = "Sub_poison_morb") %>%
-  dplyr::bind_rows(Sub_morb_diag %>% dplyr::mutate(var = "Sub_poison_morb")) %>%
-  dplyr::bind_rows(Sub_morb_ediag %>% dplyr::mutate(var = "Sub_poison_morb")) %>%
-  dplyr::group_by(var, broad_type) %>%
-  dplyr::arrange(broad_type, num) %>%
-  dplyr::mutate(num = dplyr::row_number()) %>%
+  dplyr::arrange(broad_type, letter, lower, upper) %>%
+  dplyr::group_by(broad_type) %>%
+  dplyr::mutate(num = dplyr::row_number(),
+                .before = 1) %>%
   dplyr::ungroup() %>%
   as.data.frame()
 
@@ -250,9 +252,9 @@ icd_dat <- dplyr::bind_rows(MH_morb_diag,
                             Sub_morb_diag,
                             Sub_morb_ediag,
 
-                            Poison_morb_diag, # New poisoning only flag
+                            Poison_morb, # New poisoning only flag
 
-                            Sub_poison_morb_diag, # New poisoning or substance flag
+                            Sub_poison_morb, # New poisoning or substance flag
 
                             Alc_morb_diag,
                             Alc_morb_ediag,
