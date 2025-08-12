@@ -14,7 +14,7 @@
 #' @param diag_type_custom_vars Variables to search across when `diag_type == "custom"`.
 #' @param diag_type_custom_params Search parameters to search across when `diag_type == "custom"`. Must be a list where the keys are the variable names and values are the inputs to `WAACHShelp::val_filt`. Can also be a list of lists where multiple ICD can be searched across for a single variable. See examples for specification.
 #' @param under_age Return additional variables corresponding to when participant was strictly under `age` y.o.. Uses DOBmap DOB and subadm morbidity admission date. Variables have suffix "_under\{age\}".
-#' @param age Integer. Age to consider for the `under_age` variable (default 18).
+#' @param age Numeric. Age (years) to consider for the `under_age` variable (default 18).
 #' @param person_summary Summarise results at a person-level.
 #' @param id_var Joining (ID) variable consistent between `data` and `dobmap`. Default `rootnum`.
 #' @param morb_date_var Hospital morbidity date variable in `data`. Default `"subadm"`.
@@ -134,14 +134,29 @@ icd_morb_flag <- function(data,
                           dobmap_dob_var = "dob",
                           dobmap_other_vars = NULL){
 
-  utils::data("colname_classify_specific",
-              package = "WAACHShelp")
-  utils::data("icd_dat",
-              package = "WAACHShelp")
-
   if (!(flag_category %in% c(unique(icd_dat$var), "Other"))) {
     stop(sprintf("Error: '%s' is not a valid input. Please choose from %s. If variable not contained in this list, please specify `flag_category == \"Other\"` and use the `flag_other_varname` and `flag_other_vals` arguments.",
                  flag_category, paste(c(unique(icd_dat$var)), collapse = ", ")))
+  }
+
+  # Error if age is zero or negative
+  if (age == 0){
+    warning("`age` detected as 0. Please confirm before proceeding.")
+  } else if (age < 0){
+    stop("Please specify a non-negative value for `age`!")
+  }
+
+  # Warn if dobmap, age, etc. specified but is not being used
+  if (under_age != TRUE) {
+    ignored_args <- c(dobmap = !missing(dobmap) && !is.null(dobmap),
+                      age = !missing(age))
+
+    if (any(ignored_args)) {
+      ignored <- names(ignored_args[ignored_args])
+      warning(sprintf("Because `under_age` is not TRUE, the following arguments are ignored: %s.",
+                      paste0(ignored, collapse = ", ")),
+              call. = FALSE)
+    }
   }
 
   # Warn if unused arguments are specified when using a standard flag_category
@@ -173,12 +188,30 @@ icd_morb_flag <- function(data,
                  dobmap_dob_var))
   }
 
+  # Warning if dobmap is not unique
+  if (under_age == TRUE & !is.null(dobmap)) {
+    if ((any(duplicated(dobmap[[id_var]])))) {
+      warning(sprintf("`dobmap` is not uniquely defined. Multiple records exist per `%s`.\nOutput may have more rows than input data set.", id_var), call. = FALSE)
+    }
+  }
+
   # Error if `morb_date_var` is not in the data
   if (under_age == TRUE & !morb_date_var %in% colnames(data)) {
     stop(sprintf("Error: `data` does not contain a column named '%s'. Consider changing the `morb_date_var` argument, if necessary.",
                  morb_date_var))
   }
 
+  if (flag_category != "Other"){
+    reqd_vars <- colname_classify_specific[{icd_dat %>% dplyr::filter(var == flag_category) %>% pull(classification) %>% unique}] %>%
+      unlist %>%
+      as.vector()
+    if (!all(reqd_vars %in% colnames(data))){
+      missing_vars <- setdiff(reqd_vars, colnames(data))
+      stop(sprintf("The following variable(s) are required to calculate '%s' but do not exist in `data`:\n%s",
+                   flag_category,
+                   paste0("`", missing_vars, "`", collapse = ", ")))
+    }
+  }
 
   # 1) Calculate age at record
   ## 1.1) For morbidity data sets -> relative to `subadm`
