@@ -36,7 +36,8 @@ Suggests:
     tcltk,
     tidyr,
     tidyselect,
-    utils
+    utils,
+    testthat (>= 3.0.0)
 Description: Data analysis requirements for the WAACHS project often involves a range of complex and nuanced functions. This is conflated by different analysts working across similar tasks at different points in time. This (local) package aims to ameliorate this with a set of functions applicable to all analysts (who use R)---aiding reproducibility.
 License: MIT + file LICENSE
 Encoding: UTF-8
@@ -44,3 +45,4 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
 VignetteBuilder: knitr
 LazyData: true
+Config/testthat/edition: 3
