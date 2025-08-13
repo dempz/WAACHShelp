@@ -22,6 +22,7 @@ Suggests:
     forcats,
     haven,
     knitr,
+    kableExtra,
     lubridate,
     officer,
     purrr,
