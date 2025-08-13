@@ -24,7 +24,7 @@ aducust_flag(
 
 \item{dobmap}{DOBmap file at the child level.}
 
-\item{carer_map}{Mapping file with columns "child ID", "carer ID". Can have multiple rows per child, to correspond to each carer type (e.g., carer 1, carer 2, NEWBMID).}
+\item{carer_map}{Mapping file with columns "child ID", "carer ID". Can have multiple rows per child (e.g., one per carer 1, carer 2, NEWBMID).}
 
 \item{child_id_var}{Variable denoting "child ID". Must exist and be called the same thing in \code{dobmap} and \code{carer_map}. Default \code{"rootnum"}.}
 
@@ -38,17 +38,25 @@ aducust_flag(
 
 \item{child_start_age}{Numeric. Start (minimum) age (years) to consider for flagging (default \code{0}).}
 
+\item{child_end_age}{Numeric. End (maximum) age (years) to consider for flagging (default \code{18}).}
+
 \item{carer_summary}{Collapse aducust flags \emph{within carer} (i.e., for each \code{carer_id_var}). Default \code{FALSE}.}
 
 \item{any_carer_summary}{Collapse aducust flags \emph{across carers}. Default \code{FALSE}.}
-
-\item{child_end_date}{Numeric. End (maximum) age (years) to consider for flagging (default \code{18}).}
 }
 \value{
 Flagged dataframe.
 }
 \description{
 This function serves to flag whether a custodial record exists when a child is of a certain stage.
+}
+\note{
+\itemize{
+\item If \code{carer_summary} is \code{TRUE}, then we are flagging whether a specific carer has any aducust record.
+\item Therefore, we are assessing whether a specific carer has any aducust records.
+\item If \code{any_carer_summary} is \code{TRUE}, then we are flagging whether any carer (if multiple) have any aducust records.
+\item If \code{any_carer_summary} is \code{TRUE}, \code{carer_summary} will be ignored.
+}
 }
 \examples{
 \dontrun{

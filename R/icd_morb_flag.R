@@ -202,7 +202,7 @@ icd_morb_flag <- function(data,
   }
 
   if (flag_category != "Other"){
-    reqd_vars <- colname_classify_specific[{icd_dat %>% dplyr::filter(var == flag_category) %>% pull(classification) %>% unique}] %>%
+    reqd_vars <- colname_classify_specific[{icd_dat %>% dplyr::filter(var == flag_category) %>% dplyr::pull(classification) %>% unique}] %>%
       unlist %>%
       as.vector()
     if (!all(reqd_vars %in% colnames(data))){
