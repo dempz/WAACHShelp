@@ -1,5 +1,6 @@
 <!-- NEWS.md is maintained by https://cynkra.github.io/fledge, do not edit -->
 
+
 # WAACHShelp 1.2.0 (2025-08-13)
 
 - Same as previous version.
