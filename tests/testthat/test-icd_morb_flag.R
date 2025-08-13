@@ -114,21 +114,35 @@ test_that("Warning if extra args used with predefined flag_category", {
   )
 })
 
+#test_that("Warning if dobmap has duplicate IDs when under_age = TRUE", {
+#  # Create a dobmap with duplicate IDs
+#  dobmap_dup <- dob_min
+#  dobmap_dup <- rbind(dobmap_dup, dobmap_dup[1, ])  # duplicate first row
+#
+#  expect_warning(
+#    icd_morb_flag(data = morb_min,
+#                  dobmap = dobmap_dup,
+#                  flag_category = "MH_morb",
+#                  under_age = TRUE,
+#                  age = 18),
+#    regexp = "`dobmap` is not uniquely defined. Multiple records exist per `rootnum`"
+#    )
+#})
 test_that("Warning if dobmap has duplicate IDs when under_age = TRUE", {
-  # Create a dobmap with duplicate IDs
-  dobmap_dup <- dob_min
-  dobmap_dup <- rbind(dobmap_dup, dobmap_dup[1, ])  # duplicate first row
+  dobmap_dup <- rbind(dob_min, dob_min[1, ])  # duplicate first row
 
-  expect_warning(
-    icd_morb_flag(data = morb_min,
-                  dobmap = dobmap_dup,
-                  flag_category = "MH_morb",
-                  under_age = TRUE,
-                  age = 18),
-    regexp = "`dobmap` is not uniquely defined. Multiple records exist per `rootnum`"
+  w <- capture_warnings(
+    icd_morb_flag(
+      data = morb_min,
+      dobmap = dobmap_dup,
+      flag_category = "MH_morb",
+      under_age = TRUE,
+      age = 18
     )
-})
+  )
 
+  expect_true(any(grepl("`dobmap` is not uniquely defined\\. Multiple records exist per `rootnum`", w)))
+})
 
  test_that("error if diag_type includes 'custom' but diag_type_custom_vars is NULL", {
   expect_error(
