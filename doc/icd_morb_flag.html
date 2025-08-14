@@ -60,7 +60,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
 { counter-reset: source-line 0; }
@@ -424,10 +424,10 @@ across ICD codes (via <code>WAACHShelp::val_filt</code>).</p>
 <span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a><span class="co">#&gt; 6   2 MH_morb      ecode external cause of injury      X    60  84.9999</span></span></code></pre></div>
 <p>The full set of flags is printed below:</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">unique</span>(icd_dat<span class="sc">$</span>var)</span>
-<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a><span class="co">#&gt;  [1] &quot;MH_morb&quot;       &quot;Sub_morb&quot;      &quot;Alc_morb&quot;      &quot;Tob_morb&quot;     </span></span>
-<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a><span class="co">#&gt;  [5] &quot;Opioid_morb&quot;   &quot;Cann_morb&quot;     &quot;Sed_morb&quot;      &quot;Coc_morb&quot;     </span></span>
-<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a><span class="co">#&gt;  [9] &quot;Stim_morb&quot;     &quot;Hall_morb&quot;     &quot;Solv_morb&quot;     &quot;Multdrug_morb&quot;</span></span>
-<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a><span class="co">#&gt; [13] &quot;SH_morb&quot;</span></span></code></pre></div>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a><span class="co">#&gt;  [1] &quot;MH_morb&quot;         &quot;Sub_morb&quot;        &quot;Poison_morb&quot;     &quot;Sub_poison_morb&quot;</span></span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a><span class="co">#&gt;  [5] &quot;Alc_morb&quot;        &quot;Tob_morb&quot;        &quot;Opioid_morb&quot;     &quot;Cann_morb&quot;      </span></span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a><span class="co">#&gt;  [9] &quot;Sed_morb&quot;        &quot;Coc_morb&quot;        &quot;Stim_morb&quot;       &quot;Hall_morb&quot;      </span></span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a><span class="co">#&gt; [13] &quot;Solv_morb&quot;       &quot;Multdrug_morb&quot;   &quot;SH_morb&quot;</span></span></code></pre></div>
 </div>
 <div id="applying-flags" class="section level3">
 <h3>Applying flags</h3>
