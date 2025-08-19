@@ -37,7 +37,7 @@ person_summary <- function(data,
     dplyr::mutate(!!rlang::sym(flag_category) := dplyr::case_when(any(!!rlang::sym(flag_category) == flag_category_val) ~ "Yes",
                                                     TRUE ~ "No")) %>%
     dplyr::distinct(!!rlang::sym(grouping_var), !!rlang::sym(flag_category)) %>%
-    dplyr::ungroup
+    dplyr::ungroup()
 
   return(data)
 }

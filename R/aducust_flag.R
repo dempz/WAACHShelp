@@ -2,6 +2,7 @@
 #'
 #' This function serves to flag whether a custodial record exists when a child is of a certain stage.
 #'
+#'
 #' @param data Input dataset (carer aducust).
 #' @param dobmap DOBmap file at the child level.
 #' @param carer_map Mapping file with columns "child ID", "carer ID". Can have multiple rows per child (e.g., one per carer 1, carer 2, NEWBMID).

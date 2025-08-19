@@ -12,12 +12,20 @@
 
 save_waachs <- function(dataframe, path, filename){
 
+  if (!dir.exists(path)) {
+    stop("The path provided does not exist.")
+  }
+
+  if (is.null(filename) || !nzchar(filename)) {
+    stop("`filename` must be provided and non-empty")
+  }
+
   utils::write.csv(x = dataframe,
-            file = paste0(path,filename,".csv"), row.names = F)
+                   file = file.path(path, paste0(filename,".csv")), row.names = FALSE)
 
   haven::write_sas(data = dataframe,
-                   path = paste0(path, filename,".sas7bdat"))
+                   path = file.path(path, paste0(filename,".sas7bdat")))
 
   readr::write_rds(x = dataframe,
-                   file = paste0(path, filename, ".RDS"))
+                   file = file.path(path, paste0(filename, ".RDS")))
 }
