@@ -1,0 +1,12 @@
+pandoc: 3.1.11
+pkgdown: 2.1.3
+pkgdown_sha: ~
+articles:
+  aducust_flag: aducust_flag.html
+  create_markdown: create_markdown.html
+  create_project: create_project.html
+  icd_morb_flag: icd_morb_flag.html
+last_built: 2025-08-19T00:07Z
+urls:
+  reference: https://dempz.github.io/WAACHShelp/reference
+  article: https://dempz.github.io/WAACHShelp/articles
