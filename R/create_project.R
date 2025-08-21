@@ -18,7 +18,7 @@
 #' An interactive window will appear prompting the user to select the folder where the project structure should be created.
 #' The default is the current working directory.
 #'
-#' @details For more details, see the \href{../doc/create_project.html}{vignette}.
+#' @details For more details, see the \href{https://dempz.github.io/WAACHShelp/articles/create_project.html}{vignette}.
 #'
 #' @examples
 #' \dontrun{

@@ -28,7 +28,7 @@ a new Quarto markdown file based on the extension template.
 
 By default, the \code{reports} folder will be selected to house the report.
 
-For more details, see the \href{../doc/create_markdown.html}{vignette}.
+For more details, see the \href{https://dempz.github.io/WAACHShelp/articles/create_markdown.html}{vignette}.
 }
 \note{
 The function assumes that the package \code{WAACHShelp} contains the necessary extension files

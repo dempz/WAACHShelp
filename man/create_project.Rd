@@ -37,7 +37,7 @@ This function creates a directory structure for a new project based on a specifi
 It can also create additional folders such as \code{data}, \code{reports}, \code{output} and \code{documentation}.
 The function copies specific files and folders from the chosen extension to the project directory.
 
-For more details, see the \href{../doc/create_project.html}{vignette}.
+For more details, see the \href{https://dempz.github.io/WAACHShelp/articles/create_project.html}{vignette}.
 }
 \note{
 An interactive window will appear prompting the user to select the folder where the project structure should be created.
