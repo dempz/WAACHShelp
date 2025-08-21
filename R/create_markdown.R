@@ -18,7 +18,7 @@
 #'
 #' By default, the `reports` folder will be selected to house the report.
 #'
-#' @details For more details, see the \href{../doc/create_markdown.html}{vignette}.
+#' @details For more details, see the \href{https://dempz.github.io/WAACHShelp/articles/create_markdown.html}{vignette}.
 #'
 #' @note
 #' The function assumes that the package `WAACHShelp` contains the necessary extension files

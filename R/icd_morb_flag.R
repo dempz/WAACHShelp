@@ -4,7 +4,7 @@
 #' Flags can be added for general categories based on pre-established ICD codes (e.g., any mental health contact, any substance-related contact, any alcohol/tobacco-related contact etc.) or add a custom set of ICD codes.
 #' The file with these pre-established ICD codes are saved as an .RData file and are trivial to change.
 #'
-#' @details For more details, see the \href{../doc/icd_morb_flag.html}{vignette}.
+#' @details For more details, see the \href{https://dempz.github.io/WAACHShelp/articles/icd_morb_flag.html}{vignette}.
 #'
 #' @param data Input dataset (morbidity).
 #' @param dobmap DOBmap file corresponding to input dataset.

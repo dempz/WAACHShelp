@@ -23,6 +23,7 @@
 #' + If `any_carer_summary` is `TRUE`, then we are flagging whether any carer (if multiple) have any aducust records.
 #' + If `any_carer_summary` is `TRUE`, `carer_summary` will be ignored.
 #'
+#' @details For more details, see the \href{https://dempz.github.io/WAACHShelp/articles/aducust_flag.html}{vignette}.
 #'
 #' @importFrom magrittr %>%
 #'

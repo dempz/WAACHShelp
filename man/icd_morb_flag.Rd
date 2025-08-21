@@ -59,7 +59,7 @@ Flags can be added for general categories based on pre-established ICD codes (e.
 The file with these pre-established ICD codes are saved as an .RData file and are trivial to change.
 }
 \details{
-For more details, see the \href{../doc/icd_morb_flag.html}{vignette}.
+For more details, see the \href{https://dempz.github.io/WAACHShelp/articles/icd_morb_flag.html}{vignette}.
 }
 \examples{
 \dontrun{

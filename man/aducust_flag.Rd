@@ -50,6 +50,9 @@ Flagged dataframe.
 \description{
 This function serves to flag whether a custodial record exists when a child is of a certain stage.
 }
+\details{
+For more details, see the \href{https://dempz.github.io/WAACHShelp/articles/aducust_flag.html}{vignette}.
+}
 \note{
 \itemize{
 \item If \code{carer_summary} is \code{TRUE}, then we are flagging whether a specific carer has any aducust record.
