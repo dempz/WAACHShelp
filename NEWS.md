@@ -1,5 +1,11 @@
 <!-- NEWS.md is maintained by https://cynkra.github.io/fledge, do not edit -->
 
+# WAACHShelp 1.3.0 (2025-08-26)
+
+- Add `check_att()` function tha flags expectation of education record in visibility window by DOB.
+- Add testing for `check_att()`.
+
+
 # WAACHShelp 1.2.3 (2025-08-22)
 
 - Same as previous version.

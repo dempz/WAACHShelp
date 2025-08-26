@@ -1,6 +1,6 @@
 Package: WAACHShelp
-Version: 1.2.3
-Date: 2025-08-22
+Version: 1.3.0
+Date: 2025-08-26
 Title: Various helper functions to aid reproducibility in WAACHS analysis-related tasks
 Authors@R: c(person("Zac", "Dempsey", role = c("aut", "cre"),
                      email = "zac.dempsey@thekids.org.au"))
