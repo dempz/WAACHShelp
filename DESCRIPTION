@@ -14,6 +14,7 @@ Imports:
     ggplot2,
     grDevices,
     magrittr,
+    rlang,
     table1,
     tibble
 Suggests: 
@@ -28,7 +29,6 @@ Suggests:
     officer,
     purrr,
     readr,
-    rlang,
     rmarkdown,
     rstudioapi,
     rvest,
@@ -39,7 +39,8 @@ Suggests:
     tidyr,
     tidyselect,
     utils,
-    testthat (>= 3.0.0)
+    testthat (>= 3.0.0),
+    withr
 Description: Data analysis requirements for the WAACHS project often involves a range of complex and nuanced functions. This is conflated by different analysts working across similar tasks at different points in time. This (local) package aims to ameliorate this with a set of functions applicable to all analysts (who use R)---aiding reproducibility.
 License: MIT + file LICENSE
 Encoding: UTF-8
