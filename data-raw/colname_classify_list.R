@@ -12,9 +12,3 @@ colname_classify_specific <- list("principal diagnosis" = actual_colnames[str_de
                                   "additional diagnoses" = actual_colnames[str_detect(actual_colnames, "ediag")],
                                   "external cause of injury" = actual_colnames[str_detect(actual_colnames, "ecode")],
                                   "dagger" = actual_colnames[str_detect(actual_colnames, "dagger")])
-
-
-usethis::use_data(colname_classify_specific,
-                  colname_classify_broad,
-                  internal = T,
-                  overwrite = T)

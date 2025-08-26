@@ -2,6 +2,7 @@
 
 export(add_rows2)
 export(aducust_flag)
+export(check_att)
 export(create_markdown)
 export(create_project)
 export(icd_morb_flag)
@@ -22,3 +23,4 @@ importFrom(data.table,":=")
 importFrom(ggplot2,ggplot)
 importFrom(gtsummary,tbl_summary)
 importFrom(magrittr,"%>%")
+importFrom(rlang,.data)
