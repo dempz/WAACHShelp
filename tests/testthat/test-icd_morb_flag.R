@@ -168,7 +168,7 @@ test_that("error if diag_type contains invalid values", {
       diag_type_custom_params = list("dagger" = list(letter = "Z", lower = 0, upper = 7)),
       flag_other_varname = "test_flag"
     ),
-    "Error: 'diag_type' must be one of 'principal diagnosis', 'additional diagnoses', 'external cause of injury', 'dagger', or 'custom'."
+    "Error: 'diag_type' must be one of 'principal diagnosis', 'additional diagnoses', 'external cause of injury', 'co-diagnosis', or 'custom'."
   )
 })
 
