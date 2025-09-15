@@ -1,5 +1,12 @@
 <!-- NEWS.md is maintained by https://cynkra.github.io/fledge, do not edit -->
 
+# WAACHShelp 1.3.1 (2025-09-15)
+
+- Fix bug in `icd_morb_flag()` which improperly treats pre-specified flags containing "dagger" variable.
+- Fix bug in `twoway` following updates. 
+- Fig bug in tests following updates.
+
+
 # WAACHShelp 1.3.0 (2025-08-26)
 
 - Add `check_att()` function tha flags expectation of education record in visibility window by DOB.
