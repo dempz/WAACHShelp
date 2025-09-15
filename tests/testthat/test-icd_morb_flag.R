@@ -394,13 +394,13 @@ test_that("person_summary works correctly for flag_category = 'Other', under_age
   expect_true(paste0("test_flag", "_under", 18) %in% colnames(result))
 })
 
-test_that("can specify 'dagger' in `diag_type`", {
+test_that("can specify 'co-diagnosis' in `diag_type`", {
   expect_message(icd_morb_flag(
     data = morb_min,
     flag_category = "Other",
     flag_other_varname = "test_var",
-    diag_type = "dagger",
-    diag_type_custom_params = list("dagger" = list("letter" = "Z", "lower" = 0, "upper" = 7))
+    diag_type = "co-diagnosis",
+    diag_type_custom_params = list("co-diagnosis" = list("letter" = "Z", "lower" = 0, "upper" = 7))
   ))
 })
 
