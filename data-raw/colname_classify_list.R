@@ -6,9 +6,9 @@ actual_colnames <- c("diagnosis",
 colname_classify_broad <- list("principal diagnosis" = "diagnosis",
                                "additional diagnoses" = "ediag",
                                "external cause of injury" = "ecode",
-                               "dagger" = "dagger")
+                               "co-diagnosis" = "dagger")
 
 colname_classify_specific <- list("principal diagnosis" = actual_colnames[str_detect(actual_colnames, "diagnosis")],
                                   "additional diagnoses" = actual_colnames[str_detect(actual_colnames, "ediag")],
                                   "external cause of injury" = actual_colnames[str_detect(actual_colnames, "ecode")],
-                                  "dagger" = actual_colnames[str_detect(actual_colnames, "dagger")])
+                                  "co-diagnosis" = actual_colnames[str_detect(actual_colnames, "dagger")])
