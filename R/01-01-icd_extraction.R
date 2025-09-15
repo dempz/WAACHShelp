@@ -15,7 +15,7 @@ icd_extraction <- function(data,
   # Error messages!
   if (flag_category == "Other") {
     # Ensure that diag_type and diag_type_custom_vars are properly defined
-    reserved_terms <- c("principal diagnosis", "additional diagnoses", "external cause of injury")
+    reserved_terms <- c("principal diagnosis", "additional diagnoses", "external cause of injury", "co-diagnosis")
     invalid_vars <- intersect(diag_type_custom_vars, reserved_terms)
     if (length(invalid_vars) > 0) {
       stop(paste("Error: The following term(s) should be specified in `diag_type` and not in `diag_type_custom_vars`:",
@@ -23,8 +23,8 @@ icd_extraction <- function(data,
     }
 
     # Make sure the diagnosis type is properly captured
-    if (!all(diag_type %in% c("principal diagnosis", "additional diagnoses", "external cause of injury", "dagger", "custom"))) {
-      stop("Error: 'diag_type' must be one of 'principal diagnosis', 'additional diagnoses', 'external cause of injury', 'dagger', or 'custom'.")
+    if (!all(diag_type %in% c("principal diagnosis", "additional diagnoses", "external cause of injury", "co-diagnosis", "custom"))) {
+      stop("Error: 'diag_type' must be one of 'principal diagnosis', 'additional diagnoses', 'external cause of injury', 'co-diagnosis', or 'custom'.")
     }
 
     # If `diag_type`=="custom", make sure that variables to search across are specified
@@ -44,7 +44,7 @@ icd_extraction <- function(data,
 
     # Message to say what variables are being flagged
     for (type in unique(diag_type)) {
-      if (type %in% c("principal diagnosis", "additional diagnoses", "external cause of injury")) {
+      if (type %in% c("principal diagnosis", "additional diagnoses", "external cause of injury", "co-diagnosis")) {
         message(paste0("Flagging across the following ", type, " variable(s):\n",
                        paste0(colname_classify_specific[[type]],
                               collapse = ", "),
@@ -104,7 +104,7 @@ icd_extraction <- function(data,
   if (flag_category == "Other"){
     custom_icd_categories <- list()
     for (i in diag_type){
-      if (i %in% c("principal diagnosis", "additional diagnoses", "external cause of injury", "dagger")){ # The pre-defined cases
+      if (i %in% c("principal diagnosis", "additional diagnoses", "external cause of injury", "co-diagnosis")){ # The pre-defined cases
         vars <- colname_classify_specific[[i]] # Extract all the salient variables
         observed_icds <- unique(unlist(data %>% dplyr::select(!!vars), use.names = F)) # Extract all the ICD codes observed here
 
@@ -145,7 +145,7 @@ icd_extraction <- function(data,
                                letter = letter,
                                lower  = lower,
                                upper  = upper)
-        } else if (i == "dagger"){ # dagger
+        } else if (i == "co-diagnosis"){ # dagger
           codes_ij <- val_filt(dagger_icd_categories,
                                letter = letter,
                                lower  = lower,

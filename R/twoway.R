@@ -19,17 +19,19 @@ twoway <- function(var1, var2, data = NULL, var2lab = NULL){
   v1  <- as.character(arg$var1)
   v2  <- as.character(arg$var2)
   dd  <- dplyr::select(data, dplyr::all_of(c(v1, v2)))
-  dd[,v2] <- forcats::as_factor(dd[, v2, drop = T])
+
+  # Convert all character columns to factor
+  dd <- dd %>% dplyr::mutate(across(where(is.character), as.factor))
 
   # Sort out the labels:
-  ll = attr(dd[,v2, drop = T], "label")
-  if(is.null(ll)) lab = v2 else lab = ll
-  if(!is.null(var2lab)) lab = var2lab
+  ll <- attr(dd[[v2]], "label")
+  lab <- if(is.null(ll)) v2 else ll
+  if(!is.null(var2lab)) lab <- var2lab
 
-  ## Create a constant columns which we use in the formula:
+  # Create a constant column for table1
   dd$tt <- lab
-  ff = stats::as.formula(paste0("~ " , v1, " | tt*", v2))
+  ff <- stats::as.formula(paste0("~ ", v1, " | tt * ", v2))
 
-  # Output the table.
-  table1::table1(ff, data = dd, overall = F)
+  # Output the table
+  table1::table1(ff, data = dd, overall = FALSE)
 }
