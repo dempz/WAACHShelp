@@ -1,5 +1,7 @@
 # WAACHShelp
 
+[![name status badge](https://dempz.r-universe.dev/badges/:name)](https://dempz.r-universe.dev/)
+[![WAACHShelp status badge](https://dempz.r-universe.dev/WAACHShelp/badges/version)](https://dempz.r-universe.dev/WAACHShelp)
 ![R-CMD-check](https://github.com/dempz/WAACHShelp/actions/workflows/R-CMD-check.yaml/badge.svg)
 [![Codecov test coverage](https://codecov.io/gh/dempz/WAACHShelp/graph/badge.svg)](https://app.codecov.io/gh/dempz/WAACHShelp)
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
