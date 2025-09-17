@@ -9,7 +9,15 @@ General helper functions for the WAACHS linked data project.
 
 ## Installation instructions
 
-`remotes::install_github(repo = "dempz/WAACHShelp", build_vignettes = TRUE)` or `devtools::install_github(repo = "dempz/WAACHShelp", build_vignettes = TRUE)`
+The package can be installed from the R-universe, by:
+```
+install.packages("WAACHShelp", repos = "https://dempz.r-universe.dev")
+```
+
+ALternatively, the package can be installed using `remotes`:
+```
+remotes::install_github(repo = "dempz/WAACHShelp", build_vignettes = TRUE)
+```
 
 ## Accessing vignettes
 
