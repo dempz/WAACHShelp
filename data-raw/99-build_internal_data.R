@@ -4,5 +4,5 @@ source(file = "data-raw/colname_classify_list.R")
 usethis::use_data(colname_classify_specific,
                   colname_classify_broad,
                   a_ref,
-                  internal = T,
-                  overwrite = T)
+                  internal = TRUE,
+                  overwrite = TRUE)

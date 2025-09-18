@@ -103,31 +103,18 @@ test_that("Warning if extra args used with predefined flag_category", {
   expect_warning(
     icd_morb_flag(
       data = morb_min,
-      flag_category = "MH_morb",    # predefined category
+      flag_category = "MH_morb",  # predefined category
       flag_other_varname = "test_var",
       diag_type = "custom",
       diag_type_custom_vars = c("diag"),
-      diag_type_custom_params = list("diag" = list(letter = "F", lower = 0, upper = 99)),
-      under_age = FALSE
-    ),
+      diag_type_custom_params = list("diag" = list(letter = "F",
+                                                   lower = 0,
+                                                   upper = 99)),
+      under_age = FALSE),
     regexp = "Because `flag_category = 'MH_morb'` is predefined, the following arguments are ignored"
   )
 })
 
-#test_that("Warning if dobmap has duplicate IDs when under_age = TRUE", {
-#  # Create a dobmap with duplicate IDs
-#  dobmap_dup <- dob_min
-#  dobmap_dup <- rbind(dobmap_dup, dobmap_dup[1, ])  # duplicate first row
-#
-#  expect_warning(
-#    icd_morb_flag(data = morb_min,
-#                  dobmap = dobmap_dup,
-#                  flag_category = "MH_morb",
-#                  under_age = TRUE,
-#                  age = 18),
-#    regexp = "`dobmap` is not uniquely defined. Multiple records exist per `rootnum`"
-#    )
-#})
 test_that("Warning if dobmap has duplicate IDs when under_age = TRUE", {
   dobmap_dup <- rbind(dob_min, dob_min[1, ])  # duplicate first row
 
@@ -269,15 +256,18 @@ test_that("person_summary = TRUE aggregates correctly", {
 
 test_that("works with flag_category == 'Other' and custom args", {
   expect_message(
-    icd_morb_flag(
-      data = morb_min,
-      flag_category = "Other",
-      flag_other_varname = "test_var",
-      diag_type = "custom",
-      diag_type_custom_vars = c("diagnosis", "ediag1"),
-      diag_type_custom_params = list(
-        "diagnosis" = list("letter" = "F", "lower" = 0, "upper" = 99.9999),
-        "ediag1" = list("letter" = "", "lower" = 0, "upper" = 99.9999)))
+    icd_morb_flag(data = morb_min,
+                  flag_category = "Other",
+                  flag_other_varname = "test_var",
+                  diag_type = "custom",
+                  diag_type_custom_vars = c("diagnosis",
+                                            "ediag1"),
+                  diag_type_custom_params = list("diagnosis" = list("letter" = "F",
+                                                                    "lower" = 0,
+                                                                    "upper" = 99.9999),
+                                                 "ediag1" = list("letter" = "",
+                                                                 "lower" = 0,
+                                                                 "upper" = 99.9999)))
   )
 })
 
@@ -410,4 +400,3 @@ test_that("Actually searches across dagger when `flag_category!='Other'", {
     flag_category = "Sub_poison_morb"
   ))
 })
-

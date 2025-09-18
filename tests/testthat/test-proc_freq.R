@@ -68,14 +68,14 @@ test_that("proc_freq sorts ascending and descending on Frequency", {
 test_that("proc_freq ignores invalid sort values without error", {
   skip_if_not_installed("flextable")
 
-  dat <- data.frame(x = c("A","B","C","A","B","A"))
+  dat <- data.frame(x = c("A", "B", "C", "A", "B", "A"))
   expect_silent(proc_freq(x, dat, sort = "random"))
 })
 
 test_that("proc_freq creates cumulative columns with correct endpoints", {
   skip_if_not_installed("flextable")
 
-  dat <- data.frame(x = c("A","A","B","C"))
+  dat <- data.frame(x = c("A", "A", "B", "C"))
   df <- proc_freq(x, dat)$body$dataset
 
   expect_true("Cumulative Frequency" %in% names(df))

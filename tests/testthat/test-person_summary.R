@@ -1,10 +1,8 @@
 library(testthat)
 
 test_that("person_summary collapses long dataframe correctly", {
-  df <- data.frame(
-    id = c(1,1,2,2,3,3,3),
-    flag = c("Yes", "No", "No", "No", "Yes", "Yes", "No")
-  )
+  df <- data.frame(id = c(1, 1, 2, 2, 3, 3, 3),
+                   flag = c("Yes", "No", "No", "No", "Yes", "Yes", "No"))
 
   res <- person_summary(data = df,
                         flag_category = "flag",
@@ -26,7 +24,7 @@ test_that("person_summary collapses long dataframe correctly", {
 
 test_that("person_summary works with different flag_category_val", {
   df <- data.frame(
-    id = c(1,1,2,2),
+    id = c(1, 1, 2, 2),
     status = c("A", "B", "B", "B")
   )
 
@@ -40,10 +38,8 @@ test_that("person_summary works with different flag_category_val", {
 })
 
 test_that("person_summary returns correct columns", {
-  df <- data.frame(
-    pid = c(1,2),
-    flag = c("Yes", "No")
-  )
+  df <- data.frame(pid = c(1, 2),
+                   flag = c("Yes", "No"))
 
   res <- person_summary(data = df,
                         flag_category = "flag",
@@ -53,10 +49,8 @@ test_that("person_summary returns correct columns", {
 })
 
 test_that("person_summary works when all rows are flag_category_val", {
-  df <- data.frame(
-    id = c(1,1,2,2),
-    flag = c("Yes", "Yes", "Yes", "Yes")
-  )
+  df <- data.frame(id = c(1, 1, 2, 2),
+                   flag = c("Yes", "Yes", "Yes", "Yes"))
 
   res <- person_summary(data = df,
                         flag_category = "flag",
@@ -66,10 +60,8 @@ test_that("person_summary works when all rows are flag_category_val", {
 })
 
 test_that("person_summary works when no rows are flag_category_val", {
-  df <- data.frame(
-    id = c(1,1,2,2),
-    flag = c("No", "No", "No", "No")
-  )
+  df <- data.frame(id = c(1, 1, 2, 2),
+                   flag = c("No", "No", "No", "No"))
 
   res <- person_summary(data = df,
                         flag_category = "flag",

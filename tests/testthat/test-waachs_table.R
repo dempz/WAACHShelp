@@ -115,11 +115,6 @@ test_that("waachs_table restores flextable defaults after execution", {
 })
 
 # Can probably be improved
-#test_that("check_font_family returns a font name or fallback", {
-#  out <- waachs_table(mtcars[1:5, ], font_family = "DefinitelyNoSuchFont123")
-#  defaults <- flextable::get_flextable_defaults()
-#  expect_true(defaults$font.family %in% c("sans", "DefinitelyNoSuchFont123", "Arial"))
-#})
 test_that("check_font_family returns a font name or fallback", {
   out <- waachs_table(mtcars[1:5, ], font_family = "DefinitelyNoSuchFont123")
   defaults <- flextable::get_flextable_defaults()

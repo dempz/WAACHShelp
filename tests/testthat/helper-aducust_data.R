@@ -10,10 +10,10 @@ make_rootnum <- function(n) {
 n_children <- 10
 rootnums <- make_rootnum(n_children)
 
-# dobmap: rootnum + dob
+# dobmap is rootnum & dob
 dobmap <- tibble(
   rootnum = rootnums,
-  dob = as.Date('2010-01-01') + sample(0:3650, n_children, replace = TRUE) # random dob within 10 years
+  dob = as.Date("2010-01-01") + sample(0:3650, n_children, replace = TRUE) # random dob within 10 years
 )
 
 carer_types <- c("carer1id", "carer2id", "NEWBMID")
@@ -40,7 +40,7 @@ for (i in seq_len(nrow(carer_map))) {
   if (n_records == 0) {
     aducust_list[[i]] <- NULL
   } else {
-    rec_dates <- as.Date('2020-01-01') + sample(0:1000, n_records, replace = TRUE)
+    rec_dates <- as.Date("2020-01-01") + sample(0:1000, n_records, replace = TRUE)
     dis_dates <- rec_dates + sample(1:30, n_records, replace = TRUE)
 
     aducust_list[[i]] <- tibble(
@@ -57,4 +57,3 @@ aducust <- bind_rows(aducust_list) %>%
   rename(carer_rootnum = rootnum)
 
 rm(aducust_list, carer_types, carers_per_child, n_children, rootnums, make_rootnum)
-
