@@ -34,7 +34,7 @@ aducust_flag(
 
 \item{data_end_date}{End date to consider in \code{data}. Corresponds to aducust \emph{end} date. Default \code{"DischargeDate"}.}
 
-\item{dobmap_dob_var}{Date of birth (DOB) varible in \code{dobmap}. Default \code{"dob"}.}
+\item{dobmap_dob_var}{Date of birth (DOB) variable in \code{dobmap}. Default \code{"dob"}.}
 
 \item{child_start_age}{Numeric. Start (minimum) age (years) to consider for flagging (default \code{0}).}
 

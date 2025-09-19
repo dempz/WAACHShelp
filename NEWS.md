@@ -9,7 +9,7 @@
 
 # WAACHShelp 1.3.0 (2025-08-26)
 
-- Add `check_att()` function tha flags expectation of education record in visibility window by DOB.
+- Add `check_att()` function that flags expectation of education record in visibility window by DOB.
 - Add testing for `check_att()`.
 
 

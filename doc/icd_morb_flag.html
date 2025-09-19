@@ -399,7 +399,7 @@ parameters/assumptions will be made:</p>
 <li>Morbidity data set is called <code>morb_dat</code>.</li>
 <li>DOBmap data set (if applicable) is called
 <code>dobmap_dat</code>.</li>
-<li>Want to create the <code>MH_morb</code> flag (unless othewise
+<li>Want to create the <code>MH_morb</code> flag (unless otherwise
 specified).</li>
 </ol>
 <div id="automatic-flagging" class="section level2">
@@ -459,7 +459,7 @@ diagnoses variables (morbidity data must contain
 <code>ediag1</code>–<code>ediag20</code> Which represent all additional
 diagnosis fields).</li>
 <li><code>&quot;external cause of injury&quot;</code> – Search across ALL external
-cause of injury variables (morbiditiy data must contain
+cause of injury variables (morbidity data must contain
 <code>ecode1</code>–<code>ecode4</code> which represent all external
 cause of injury fields).</li>
 <li><code>&quot;custom&quot;</code> – Other!</li>
@@ -574,7 +574,7 @@ values of the <code>id_var</code> (e.g., rootnum, NEWUID).</p>
 <div id="example-4-flagging-records-below-strictly-below-a-certain-age" class="section level3">
 <h3>Example 4: Flagging records below strictly below a certain age</h3>
 <p>We can create a flag based on an individual’s admission age. This
-requires a “DOBmap” file to be specified, so an age can actuall be
+requires a “DOBmap” file to be specified, so an age can actually be
 calculated.</p>
 <p>This flags records if the record occurred strictly below the age
 specified (e.g., if individual is strictly below 18). Therefore, for a

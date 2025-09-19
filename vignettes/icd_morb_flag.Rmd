@@ -54,7 +54,7 @@ For the purpose of this vignette, the following parameters/assumptions will be m
 
 1. Morbidity data set is called `morb_dat`.
 2. DOBmap data set (if applicable) is called `dobmap_dat`.
-2. Want to create the `MH_morb` flag (unless othewise specified).
+2. Want to create the `MH_morb` flag (unless otherwise specified).
 
 ## Automatic flagging
 
@@ -105,7 +105,7 @@ This involves specifying `flag_category = "Other"`, and then specifying a diagno
 
 1. `"prinicipal diagnosis"` -- Search across principal diagnosis variable (morbidity data must contain `diag` which represents principal diagnosis field).
 2. `"additional diagnoses"` -- Search across ALL additional diagnoses variables (morbidity data must contain `ediag1`--`ediag20` Which represent all additional diagnosis fields).
-3. `"external cause of injury"` -- Search across ALL external cause of injury variables (morbiditiy data must contain `ecode1`--`ecode4` which represent all external cause of injury fields).
+3. `"external cause of injury"` -- Search across ALL external cause of injury variables (morbidity data must contain `ecode1`--`ecode4` which represent all external cause of injury fields).
 4. `"custom"` -- Other!
 
 ### Example 1: Basic flag creation
@@ -217,7 +217,7 @@ icd_morb_flag(data = morb_dat,
 
 ### Example 4: Flagging records below strictly below a certain age
 
-We can create a flag based on an individual's admission age. This requires a "DOBmap" file to be specified, so an age can actuall be calculated.
+We can create a flag based on an individual's admission age. This requires a "DOBmap" file to be specified, so an age can actually be calculated.
 
 This flags records if the record occurred strictly below the age specified (e.g., if individual is strictly below 18). Therefore, for a non-missing flag to be returned, both an individual's *date of birth* and *date of admission* must exist.
 

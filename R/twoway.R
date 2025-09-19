@@ -21,7 +21,7 @@ twoway <- function(var1, var2, data = NULL, var2lab = NULL){
   dd  <- dplyr::select(data, dplyr::all_of(c(v1, v2)))
 
   # Convert all character columns to factor
-  dd <- dd %>% dplyr::mutate(across(where(is.character), as.factor))
+  dd <- dd %>% dplyr::mutate(dplyr::across(dplyr::where(is.character), as.factor))
 
   # Sort out the labels:
   ll <- attr(dd[[v2]], "label")
