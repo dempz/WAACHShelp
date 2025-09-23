@@ -1,6 +1,8 @@
 #' Custodial data flagging function
 #'
-#' This function serves to flag whether a custodial record exists when a child is of a certain stage.
+#' This function flags whether a carer record (custodial, per its name) exists when a child is of a certain age.
+#'
+#' While it is designed for use with flagging carer custodial records, it can be applied in many other circumstances where flagging of a carer (or otherwise) record exists when a child (or otherwise) is of a certain age.
 #'
 #'
 #' @param data Input dataset (carer aducust).
