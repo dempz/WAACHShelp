@@ -45,7 +45,7 @@ Description: Data analysis requirements for the WAACHS project often involves a 
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.3
 VignetteBuilder: knitr
 LazyData: true
 Config/testthat/edition: 3

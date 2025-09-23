@@ -6,6 +6,7 @@
 #' @param data Input dataset (carer aducust).
 #' @param dobmap DOBmap file at the child level.
 #' @param carer_map Mapping file with columns "child ID", "carer ID". Can have multiple rows per child (e.g., one per carer 1, carer 2, NEWBMID).
+#' @param flag_name Name of flagging variable to return. Default `"carer_aducust"`.
 #' @param child_id_var Variable denoting "child ID". Must exist and be called the same thing in `dobmap` and `carer_map`. Default `"rootnum"`.
 #' @param carer_id_var Variable denoting "carer ID". Must exist in `carer_map`. Default `"carer_rootnum"`.
 #' @param data_start_date Start date to consider in `data`. Corresponds to aducust *start* date. Default `"ReceptionDate"`.
@@ -44,6 +45,7 @@
 aducust_flag <- function(data,
                          dobmap,
                          carer_map,
+                         flag_name = "carer_aducust",
                          child_id_var = "rootnum",
                          carer_id_var = "carer_rootnum",
                          data_start_date = "ReceptionDate",
@@ -144,7 +146,7 @@ aducust_flag <- function(data,
                      relationship = "many-to-many")
 
   # 5) Do the flagging
-  varname <- paste0("carer_aducust_", child_start_age, "_", child_end_age)
+  varname <- paste0(flag_name, "_", child_start_age, "_", child_end_age)
   data_final <- data_final %>%
     dplyr::mutate(!!varname := dplyr::case_when(dplyr::if_any(.cols = c(!!rlang::sym(data_start_date), !!rlang::sym(data_end_date)),
                                                               .fns = ~ . >= start_date & . < end_date) ~ "Yes",
