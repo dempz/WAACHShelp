@@ -10,7 +10,7 @@
 #' @param carer_id_var Variable denoting "carer ID". Must exist in `carer_map`. Default `"carer_rootnum"`.
 #' @param data_start_date Start date to consider in `data`. Corresponds to aducust *start* date. Default `"ReceptionDate"`.
 #' @param data_end_date End date to consider in `data`. Corresponds to aducust *end* date. Default `"DischargeDate"`.
-#' @param dobmap_dob_var Date of birth (DOB) varible in `dobmap`. Default `"dob"`.
+#' @param dobmap_dob_var Date of birth (DOB) variable in `dobmap`. Default `"dob"`.
 #' @param child_start_age Numeric. Start (minimum) age (years) to consider for flagging (default `0`).
 #' @param child_end_age Numeric. End (maximum) age (years) to consider for flagging (default `18`).
 #' @param carer_summary Collapse aducust flags *within carer* (i.e., for each `carer_id_var`). Default `FALSE`.

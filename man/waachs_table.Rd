@@ -22,13 +22,13 @@ waachs_table(
 \arguments{
 \item{x}{A table, typically a data.frame, tibble, or output from gtsummary.}
 
-\item{font.size}{The font size for text in the body of the table, defaults to 8 (passed throught to set_flextable_defaults).}
+\item{font.size}{The font size for text in the body of the table, defaults to 8 (passed through to set_flextable_defaults).}
 
 \item{font.size.header}{The font size for text in the header of the table, defaults to 10.}
 
-\item{line.spacing}{Line spacing for the table, defaults to 1.5 (passed throught to set_flextable_defaults).}
+\item{line.spacing}{Line spacing for the table, defaults to 1.5 (passed through to set_flextable_defaults).}
 
-\item{padding}{Padding around all four sides of the text within the cell, defaults to 2 (passed throught to set_flextable_defaults).}
+\item{padding}{Padding around all four sides of the text within the cell, defaults to 2 (passed through to set_flextable_defaults).}
 
 \item{body_bg_col}{Body background colour (default WAACHS cream).}
 
