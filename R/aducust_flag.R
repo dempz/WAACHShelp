@@ -164,6 +164,7 @@ aducust_flag <- function(data,
       dplyr::group_by(dplyr::across(tidyselect::all_of(group_cols))) %>%
       dplyr::summarise(!!varname := dplyr::case_when(any(.data[[varname]] == "Yes") ~ "Yes",
                                                      all(.data[[varname]] == "No") ~ "No",
+                                                     all(.data[[varname]] %in% c("No", "No record")) ~ "No",
                                                      all(.data[[varname]] == "No record") ~ "No record"))
   } else if (carer_summary) {
     # Honour carer_summary only if any_carer_summary is FALSE
