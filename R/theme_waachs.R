@@ -1,12 +1,12 @@
 #' Apply WAACHS theme to ggplot2 plots
 #'
-#' This function applies a custom theme to ggplot2 plots, incorporating colors to align with the project's visual identity.
+#' This function applies a custom theme to ggplot2 plots, incorporating colours to align with the project's visual identity.
 #'
 #' @param base_size Base font size
 #' @param base_line_size Base line size (default `base_size/22`)
 #' @param base_rect_size Base rectangle size (default `base_size/22`)
 #'
-#' @details The function determines the operating system and selects appropriate font names for Windows or other systems. It also adjusts color scales.
+#' @details The function determines the operating system and selects appropriate font names for Windows or other systems. It also adjusts colour scales.
 #'
 #' @return A list of ggplot2 theme elements and scale adjustments.
 #'

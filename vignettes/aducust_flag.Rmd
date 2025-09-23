@@ -305,7 +305,7 @@ head(eg3.3) %>%
 
 ## Example 4: Summarising Records
 
-### Example 4.1: Summaring within carer
+### Example 4.1: Summarising within carer
 
 + `carer_summary=TRUE`
 + Within each carer, returns: 
