@@ -1,5 +1,11 @@
 <!-- NEWS.md is maintained by https://cynkra.github.io/fledge, do not edit -->
 
+# WAACHShelp 1.4.0 (2025-10-28)
+
+- `aducust_flag()`: Resolve inconsistent flagging amongst NAs.
+- `aducust_flag()`: Add parameter to set own variable name.
+
+
 # WAACHShelp 1.3.1 (2025-09-15)
 
 - Fix bug in `icd_morb_flag()` which improperly treats pre-specified flags containing "dagger" variable.

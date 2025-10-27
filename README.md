@@ -5,6 +5,7 @@
 ![R-CMD-check](https://github.com/dempz/WAACHShelp/actions/workflows/R-CMD-check.yaml/badge.svg)
 [![Codecov test coverage](https://codecov.io/gh/dempz/WAACHShelp/graph/badge.svg)](https://app.codecov.io/gh/dempz/WAACHShelp)
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
+[![DOI](https://zenodo.org/badge/849158197.svg)](https://doi.org/10.5281/zenodo.17460007)
 
 
 General helper functions for the WAACHS linked data project.

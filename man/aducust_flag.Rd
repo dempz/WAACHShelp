@@ -8,6 +8,7 @@ aducust_flag(
   data,
   dobmap,
   carer_map,
+  flag_name = "carer_aducust",
   child_id_var = "rootnum",
   carer_id_var = "carer_rootnum",
   data_start_date = "ReceptionDate",
@@ -25,6 +26,8 @@ aducust_flag(
 \item{dobmap}{DOBmap file at the child level.}
 
 \item{carer_map}{Mapping file with columns "child ID", "carer ID". Can have multiple rows per child (e.g., one per carer 1, carer 2, NEWBMID).}
+
+\item{flag_name}{Name of flagging variable to return. Default \code{"carer_aducust"}.}
 
 \item{child_id_var}{Variable denoting "child ID". Must exist and be called the same thing in \code{dobmap} and \code{carer_map}. Default \code{"rootnum"}.}
 
