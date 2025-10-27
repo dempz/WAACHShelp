@@ -1,5 +1,11 @@
 <!-- NEWS.md is maintained by https://cynkra.github.io/fledge, do not edit -->
 
+# WAACHShelp 1.4.0 (2025-10-28)
+
+- `aducust_flag()`: Resolve inconsistent flagging amongst NAs.
+- `aducust_flag()`: Add parameter to set own variable name.
+
+
 # WAACHShelp 1.3.1 (2025-09-15)
 
 - Fix bug in `icd_morb_flag()` which improperly treats pre-specified flags containing "dagger" variable.
@@ -9,7 +15,7 @@
 
 # WAACHShelp 1.3.0 (2025-08-26)
 
-- Add `check_att()` function tha flags expectation of education record in visibility window by DOB.
+- Add `check_att()` function that flags expectation of education record in visibility window by DOB.
 - Add testing for `check_att()`.
 
 

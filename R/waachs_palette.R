@@ -5,7 +5,7 @@
 #' @param type Type of colour palette to render (values "discrete", "continuous").
 #' @param n Number of colours to generate in palette (if `type == "continuous"`).
 #' @param visualisation (Default `TRUE`). Return visualisation of the colour spectrum to aid in decision making.
-#' @param bias A positive nmber representing the spacing between colours at the high end. Parsed to `grDevices::colorRamp` (default 2).
+#' @param bias A positive number representing the spacing between colours at the high end. Parsed to `grDevices::colorRamp` (default 2).
 #' @param interpolate Interpolation algorithm to parse to `grDevices::colorRamp` (default "spline").
 #' @param ... Miscellaneous arguments to parse to `grDevices::colorRampPalette`.
 #'

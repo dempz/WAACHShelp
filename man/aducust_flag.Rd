@@ -8,6 +8,7 @@ aducust_flag(
   data,
   dobmap,
   carer_map,
+  flag_name = "carer_aducust",
   child_id_var = "rootnum",
   carer_id_var = "carer_rootnum",
   data_start_date = "ReceptionDate",
@@ -26,6 +27,8 @@ aducust_flag(
 
 \item{carer_map}{Mapping file with columns "child ID", "carer ID". Can have multiple rows per child (e.g., one per carer 1, carer 2, NEWBMID).}
 
+\item{flag_name}{Name of flagging variable to return. Default \code{"carer_aducust"}.}
+
 \item{child_id_var}{Variable denoting "child ID". Must exist and be called the same thing in \code{dobmap} and \code{carer_map}. Default \code{"rootnum"}.}
 
 \item{carer_id_var}{Variable denoting "carer ID". Must exist in \code{carer_map}. Default \code{"carer_rootnum"}.}
@@ -34,7 +37,7 @@ aducust_flag(
 
 \item{data_end_date}{End date to consider in \code{data}. Corresponds to aducust \emph{end} date. Default \code{"DischargeDate"}.}
 
-\item{dobmap_dob_var}{Date of birth (DOB) varible in \code{dobmap}. Default \code{"dob"}.}
+\item{dobmap_dob_var}{Date of birth (DOB) variable in \code{dobmap}. Default \code{"dob"}.}
 
 \item{child_start_age}{Numeric. Start (minimum) age (years) to consider for flagging (default \code{0}).}
 

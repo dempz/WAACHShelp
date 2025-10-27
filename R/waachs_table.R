@@ -5,10 +5,10 @@
 #' Inspired and based on `thekidsbiostats::thekids_table()`.
 #'
 #' @param x A table, typically a data.frame, tibble, or output from gtsummary.
-#' @param font.size The font size for text in the body of the table, defaults to 8 (passed throught to set_flextable_defaults).
+#' @param font.size The font size for text in the body of the table, defaults to 8 (passed through to set_flextable_defaults).
 #' @param font.size.header The font size for text in the header of the table, defaults to 10.
-#' @param line.spacing Line spacing for the table, defaults to 1.5 (passed throught to set_flextable_defaults).
-#' @param padding Padding around all four sides of the text within the cell, defaults to 2 (passed throught to set_flextable_defaults).
+#' @param line.spacing Line spacing for the table, defaults to 1.5 (passed through to set_flextable_defaults).
+#' @param padding Padding around all four sides of the text within the cell, defaults to 2 (passed through to set_flextable_defaults).
 #' @param body_bg_col Body background colour (default WAACHS cream).
 #' @param header_bg_col Header background colour (default WAACHS blue).
 #' @param header_text_col Header text colour (default black).

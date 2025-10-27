@@ -21,10 +21,10 @@ theme_waachs(
 A list of ggplot2 theme elements and scale adjustments.
 }
 \description{
-This function applies a custom theme to ggplot2 plots, incorporating colors to align with the project's visual identity.
+This function applies a custom theme to ggplot2 plots, incorporating colours to align with the project's visual identity.
 }
 \details{
-The function determines the operating system and selects appropriate font names for Windows or other systems. It also adjusts color scales.
+The function determines the operating system and selects appropriate font names for Windows or other systems. It also adjusts colour scales.
 }
 \examples{
 
