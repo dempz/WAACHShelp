@@ -1,5 +1,10 @@
 <!-- NEWS.md is maintained by https://cynkra.github.io/fledge, do not edit -->
 
+# WAACHShelp 1.4.1 (2025-10-28)
+
+- Make dependencies more strict.
+
+
 # WAACHShelp 1.4.0 (2025-10-28)
 
 - `aducust_flag()`: Resolve inconsistent flagging amongst NAs.
