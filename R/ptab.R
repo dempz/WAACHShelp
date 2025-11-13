@@ -2,6 +2,11 @@
 #'
 #' Created by PV (2023).
 #'
+#' @description
+#' `r lifecycle::badge("deprecated")`
+#'
+#' This function was deprecated because it was no longer required by analysts.
+#'
 #' @param tt Dataframe intended to display as a html table.
 #' @param shading Vector denoting the lines of the table that might want to be shaded. For example, to shade the first, third and fifth rows, supply `shading = c(1, 3, 5)`.
 #' @param caption Caption to add to the data set.
@@ -11,10 +16,14 @@
 #'
 #' @return Two-way table
 #'
+#' @keywords internal
+#'
 #' @export
 
 ptab <- function(tt, shading = NULL, caption = " ", bodysize = 11) {
-
+  lifecycle::deprecate_warn(when = "1.4.2",
+                            what = "ptab()",
+                            details = "Function is no required by analysts.")
 
   ft <- tt %>%
     flextable::flextable() %>%

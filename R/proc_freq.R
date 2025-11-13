@@ -5,6 +5,12 @@
 #' Renders output similar to the "proc freq" function of SAS.
 #'
 #' Created by PV (2023).
+#'
+#' @description
+#' `r lifecycle::badge("deprecated")`
+#'
+#' This function was deprecated because it was no longer required by analysts.
+#'
 #' @param var1 Name of the variable
 #' @param data Dataset that contains `var1`
 #' @param sort Optional argument which can take on "asc" or "desc" to indicate the type of sort required.
@@ -23,6 +29,9 @@
 #' @export
 
 proc_freq <- function(var1, data = NULL, sort = NULL, min.frq = 0){
+  lifecycle::deprecate_warn(when = "1.4.2",
+                            what = "proc_freq()",
+                            details = "Function is no required by analysts.")
 
   # Avoid "no visible binding" notes for R CMD check
   Frequency <- Percent <- NULL

@@ -13,9 +13,13 @@ proc_contents(df)
 Dataframe
 }
 \description{
-This little function pulls out the labels and formats from a dataframe and compiles this metadata as a dataframe.
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
+
+This function was deprecated because it was no longer required by analysts.
 }
 \details{
+This little function pulls out the labels and formats from a dataframe and compiles this metadata as a dataframe.
+
 Imitates the "proc contents" function of SAS.
 
 Created by PV (2023).

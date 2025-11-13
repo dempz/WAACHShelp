@@ -6,6 +6,11 @@
 #'
 #' Created by PV (2023).
 #'
+#' @description
+#' `r lifecycle::badge("deprecated")`
+#'
+#' This function was deprecated because it was no longer required by analysts.
+#'
 #' @param df Dataframe to input.
 #' @return Dataframe
 #'
@@ -15,6 +20,10 @@
 #' @export
 
 proc_contents = function(df){
+  lifecycle::deprecate_warn(when = "1.4.2",
+                            what = "proc_contents()",
+                            details = "Function is no required by analysts.")
+
   dplyr::bind_cols(var_name = names(df),
                    class = purrr::map_chr(df, function(x) ifelse(is.null(attr(x, "class")),
                                                                  "",

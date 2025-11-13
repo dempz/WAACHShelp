@@ -4,7 +4,7 @@ library(testthat)
 test_that("proc_freq returns a flextable with expected columns and totals", {
   skip_if_not_installed("flextable")
 
-  ft <- proc_freq(Species, iris)
+  ft <- suppressWarnings(proc_freq(Species, iris))
   expect_s3_class(ft, "flextable")
 
   # column keys and body dataset
@@ -28,7 +28,7 @@ test_that("proc_freq handles missing values by excluding from body and reporting
 
   dat <- iris
   dat$Species[1:7] <- NA_integer_
-  ft <- proc_freq(Species, dat)
+  ft <- suppressWarnings(proc_freq(Species, dat))
 
   df <- ft$body$dataset
   expect_equal(sum(df$Frequency), nrow(na.omit(dat["Species"])))
@@ -38,7 +38,7 @@ test_that("proc_freq groups low-frequency categories with min.frq and places gro
   skip_if_not_installed("flextable")
 
   dat <- data.frame(x = c(rep("A", 5), rep("B", 2), rep("C", 1)))
-  ft <- proc_freq(x, dat, min.frq = 3)
+  ft <- suppressWarnings(proc_freq(x, dat, min.frq = 3))
   df <- ft$body$dataset
 
   # last row label is "n < 3"
@@ -57,8 +57,8 @@ test_that("proc_freq sorts ascending and descending on Frequency", {
 
   dat <- data.frame(x = c(rep("A", 5), rep("B", 3), rep("C", 1)))
 
-  df_asc  <- proc_freq(x, dat, sort = "asc")$body$dataset
-  df_desc <- proc_freq(x, dat, sort = "desc")$body$dataset
+  df_asc  <- suppressWarnings(proc_freq(x, dat, sort = "asc")$body$dataset)
+  df_desc <- suppressWarnings(proc_freq(x, dat, sort = "desc")$body$dataset)
 
   # non-decreasing / non-increasing Frequency
   expect_true(all(diff(df_asc$Frequency)  >= 0))
@@ -69,17 +69,22 @@ test_that("proc_freq ignores invalid sort values without error", {
   skip_if_not_installed("flextable")
 
   dat <- data.frame(x = c("A","B","C","A","B","A"))
-  expect_silent(proc_freq(x, dat, sort = "random"))
+  expect_silent(suppressWarnings(proc_freq(x, dat, sort = "random")))
 })
 
 test_that("proc_freq creates cumulative columns with correct endpoints", {
   skip_if_not_installed("flextable")
 
   dat <- data.frame(x = c("A","A","B","C"))
-  df <- proc_freq(x, dat)$body$dataset
+  df <- suppressWarnings(proc_freq(x, dat)$body$dataset)
 
   expect_true("Cumulative Frequency" %in% names(df))
   expect_true("Cumulative Percent" %in% names(df))
   expect_equal(max(df$`Cumulative Frequency`), sum(!is.na(dat$x)))
   expect_equal(round(max(df$`Cumulative Percent`), 1), 100)
+})
+
+test_that("proc_freq is deprecated", {
+  dat <- data.frame(x = c("A","A","B","C"))
+  lifecycle::expect_deprecated(proc_freq(x, dat))
 })

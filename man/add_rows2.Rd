@@ -15,8 +15,12 @@ add_rows2(..., id = NULL)
 SAS labelled dataframe
 }
 \description{
-Almost identical to the original \code{dplyr::add_row} but also looks for \code{format.sas} attribute which \code{haven} provides when loading as SAS dataset.
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
+
+This function was deprecated because it was no longer required by analysts.
 }
 \details{
+Almost identical to the original \code{dplyr::add_row} but also looks for \code{format.sas} attribute which \code{haven} provides when loading as SAS dataset.
+
 Created by PV (2023).
 }

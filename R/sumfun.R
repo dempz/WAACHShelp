@@ -2,6 +2,11 @@
 #'
 #' Created by PV (2023).
 #'
+#' @description
+#' `r lifecycle::badge("deprecated")`
+#'
+#' This function was deprecated because it was no longer required by analysts.
+#'
 #' @param x Vector from input dataframe to summarise.
 #' @param na.rm (Default TRUE) to remove NA (missing) observations from summary.
 #' @param ... Any other arguments parsed into component base R functions.
@@ -12,6 +17,10 @@
 #' @export
 
 sumfun <- function(x, na.rm = TRUE, ...){
+  lifecycle::deprecate_warn(when = "1.4.2",
+                            what = "sumfun()",
+                            details = "Function is no required by analysts.")
+
   data.frame(n = length(x),
              miss = sum(is.na(x)),
              mean = mean(x, na.rm = na.rm, ...),
