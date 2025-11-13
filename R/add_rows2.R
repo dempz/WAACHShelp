@@ -4,6 +4,11 @@
 #'
 #' Created by PV (2023).
 #'
+#' @description
+#' `r lifecycle::badge("deprecated")`
+#'
+#' This function was deprecated because it was no longer required by analysts.
+#'
 #' @param id Default NULL
 #' @param ... Other parameters to parse to function.
 #' @return SAS labelled dataframe
@@ -13,6 +18,9 @@
 #' @export
 
 add_rows2 <- function (..., id = NULL) {
+  lifecycle::deprecate_warn(when = "1.4.2",
+                            what = "add_rows2()",
+                            details = "Function is no required by analysts.")
 
   cnames <- purrr::map(list(...), ~colnames(.x)) %>% purrr::flatten_chr()
   if (!is.null(id) && id %in% cnames) {

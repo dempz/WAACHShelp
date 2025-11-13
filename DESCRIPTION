@@ -27,6 +27,7 @@ Suggests:
     haven,
     knitr,
     kableExtra,
+    lifecycle (>= 1.0.0), 
     lubridate (>= 1.9.0),
     mockery,
     officer,

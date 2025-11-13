@@ -19,8 +19,12 @@ twoway(var1, var2, data = NULL, var2lab = NULL)
 Two-way table
 }
 \description{
-Two-way table similar to the "proc freq" function of SAS with two variables
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
+
+This function was deprecated because it was no longer required by analysts.
 }
 \details{
+Two-way table similar to the "proc freq" function of SAS with two variables
+
 Created by PV (2023).
 }
