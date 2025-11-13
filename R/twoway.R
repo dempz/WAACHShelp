@@ -3,6 +3,12 @@
 #' Two-way table similar to the "proc freq" function of SAS with two variables
 #'
 #' Created by PV (2023).
+#'
+#' @description
+#' `r lifecycle::badge("deprecated")`
+#'
+#' This function was deprecated because it was no longer required by analysts.
+#'
 #' @param var1 Vector of first variable
 #' @param var2 Vector of second variable
 #' @param data Vector of second variable
@@ -13,6 +19,9 @@
 #' @export
 
 twoway <- function(var1, var2, data = NULL, var2lab = NULL){
+  lifecycle::deprecate_warn(when = "1.4.2",
+                            what = "twoway()",
+                            details = "Function is no required by analysts.")
 
   # Pick up the arguments:
   arg <- match.call()
