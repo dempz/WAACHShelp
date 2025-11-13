@@ -19,9 +19,13 @@ proc_freq(var1, data = NULL, sort = NULL, min.frq = 0)
 Dataframe
 }
 \description{
-Renders a HTML table ready for plonking into a HTML or word document.
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
+
+This function was deprecated because it was no longer required by analysts.
 }
 \details{
+Renders a HTML table ready for plonking into a HTML or word document.
+
 Renders output similar to the "proc freq" function of SAS.
 
 Created by PV (2023).
