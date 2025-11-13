@@ -1,5 +1,5 @@
 Package: WAACHShelp
-Version: 1.4.2
+Version: 1.5.0
 Date: 2025-11-13
 Title: Various helper functions to aid reproducibility in WAACHS analysis-related tasks
 Authors@R: c(

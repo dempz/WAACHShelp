@@ -1,5 +1,10 @@
 <!-- NEWS.md is maintained by https://cynkra.github.io/fledge, do not edit -->
 
+# WAACHShelp 1.5.0 (2025-11-13)
+
+- Same as previous version.
+
+
 # WAACHShelp 1.4.2 (2025-11-13)
 
 - Initiate deprecation procedure for unused functions.
