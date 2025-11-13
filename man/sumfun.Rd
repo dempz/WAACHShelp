@@ -17,6 +17,11 @@ sumfun(x, na.rm = TRUE, ...)
 Summary table with n (length), miss (number of missing observations), mean, sd (standard deviation), med (median), q25 (first quartile), q75 (third quartile), min (minimum value), max (maximum value).
 }
 \description{
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
+
+This function was deprecated because it was no longer required by analysts.
+}
+\details{
 Created by PV (2023).
 }
 \examples{
