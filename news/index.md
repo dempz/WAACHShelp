@@ -1,5 +1,9 @@
 # Changelog
 
+## WAACHShelp 1.4.2 (2025-11-13)
+
+- Initiate deprecation procedure for unused functions.
+
 ## WAACHShelp 1.4.1 (2025-10-28)
 
 - Make dependencies more strict.
