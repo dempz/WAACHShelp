@@ -7,14 +7,17 @@
 
 ## Citation
 
+Source:
+[`DESCRIPTION`](https://github.com/dempz/WAACHShelp/blob/main/DESCRIPTION)
+
 Dempsey Z (2025). *WAACHShelp: Various helper functions to aid
 reproducibility in WAACHS analysis-related tasks*. R package version
-1.5.0, <https://dempz.github.io/WAACHShelp/>.
+1.5.0, <https://github.com/dempz/WAACHShelp>.
 
     @Manual{,
       title = {WAACHShelp: Various helper functions to aid reproducibility in WAACHS analysis-related tasks},
       author = {Zac Dempsey},
       year = {2025},
       note = {R package version 1.5.0},
-      url = {https://dempz.github.io/WAACHShelp/},
+      url = {https://github.com/dempz/WAACHShelp},
     }
