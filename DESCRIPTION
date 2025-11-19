@@ -54,5 +54,6 @@ RoxygenNote: 7.3.3
 VignetteBuilder: knitr
 LazyData: true
 Config/testthat/edition: 3
-URL: https://dempz.github.io/WAACHShelp/
+URL: https://github.com/dempz/WAACHShelp, https://dempz.github.io/WAACHShelp/
+BugReports: https://github.com/dempz/WAACHShelp/issues
 Language: en-GB
